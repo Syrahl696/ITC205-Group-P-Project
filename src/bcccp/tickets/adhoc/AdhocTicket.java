@@ -6,107 +6,110 @@ public class AdhocTicket implements IAdhocTicket {
 	
 	private String carparkId;
 	private int ticketNo;
-	private long entryDateTime;
-	private long paidDateTime;
-	private long exitDateTime;
-	private float charge;
+	private long entryDateTime = 0;
+	private long paidDateTime = 0;
+	private long exitDateTime = 0;
+	private float charge = 0;
 	private String barcode;
 
 	
 	
+        //still to do
 	public AdhocTicket(String carparkId, int ticketNo, String barcode) {
-		//TDO Implement constructor
+            this.carparkId = carparkId;
+            this.ticketNo = ticketNo;
+            this.barcode = barcode;
+            
+            Date currentTime = new Date();
+            this.enter(currentTime.getTime());
 	}
 
 
 	@Override
 	public int getTicketNo() {
-		// TODO Auto-generated method stub
-		return 0;
+		return ticketNo;
 	}
 
 
 	@Override
 	public String getBarcode() {
-		// TODO Auto-generated method stub
-		return null;
+		return barcode;
 	}
 
 
 	@Override
 	public String getCarparkId() {
-		// TODO Auto-generated method stub
-		return null;
+		return carparkId;
 	}
 
-
+        
 	@Override
 	public void enter(long dateTime) {
-		// TODO Auto-generated method stub
-		
+                this.entryDateTime = dateTime;		
 	}
 
 
 	@Override
 	public long getEntryDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return entryDateTime;
 	}
 
-
+        
 	@Override
 	public boolean isCurrent() {
-		// TODO Auto-generated method stub
-		return false;
+            return entryDateTime != 0 && exitDateTime == 0;
 	}
 
 
 	@Override
 	public void pay(long dateTime, float charge) {
-		// TODO Auto-generated method stub
-		
+            this.charge = charge;
+            this.paidDateTime = dateTime;	
 	}
 
 
 	@Override
 	public long getPaidDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+            if (isPaid()) {
+		return paidDateTime;
+            }
+            else {
+                return 0;
+            }
 	}
 
 
+        //still to do
 	@Override
 	public boolean isPaid() {
-		// TODO Auto-generated method stub
-		return false;
+	return paidDateTime != 0;
 	}
 
 
 	@Override
 	public float getCharge() {
-		// TODO Auto-generated method stub
-		return 0;
+		return charge;
 	}
 
 
+        //still to do
 	@Override
 	public void exit(long dateTime) {
-		// TODO Auto-generated method stub
+            this.exitDateTime = dateTime;
 		
 	}
 
 
 	@Override
 	public long getExitDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return exitDateTime;
 	}
 
 
+        //still to do
 	@Override
 	public boolean hasExited() {
-		// TODO Auto-generated method stub
-		return false;
+            return exitDateTime != 0;
 	}
 
 	
