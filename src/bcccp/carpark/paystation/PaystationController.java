@@ -23,22 +23,30 @@ public class PaystationController
 	@Override
 	public void ticketInserted(String barcode) {
 		// TODO Auto-generated method stub
-		
+		adhocTicket = carpark.getAdhocTicket(barcode);
+                adhocTicket.getEntryDateTime();
+                //TODO Verify ticket based on date and time
+                charge = adhocTicket.getCharge();
+                ui.display("Please pay: " + String.valueOf(charge));
+                
 	}
 
 
 
 	@Override
 	public void ticketPaid() {
-		// TODO Auto-generated method stub
-		
+		adhocTicket.pay(currenttime, charge); //TODO: Sort out date format
+                ui.printTicket(carpark.getName(), adhocTicket.getTicketNo(),
+                        adhocTicket.getEntryDateTime(), adhocTicket.getPaidDateTime(),
+                        charge, adhocTicket.getBarcode());
+		ui.display("Take Ticket");
 	}
 
 
 
 	@Override
 	public void ticketTaken() {
-		// TODO Auto-generated method stub
+		ui.display("Leave in <15 min");
 		
 	}
 

@@ -1,5 +1,6 @@
 package bcccp.carpark;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bcccp.tickets.adhoc.IAdhocTicket;
@@ -21,14 +22,21 @@ public class Carpark implements ICarpark {
 	public Carpark(String name, int capacity, 
 			IAdhocTicketDAO adhocTicketDAO, 
 			ISeasonTicketDAO seasonTicketDAO) {
-		//TODO Implement constructor
+            this.carparkId = name;
+            this.capacity = capacity;
+            this.numberOfCarsParked = 0;
+            this.seasonTicketDAO = seasonTicketDAO;
+            this.adhocTicketDAO = adhocTicketDAO;
+            this.observers = new ArrayList<>();
 	}
 
 
 
 	@Override
 	public void register(ICarparkObserver observer) {
-		// TODO Auto-generated method stub
+		if (!observers.contains(observer)) {
+			observers.add(observer);
+		}
 		
 	}
 
@@ -36,7 +44,9 @@ public class Carpark implements ICarpark {
 
 	@Override
 	public void deregister(ICarparkObserver observer) {
-		// TODO Auto-generated method stub
+		if (observers.contains(observer)) {
+			observers.remove(observer);
+		}
 		
 	}
 
@@ -44,17 +54,16 @@ public class Carpark implements ICarpark {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.carparkId;
 	}
 
 
 
 	@Override
 	public boolean isFull() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		// TODO Include logic to reserve spots for Season Ticket holders
+		return (numberOfCarsParked >= capacity);
+        }
 
 
 
@@ -67,7 +76,7 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-	public void recordAdhocTicketEntry() {
+	public void recordAdhocTicketEntry() { //should this have the ticket passed to it?
 		// TODO Auto-generated method stub
 		
 	}
@@ -91,7 +100,7 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-	public void recordAdhocTicketExit() {
+	public void recordAdhocTicketExit() { // consider putting the check for empty carpark in this method or another?
 		// TODO Auto-generated method stub
 		
 	}
@@ -139,7 +148,7 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-	public void recordSeasonTicketExit(String ticketId) {
+	public void recordSeasonTicketExit(String ticketId) { // consider putting the check for empty carpark in this method or another?
 		// TODO Auto-generated method stub
 		
 	}

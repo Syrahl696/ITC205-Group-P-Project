@@ -76,7 +76,7 @@ public class AdhocTicket implements IAdhocTicket {
 
 
 	@Override
-	public boolean isPaid() {
+	public boolean isPaid() { //make sure to check if more than 15 minutes have elapsed before payment, according to case study
 		// TODO Auto-generated method stub
 		return false;
 	}
