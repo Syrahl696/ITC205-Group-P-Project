@@ -1,20 +1,27 @@
 package bcccp.tickets.adhoc;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AdhocTicketFactory implements IAdhocTicketFactory {
 
 	@Override
 	public IAdhocTicket make(String carparkId, int ticketNo) {
-            String barcode;
+            //get current miliseconds
+            long dateTime = System.currentTimeMillis();
+            
+            //create SimpleDateFormat object, supply formatting
+            SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyyHHmmss");
+            //convert milliseconds to correct format and add ticket no
+            String barcode =  Integer.toString(ticketNo) + formatter.format(dateTime);
+            System.out.println("Barcode is: " + barcode);
             
             
-            AdhocTicket newTicket = new AdhocTicket(carparkId, ticketNo, currentDateFormatted(ticketNo));
-		return newTicket;
-                
-                
+            //create new ticket with inputs and return
+            AdhocTicket newTicket = new AdhocTicket(carparkId, ticketNo, barcode);
+		return newTicket;   
 	}
         
-        
+      /*  
       public String currentDateFormatted(int ticketNo) {
           String date = Integer.toString(ticketNo);
           
@@ -71,5 +78,6 @@ public class AdhocTicketFactory implements IAdhocTicketFactory {
           return date;
          
       }
+*/
 
 }

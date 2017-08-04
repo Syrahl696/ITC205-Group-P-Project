@@ -20,7 +20,6 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
 	@Override
 	public IAdhocTicket createTicket(String carparkId) {
              AdhocTicket newTicket = (AdhocTicket) factory.make(carparkId, currentTicketNo);
-         
                 currentTicketNo++;
 		return newTicket;
 	}
