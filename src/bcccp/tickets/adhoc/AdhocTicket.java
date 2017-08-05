@@ -81,9 +81,12 @@ public class AdhocTicket implements IAdhocTicket {
 
 
         //returns boolean if ticket has had charge assigned to it, if it has been paid for
+        //determine whether this method checks if ticket was paid within 15 minutes. 
 	@Override
 	public boolean isPaid() {
-	return paidDateTime != 0;
+            long currentMilli = System.currentTimeMillis() - getPaidDateTime();
+            long fifteenMinutes = 900000;
+            return (paidDateTime != 0) && (currentMilli <= fifteenMinutes);
 	}
 
 
