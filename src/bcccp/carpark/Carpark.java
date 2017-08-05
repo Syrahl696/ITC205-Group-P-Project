@@ -7,6 +7,8 @@ import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Carpark implements ICarpark {
 	
@@ -17,9 +19,15 @@ public class Carpark implements ICarpark {
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
 	
-	
-	
-	public Carpark(String name, int capacity, 
+    /**
+     * Constructs a Carpark object with the name, capacity, and the data access objects passed to it.
+     *
+     * @param name
+     * @param capacity
+     * @param adhocTicketDAO
+     * @param seasonTicketDAO
+     */
+    public Carpark(String name, int capacity, 
 			IAdhocTicketDAO adhocTicketDAO, 
 			ISeasonTicketDAO seasonTicketDAO) {
             this.carparkId = name;
@@ -30,9 +38,11 @@ public class Carpark implements ICarpark {
             this.observers = new ArrayList<>();
 	}
 
-
-
-	@Override
+    /**
+     * Registers the passed object (usually an entry controller) as an observer to this carpark.
+     * @param observer
+     */
+    @Override
 	public void register(ICarparkObserver observer) {
 		if (!observers.contains(observer)) {
 			observers.add(observer);
@@ -40,9 +50,11 @@ public class Carpark implements ICarpark {
 		
 	}
 
-
-
-	@Override
+    /**
+     * Removes the passed object (usually an entry controller) as an observer to this carpark.
+     * @param observer
+     */
+    @Override
 	public void deregister(ICarparkObserver observer) {
 		if (observers.contains(observer)) {
 			observers.remove(observer);
@@ -50,16 +62,20 @@ public class Carpark implements ICarpark {
 		
 	}
 
-
-
-	@Override
+    /**
+     *Returns the name of this carpark.
+     * @return
+     */
+    @Override
 	public String getName() {
 		return this.carparkId;
 	}
 
-
-
-	@Override
+    /**
+     * Returns true if the carpark cannot accept any more ad-hoc ticket customers.
+     * @return
+     */
+    @Override
 	public boolean isFull() {
 		// TODO Include logic to reserve spots for Season Ticket holders
 		return (numberOfCarsParked >= capacity);
@@ -73,18 +89,25 @@ public class Carpark implements ICarpark {
 		return null;
 	}
 
-
-
-	@Override
+    /**
+     * Also notifies all observers, allowing them to take an action if the carpark is full.
+     */
+    @Override
 	public void recordAdhocTicketEntry() { //should this have the ticket passed to it?
 		// TODO Auto-generated method stub
+                if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
+                    for (int i = 0; i < observers.size(); i++){
+                        observers.get(i).notifyCarparkEvent();
+                    }
+
+                }
 		
 	}
 
 
 
 	@Override
-	public IAdhocTicket getAdhocTicket(String barcode) {
+	public IAdhocTicket getAdhocTicket(String barcode) { //I would assume this would return null if the given ticket is not an adhoc ticket.
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -100,7 +123,7 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-	public void recordAdhocTicketExit() { // consider putting the check for empty carpark in this method or another?
+	public void recordAdhocTicketExit() { // consider putting the check for empty carpark in this method or another? - nevermind
 		// TODO Auto-generated method stub
 		
 	}
@@ -148,7 +171,7 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-	public void recordSeasonTicketExit(String ticketId) { // consider putting the check for empty carpark in this method or another?
+	public void recordSeasonTicketExit(String ticketId) { // consider putting the check for empty carpark in this method or another? - nevermind
 		// TODO Auto-generated method stub
 		
 	}
