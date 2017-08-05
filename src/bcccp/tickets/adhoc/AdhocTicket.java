@@ -14,53 +14,58 @@ public class AdhocTicket implements IAdhocTicket {
 
 	
 	
-        //still to do
+        //Adhoc ticket constructor, assigning values and setting enter time to current time
 	public AdhocTicket(String carparkId, int ticketNo, String barcode) {
             this.carparkId = carparkId;
             this.ticketNo = ticketNo;
             this.barcode = barcode;
-            
-            Date currentTime = new Date();
-            this.enter(currentTime.getTime());
+
 	}
 
 
+        //returns ticketNo Integer
 	@Override
 	public int getTicketNo() {
 		return ticketNo;
 	}
 
 
+        //returns barcode String
 	@Override
 	public String getBarcode() {
 		return barcode;
 	}
 
 
+        //returns carParkId String
 	@Override
 	public String getCarparkId() {
 		return carparkId;
 	}
 
         
+        //sets the enter time from given long value
 	@Override
 	public void enter(long dateTime) {
                 this.entryDateTime = dateTime;		
 	}
 
 
+        //returns entryTime long
 	@Override
 	public long getEntryDateTime() {
 		return entryDateTime;
 	}
 
         
+        //returns boolean if ticket is valid, if it has an entry time and no exit time
 	@Override
 	public boolean isCurrent() {
             return entryDateTime != 0 && exitDateTime == 0;
 	}
 
 
+        //assigns the paid charge to the Ticket from given float and exit long
 	@Override
 	public void pay(long dateTime, float charge) {
             this.charge = charge;
@@ -68,31 +73,28 @@ public class AdhocTicket implements IAdhocTicket {
 	}
 
 
+        //returns the paidDateTime long
 	@Override
 	public long getPaidDateTime() {
-            if (isPaid()) {
-		return paidDateTime;
-            }
-            else {
-                return 0;
-            }
+            return paidDateTime;
 	}
 
 
-        //still to do
+        //returns boolean if ticket has had charge assigned to it, if it has been paid for
 	@Override
 	public boolean isPaid() {
 	return paidDateTime != 0;
 	}
 
 
+        //returns the assigned charge of the ticket, not used for paying of ticket. 
 	@Override
 	public float getCharge() {
 		return charge;
 	}
 
 
-        //still to do
+        //assigns given long dateTime to exitDateTime
 	@Override
 	public void exit(long dateTime) {
             this.exitDateTime = dateTime;
@@ -100,13 +102,14 @@ public class AdhocTicket implements IAdhocTicket {
 	}
 
 
+        //returns exitDateTime long
 	@Override
 	public long getExitDateTime() {
 		return exitDateTime;
 	}
 
 
-        //still to do
+        //returns boolean, if exitDateTime has a value
 	@Override
 	public boolean hasExited() {
             return exitDateTime != 0;
