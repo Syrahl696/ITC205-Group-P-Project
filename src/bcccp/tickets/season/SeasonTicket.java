@@ -29,75 +29,90 @@ public class SeasonTicket implements ISeasonTicket {
 			             String carparkId, 
 			             long startValidPeriod,
 			             long endValidPeriod) {
-		//TDO Implement constructor
                 this.ticketId = ticketId;
 		this.carparkId = carparkId;
 		this.startValidPeriod = startValidPeriod;
 		this.endValidPeriod = endValidPeriod;
+                this.usages = new ArrayList<>();
 	}
 /**
+ * @return ticketId
  * @see bcccp.tickets.season.ISeasonTicket#getId() 
  */
 	@Override
 	public String getId() {
-		// TODO Auto-generated method stub
 		return ticketId;
 	}
 /**
+ * @return carparkId
  * @see bcccp.tickets.season.ISeasonTicket#getCarparkId() 
  */
 	@Override
 	public String getCarparkId() {
-		// TODO Auto-generated method stub
 		return carparkId;
 	}
 /**
+ * @return startValidPeriod
  * @see bcccp.tickets.season.ISeasonTicket#getStartValidPeriod() 
  */
 	@Override
 	public long getStartValidPeriod() {
-		// TODO Auto-generated method stub
 		return startValidPeriod;
 	}
 /**
+ * @return endValidPeriod
  * @see bcccp.tickets.season.ISeasonTicket#getEndValidPeriod() 
  */
 	@Override
 	public long getEndValidPeriod() {
-		// TODO Auto-generated method stub
 		return endValidPeriod;
 	}
 
+/**
+ * @return currentUsage true if !null
+ * @see bcccp.tickets.season.ISeasonTicket#currentUsage() 
+ */    
 	@Override
 	public boolean inUse() {
-		// TODO Auto-generated method stub
-                return inUse();
+                return currentUsage!=null;
 		
 	}
-
+/**
+ *  Records current usage
+ * @param record 
+ */
 	@Override
 	public void recordUsage(IUsageRecord record) {
-		// TODO Auto-generated method stub
-                record = currentUsage;
+                currentUsage = record;
 		
 	}
-
+/**
+ * @return currentUsage
+ */
 	@Override
 	public IUsageRecord getCurrentUsageRecord() {
-		// TODO Auto-generated method stub
 		return currentUsage;
 	}
 
+        /**
+         * end season Ticket usage method, then adds to usages Arraylist and makes the ticket no longer in use
+         * @param dateTime 
+         */
 	@Override
 	public void endUsage(long dateTime) {
-		// TODO Auto-generated method stub
-		 
+		currentUsage.finalise(dateTime);
+		usages.add(currentUsage);
+		currentUsage = null;
 	}
 
+        /**
+         * Returns ArrayList of Usages from records
+         * @return usages
+         */
 	@Override
 	public List<IUsageRecord> getUsageRecords() {
 		// TODO Auto-generated method stub
-		return null;
+		return usages;
 	}
 
 
