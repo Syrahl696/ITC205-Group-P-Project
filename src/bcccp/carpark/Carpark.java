@@ -98,50 +98,80 @@ public class Carpark implements ICarpark {
 
 
 
+/**
+ * registers season ticket
+ * @see bcccp.tickets.season.ISeasonTicketDAO#registerTicket(seasonTicket) 
+ * @param seasonTicket 
+ */
 	@Override
 	public void registerSeasonTicket(ISeasonTicket seasonTicket) {
-		// TODO Auto-generated method stub
+		seasonTicketDAO.registerTicket(seasonTicket);
 		
 	}
 
 
-
+/**
+ * deregisters season ticket
+ * @see bcccp.tickets.season.ISeasonTicketDAO#deregisterTicket(seasonTicket) 
+ * @param seasonTicket 
+ */
 	@Override
 	public void deregisterSeasonTicket(ISeasonTicket seasonTicket) {
-		// TODO Auto-generated method stub
+		seasonTicketDAO.deregisterTicket(seasonTicket);
 		
 	}
 
 
-
+/**
+ * Finds season ticket by Id and if it exists and is still valid returns true else returns false 
+ * @see bcccp.tickets.season.ISeasonTicketDAO#findTicketById(String ticketId)
+ * @param ticketId
+ * @return boolean
+ */
 	@Override
 	public boolean isSeasonTicketValid(String ticketId) {
-		// TODO Auto-generated method stub
-		return false;
+		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
+		if ((seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod())){
+			return true;
+		}
+                return false;
 	}
 
 
-
+/**
+ * Finds season ticket by Id and then returns whether or not it is in use
+ * @see bcccp.tickets.season.ISeasonTicketDAO#findTicketById(String ticketId) 
+ * @param ticketId
+ * @return seasonTicket.inUse()
+ */
 	@Override
 	public boolean isSeasonTicketInUse(String ticketId) {
-		// TODO Auto-generated method stub
-		return false;
+		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
+		return seasonTicket.inUse();
 	}
 
 
-
+/**
+ * Records season ticket entry and increments number of cars parked by one
+ * @param ticketId 
+ */
 	@Override
 	public void recordSeasonTicketEntry(String ticketId) {
 		// TODO Auto-generated method stub
-		
+		seasonTicketDAO.recordTicketEntry(ticketId);
+		numberOfCarsParked++;
+                
 	}
 
 
-
+/**
+ * Records season ticket exit and decrements number of cars parked by one
+ * @param ticketId 
+ */
 	@Override
 	public void recordSeasonTicketExit(String ticketId) {
-		// TODO Auto-generated method stub
-		
+		seasonTicketDAO.recordTicketExit(ticketId);
+		numberOfCarsParked--;
 	}
 
 	
