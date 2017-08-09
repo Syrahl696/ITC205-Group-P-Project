@@ -119,7 +119,7 @@ public class ExitController
                         exitGate.lower();
                         if (adhocTicket != null){
                             adhocTicket.exit(exitTime);
-                            carpark.recordAdhocTicketExit(/*adhocTicket*/); //see comment on this method in Carpark, that method should probably need the ticket to be passed to it but it currently doesn't
+                            carpark.recordAdhocTicketExit(adhocTicket); //see comment on this method in Carpark, that method should probably need the ticket to be passed to it but it currently doesn't
                         }   
                             
                         }

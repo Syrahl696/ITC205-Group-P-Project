@@ -93,7 +93,7 @@ public class Carpark implements ICarpark {
      * Also notifies all observers, allowing them to take an action if the carpark is full.
      */
     @Override
-	public void recordAdhocTicketEntry() { //should this have the ticket passed to it?
+	public void recordAdhocTicketEntry(IAdhocTicket ticket) { //should this have the ticket passed to it?
 		// TODO Auto-generated method stub
                 if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
                     for (int i = 0; i < observers.size(); i++){
@@ -123,7 +123,7 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-	public void recordAdhocTicketExit() { // consider putting the check for empty carpark in this method or another? - nevermind
+	public void recordAdhocTicketExit(IAdhocTicket ticket) { // consider putting the check for empty carpark in this method or another? - nevermind
 		// TODO Auto-generated method stub
 		
 	}

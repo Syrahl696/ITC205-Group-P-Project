@@ -134,7 +134,7 @@ public class EntryController
                         flagEntering = false;
                         entryGate.lower();
                         if (adhocTicket != null){
-                            carpark.recordAdhocTicketEntry(/*adhocTicket*/); //see comment on this method in Carpark, that method should probably need the ticket to be passed to it but it currently doesn't
+                            carpark.recordAdhocTicketEntry(adhocTicket); //see comment on this method in Carpark, that method should probably need the ticket to be passed to it but it currently doesn't
                         }
                         else if (seasonTicketId != null){
                             carpark.recordSeasonTicketEntry(seasonTicketId); //see comment on this method in Carpark
