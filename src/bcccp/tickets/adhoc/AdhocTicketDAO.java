@@ -57,7 +57,7 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
         }
         
         //method to add a given ticket to currentAdhocTickets    called from Carpark Class
-        public void AddToCurrentList(IAdhocTicket ticket) {
+        public void addToCurrentList(IAdhocTicket ticket) {
             currentAdhocTickets.add(ticket);
         }
 	
