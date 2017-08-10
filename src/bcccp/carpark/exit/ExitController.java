@@ -6,6 +6,8 @@ import bcccp.carpark.ICarSensorResponder;
 import bcccp.carpark.ICarpark;
 import bcccp.carpark.IGate;
 import bcccp.tickets.adhoc.IAdhocTicket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ExitController 
 		implements ICarSensorResponder,
@@ -69,7 +71,13 @@ public class ExitController
                 else {
                     flagValid = false;
                     ui.display("Ticket not paid.");
-                }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ExitController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    ui.display("Remove Unpaid Ticket");
+                    }
             }
             else if (carpark.isSeasonTicketValid(ticketStr) & carpark.isSeasonTicketInUse(ticketStr)){
                 flagValid = true;
@@ -78,7 +86,13 @@ public class ExitController
             }
             else{
                 flagValid = false;
-                ui.display("Invalid ticket.");
+                ui.display("Invalid Ticket");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ExitController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ui.display("Remove Invalid Ticket");
             }
 		
 	}
@@ -92,6 +106,8 @@ public class ExitController
 		exitGate.raise();
                 ui.display("Thank You");
                 flagValid = false;
+            } else {
+                ui.display("Insert Ticket");
             }
 		
 	}

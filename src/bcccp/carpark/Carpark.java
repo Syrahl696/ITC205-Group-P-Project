@@ -125,6 +125,9 @@ public class Carpark implements ICarpark {
 	@Override
 	public void recordAdhocTicketExit(IAdhocTicket ticket) { // consider putting the check for empty carpark in this method or another? - nevermind
 		// TODO Auto-generated method stub
+                for (int i = 0; i < observers.size(); i++){
+                        observers.get(i).notifyCarparkEvent();
+                }
 		
 	}
 

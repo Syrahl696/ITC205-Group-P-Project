@@ -7,6 +7,9 @@ import bcccp.carpark.ICarpark;
 import bcccp.carpark.ICarparkObserver;
 import bcccp.carpark.IGate;
 import bcccp.tickets.adhoc.IAdhocTicket;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EntryController 
 		implements ICarSensorResponder,
@@ -81,9 +84,18 @@ public class EntryController
      */
     @Override
 	public void ticketInserted(String barcode) {
-            if (carpark.isSeasonTicketValid(barcode) & carpark.isSeasonTicketInUse(barcode)){ //Season tickets don't appear to have a barcode, but the method had 'barcode' as the input string...
+            if (carpark.isSeasonTicketValid(barcode) & !carpark.isSeasonTicketInUse(barcode)){ //Season tickets don't appear to have a barcode, but the method had 'barcode' as the input string...
                 seasonTicketId = barcode;
-                entryGate.raise();
+                ui.display("Take Ticket");
+            }
+            else {
+                ui.display("Invalid Ticket");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(EntryController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ui.display("Remove Invalid Ticket");
             }
             
 	}
@@ -93,8 +105,13 @@ public class EntryController
      */
     @Override
 	public void ticketTaken() {
-		entryGate.raise();
-                ui.display("Enter Carpark");
+                if (seasonTicketId != null || adhocTicket != null){
+                    entryGate.raise();
+                    ui.display("Enter Carpark");
+                } else {
+                    ui.display("Push Button");
+                }
+		
 		
 	}
 
@@ -107,6 +124,8 @@ public class EntryController
 	public void notifyCarparkEvent() {
                 if (!carpark.isFull()){
                     this.carEventDetected(outsideSensor.getId(), outsideSensor.carIsDetected());
+                } else {
+                    ui.display("Carpark Full");
                 }
 		
 	}
@@ -135,9 +154,11 @@ public class EntryController
                         entryGate.lower();
                         if (adhocTicket != null){
                             carpark.recordAdhocTicketEntry(adhocTicket); //see comment on this method in Carpark, that method should probably need the ticket to be passed to it but it currently doesn't
+                            adhocTicket = null;
                         }
                         else if (seasonTicketId != null){
                             carpark.recordSeasonTicketEntry(seasonTicketId); //see comment on this method in Carpark
+                            seasonTicketId = null;
                         }
                         
                         else{
