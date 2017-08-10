@@ -18,6 +18,8 @@ public class Carpark implements ICarpark {
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
+        final int FIFTEEN_MINUTES = 900000;
+        final float FIFTEEN_MINUTE_PRICE = 1;
 	
     /**
      * Constructs a Carpark object with the name, capacity, and the data access objects passed to it.
@@ -119,11 +121,16 @@ public class Carpark implements ICarpark {
 
 
 
-        //still to do
+        //decided on calculating per 15 minutes, with a charge of $4 an hour
 	@Override
 	public float calculateAdHocTicketCharge(long entryDateTime) {
-		// TODO Auto-generated method stub
-		return 0;
+            long stayTime = System.currentTimeMillis() - entryDateTime;
+            System.out.println("Current time: " + System.currentTimeMillis() + "  entryDateTime: " + entryDateTime + "  stayTime: " + stayTime);
+            
+            float fifteenMinuteLotsStayed = (stayTime / FIFTEEN_MINUTES) + 1;
+            System.out.println("amount of fifteen minute lots: " + fifteenMinuteLotsStayed);
+            
+            return fifteenMinuteLotsStayed * FIFTEEN_MINUTE_PRICE;
 	}
 
 
