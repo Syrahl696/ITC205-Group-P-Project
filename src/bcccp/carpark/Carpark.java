@@ -88,7 +88,7 @@ public class Carpark implements ICarpark {
         //create and return new adhoc ticket
 	@Override
 	public IAdhocTicket issueAdhocTicket() {
-            
+
             return adhocTicketDAO.createTicket(carparkId);
 	}
 
@@ -96,27 +96,29 @@ public class Carpark implements ICarpark {
      * Also notifies all observers, allowing them to take an action if the carpark is full.
      */
     @Override
+
 	public void recordAdhocTicketEntry(IAdhocTicket ticket) {
             
             adhocTicketDAO.addToCurrentList(ticket);
             numberOfCarsParked++;
-            
-            //check if carpark is now full
-                if (this.isFull()){ //notift observsers, update displays
-                    for (int i = 0; i < observers.size(); i++){
-                        observers.get(i).notifyCarparkEvent();
-                    }
+            if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
 
+                for (int i = 0; i < observers.size(); i++){
+                    observers.get(i).notifyCarparkEvent();
                 }
+
+            }
 		
 	}
 
 
 
 	@Override
+
 	public IAdhocTicket getAdhocTicket(String barcode) { 
             //return adhocTicket object, or null if not found
 		return adhocTicketDAO.findTicketByBarcode(barcode);
+
 	}
 
 
@@ -136,10 +138,16 @@ public class Carpark implements ICarpark {
 
 
 	@Override
+
 	public void recordAdhocTicketExit(IAdhocTicket ticket) {
             numberOfCarsParked--;
             
             adhocTicketDAO.removeFromCurrentList(ticket);
+
+                for (int i = 0; i < observers.size(); i++){
+                        observers.get(i).notifyCarparkEvent();
+                }
+
 		
 	}
 
