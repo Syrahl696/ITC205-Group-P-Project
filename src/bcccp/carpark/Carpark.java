@@ -18,7 +18,7 @@ public class Carpark implements ICarpark {
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
-        final int FIFTEEN_MINUTES = 900000;
+        final long FIFTEEN_MINUTES = 900000;
         final float FIFTEEN_MINUTE_PRICE = 1;
 	
     /**
