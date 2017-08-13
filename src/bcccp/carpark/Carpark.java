@@ -18,6 +18,8 @@ public class Carpark implements ICarpark {
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
+        final long FIFTEEN_MINUTES = 900000;
+        final float FIFTEEN_MINUTE_PRICE = 1;
 	
     /**
      * Constructs a Carpark object with the name, capacity, and the data access objects passed to it.
@@ -83,51 +85,69 @@ public class Carpark implements ICarpark {
 
 
 
+        //create and return new adhoc ticket
 	@Override
 	public IAdhocTicket issueAdhocTicket() {
-		// TODO Auto-generated method stub
-		return null;
+
+            return adhocTicketDAO.createTicket(carparkId);
 	}
 
     /**
      * Also notifies all observers, allowing them to take an action if the carpark is full.
      */
     @Override
-	public void recordAdhocTicketEntry(IAdhocTicket ticket) { //should this have the ticket passed to it?
-		// TODO Auto-generated method stub
-                if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
-                    for (int i = 0; i < observers.size(); i++){
-                        observers.get(i).notifyCarparkEvent();
-                    }
 
+	public void recordAdhocTicketEntry(IAdhocTicket ticket) {
+            
+            adhocTicketDAO.addToCurrentList(ticket);
+            numberOfCarsParked++;
+            if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
+
+                for (int i = 0; i < observers.size(); i++){
+                    observers.get(i).notifyCarparkEvent();
                 }
+
+            }
 		
 	}
 
 
 
 	@Override
-	public IAdhocTicket getAdhocTicket(String barcode) { //I would assume this would return null if the given ticket is not an adhoc ticket.
-		// TODO Auto-generated method stub
-		return null;
+
+	public IAdhocTicket getAdhocTicket(String barcode) { 
+            //return adhocTicket object, or null if not found
+		return adhocTicketDAO.findTicketByBarcode(barcode);
+
+	}
+
+
+
+        //decided on calculating per 15 minutes, with a charge of $4 an hour
+	@Override
+	public float calculateAdHocTicketCharge(long entryDateTime) {
+            long stayTime = System.currentTimeMillis() - entryDateTime;
+            System.out.println("Current time: " + System.currentTimeMillis() + "  entryDateTime: " + entryDateTime + "  stayTime: " + stayTime);
+            
+            float fifteenMinuteLotsStayed = (stayTime / FIFTEEN_MINUTES) + 1;
+            System.out.println("amount of fifteen minute lots: " + fifteenMinuteLotsStayed);
+            
+            return fifteenMinuteLotsStayed * FIFTEEN_MINUTE_PRICE;
 	}
 
 
 
 	@Override
-	public float calculateAddHocTicketCharge(long entryDateTime) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
+	public void recordAdhocTicketExit(IAdhocTicket ticket) {
+            numberOfCarsParked--;
+            
+            adhocTicketDAO.removeFromCurrentList(ticket);
 
-
-	@Override
-	public void recordAdhocTicketExit(IAdhocTicket ticket) { // consider putting the check for empty carpark in this method or another? - nevermind
-		// TODO Auto-generated method stub
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
                 }
+
 		
 	}
 
