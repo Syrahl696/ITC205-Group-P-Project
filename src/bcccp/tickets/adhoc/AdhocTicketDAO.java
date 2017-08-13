@@ -33,7 +33,6 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
 	public IAdhocTicket findTicketByBarcode(String findBarcode) {
             for (int i = 0; i < currentAdhocTickets.size(); i++) {
             if (currentAdhocTickets.get(i).getBarcode() ==  findBarcode) {
-                System.out.println("barcode found: " + findBarcode);
                 return currentAdhocTickets.get(i);
             }
             
