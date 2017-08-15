@@ -17,7 +17,7 @@ public class Carpark implements ICarpark {
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
         final long FIFTEEN_MINUTES = 900000;
-        final float FIFTEEN_MINUTE_PRICE = 1;
+        final float FIFTEEN_MINUTE_PRICE = 4;
 	
     /**
      * Constructs a Carpark object with the name, capacity, and the data access objects passed to it.
