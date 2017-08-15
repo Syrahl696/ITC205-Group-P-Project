@@ -34,7 +34,7 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
 	@Override
 	public IAdhocTicket findTicketByBarcode(String findBarcode) {
             for (int i = 0; i < currentAdhocTickets.size(); i++) {
-            if (currentAdhocTickets.get(i).getBarcode() ==  findBarcode) {
+            if (currentAdhocTickets.get(i).getBarcode() == null ? findBarcode == null : currentAdhocTickets.get(i).getBarcode().equals(findBarcode)) {
                 return currentAdhocTickets.get(i);
             }
             
@@ -53,11 +53,13 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
 
         
         //method to remove a given ticket from currrentAdhocTickets;  called from Carpark Class
+        @Override
         public void removeFromCurrentList(IAdhocTicket ticket) {   
             currentAdhocTickets.remove(ticket);
         }
         
         //method to add a given ticket to currentAdhocTickets    called from Carpark Class
+        @Override
         public void addToCurrentList(IAdhocTicket ticket) {
             currentAdhocTickets.add(ticket);
         }
