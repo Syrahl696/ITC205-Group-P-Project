@@ -20,6 +20,13 @@ public class PaystationController
     public PaystationController(ICarpark carpark, IPaystationUI ui) {
 		this.carpark = carpark;
                 this.ui = ui;
+                entryControllerRegister(); //Registers the entry controller as a responder to those sensors, 
+                                           //as the controller for that UI, and as an observer to the carpark object.
+                
+	}
+        private void entryControllerRegister() {
+
+                ui.registerController(this);
 	}
 
     /**
