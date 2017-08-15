@@ -7,8 +7,6 @@ import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Carpark implements ICarpark {
 	
@@ -94,6 +92,7 @@ public class Carpark implements ICarpark {
 
     /**
      * Also notifies all observers, allowing them to take an action if the carpark is full.
+     * @param ticket
      */
     @Override
 
@@ -186,10 +185,7 @@ public class Carpark implements ICarpark {
 	@Override
 	public boolean isSeasonTicketValid(String ticketId) {
 		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
-		if ((seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod())){
-			return true;
-		}
-                return false;
+                return (seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod());
 	}
 
 
@@ -213,7 +209,6 @@ public class Carpark implements ICarpark {
 	public void recordSeasonTicketEntry(String ticketId) {
 		// TODO Auto-generated method stub
 		seasonTicketDAO.recordTicketEntry(ticketId);
-		numberOfCarsParked++;
                 
 	}
 
@@ -225,6 +220,5 @@ public class Carpark implements ICarpark {
 	@Override
 	public void recordSeasonTicketExit(String ticketId) {
 		seasonTicketDAO.recordTicketExit(ticketId);
-		numberOfCarsParked--;
 
 }
