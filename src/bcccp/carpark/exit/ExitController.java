@@ -79,10 +79,11 @@ public class ExitController
                     ui.display("Remove Unpaid Ticket");
                     }
             }
-            else if (carpark.isSeasonTicketValid(ticketStr) & carpark.isSeasonTicketInUse(ticketStr)){
-                flagValid = true;
-                ui.display("Take Ticket");
-                
+            else if (carpark.isSeasonTicketValid(ticketStr)){
+                if (carpark.isSeasonTicketInUse(ticketStr)){                      
+                    flagValid = true;
+                    ui.display("Take Ticket");
+                }
             }
             else{
                 flagValid = false;

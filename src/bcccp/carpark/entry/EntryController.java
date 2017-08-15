@@ -84,9 +84,11 @@ public class EntryController
      */
     @Override
 	public void ticketInserted(String barcode) {
-            if (carpark.isSeasonTicketValid(barcode) & !carpark.isSeasonTicketInUse(barcode)){ //Season tickets don't appear to have a barcode, but the method had 'barcode' as the input string...
-                seasonTicketId = barcode;
-                ui.display("Take Ticket");
+            if (carpark.isSeasonTicketValid(barcode)){
+                if(!carpark.isSeasonTicketInUse(barcode)){ //Season tickets don't appear to have a barcode, but the method had 'barcode' as the input string...
+                    seasonTicketId = barcode;
+                    ui.display("Take Ticket");
+                    }
             }
             else {
                 ui.display("Invalid Ticket");
