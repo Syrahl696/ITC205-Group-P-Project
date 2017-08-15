@@ -1,5 +1,6 @@
 package bcccp.tickets.adhoc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdhocTicketDAO  implements IAdhocTicketDAO  {
@@ -12,7 +13,8 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
 	//AdhocTicketDAO constructor. assigning factory and setting currentTicketNo = 1
 	public AdhocTicketDAO(IAdhocTicketFactory factory) {
                 this.factory = factory;
-                currentTicketNo = 1;
+                this.currentTicketNo = 1;
+                this.currentAdhocTickets = new ArrayList();
 	}
 
 
