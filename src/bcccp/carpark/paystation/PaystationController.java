@@ -12,33 +12,62 @@ public class PaystationController
 	private IAdhocTicket  adhocTicket = null;
 	private float charge;
 	
-	
-
-	public PaystationController(ICarpark carpark, IPaystationUI ui) {
-		//TODO Implement constructor
+    /**
+     * Creates an Controller object for a carpark paystation, requiring a user interface.
+     * @param carpark
+     * @param ui
+     */
+    public PaystationController(ICarpark carpark, IPaystationUI ui) {
+		this.carpark = carpark;
+                this.ui = ui;
 	}
 
-
-
-	@Override
+    /**
+     * Reads the ticket and checks whether it is an adhoc ticket that has not yet been paid. 
+     * If it is, it calls a method to calculate and display the charge.
+     * If it has already been paid, it immediately ejects the ticket with a message.
+     * If it is invalid, displays an error.
+     * @param barcode
+     */
+    @Override
 	public void ticketInserted(String barcode) {
-		// TODO Auto-generated method stub
-		
-	}
+		if (carpark.getAdhocTicket(barcode) != null){
+                    adhocTicket = carpark.getAdhocTicket(barcode);
+                
+                    if (adhocTicket.isPaid()){
+                        ui.display("Already Paid");
+                        
+                    }
+                    else {
+                    adhocTicket.getEntryDateTime();
+                    //TODO Verify ticket based on date and time in barcode
+                    charge = adhocTicket.getCharge();
+                    ui.display("Please pay: " + String.valueOf(charge));
+                    }
+                } 
+                else{
+                    ui.display("Invalid Ticket");
+                }
+        } 
 
-
-
-	@Override
+    /**
+     * Registers the ticket as paid and prints an updated physical ticket.
+     */
+    @Override
 	public void ticketPaid() {
-		// TODO Auto-generated method stub
-		
+		adhocTicket.pay(System.currentTimeMillis(), charge); //TODO: Sort out date format
+                ui.printTicket(carpark.getName(), adhocTicket.getTicketNo(),
+                        adhocTicket.getEntryDateTime(), adhocTicket.getPaidDateTime(),
+                        charge, adhocTicket.getBarcode());
+		ui.display("Take Ticket"/*"Take Ticket & Leave in <15 min"*/); //full version won't fit
 	}
 
-
-
-	@Override
+    /**
+     * Clears the display when the ticket is taken.
+     */
+    @Override
 	public void ticketTaken() {
-		// TODO Auto-generated method stub
+		ui.display("");
 		
 	}
 

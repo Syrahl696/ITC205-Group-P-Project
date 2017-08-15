@@ -226,9 +226,5 @@ public class Carpark implements ICarpark {
 	public void recordSeasonTicketExit(String ticketId) {
 		seasonTicketDAO.recordTicketExit(ticketId);
 		numberOfCarsParked--;
-	}
-
-	
-	
 
 }
