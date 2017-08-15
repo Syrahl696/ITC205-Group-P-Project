@@ -197,8 +197,9 @@ public class Carpark implements ICarpark {
  */
 	@Override
 	public boolean isSeasonTicketInUse(String ticketId) {
-		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
+            ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
             return seasonTicket.getCurrentUsageRecord() != null;
+        }
 
 
 /**
@@ -207,7 +208,6 @@ public class Carpark implements ICarpark {
  */
 	@Override
 	public void recordSeasonTicketEntry(String ticketId) {
-		// TODO Auto-generated method stub
 		seasonTicketDAO.recordTicketEntry(ticketId);
                 
 	}
@@ -220,5 +220,7 @@ public class Carpark implements ICarpark {
 	@Override
 	public void recordSeasonTicketExit(String ticketId) {
 		seasonTicketDAO.recordTicketExit(ticketId);
+
+}
 
 }

@@ -13,7 +13,7 @@ public interface ICarpark {
 	public IAdhocTicket issueAdhocTicket();
 	public void recordAdhocTicketEntry(IAdhocTicket ticket);
 	public IAdhocTicket getAdhocTicket(String barcode);
-	public float calculateAddHocTicketCharge(long entryDateTime);
+	public float calculateAdHocTicketCharge(long entryDateTime);
 	public void recordAdhocTicketExit(IAdhocTicket ticket);
 	
 	public void registerSeasonTicket(ISeasonTicket seasonTicket);
