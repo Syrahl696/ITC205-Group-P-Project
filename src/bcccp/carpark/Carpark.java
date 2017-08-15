@@ -142,13 +142,12 @@ public class Carpark implements ICarpark {
  * Finds season ticket by Id and then returns whether or not it is in use
  * @see bcccp.tickets.season.ISeasonTicketDAO#findTicketById(String ticketId) 
  * @param ticketId
- * @return seasonTicket.inUse()
+ * @return boolean
  */
 	@Override
 	public boolean isSeasonTicketInUse(String ticketId) {
 		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
-		return seasonTicket.inUse();
-	}
+            return seasonTicket.getCurrentUsageRecord() != null;
 
 
 /**
