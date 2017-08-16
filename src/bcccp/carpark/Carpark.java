@@ -126,10 +126,8 @@ public class Carpark implements ICarpark {
 	@Override
 	public float calculateAdHocTicketCharge(long entryDateTime) {
             long stayTime = System.currentTimeMillis() - entryDateTime;
-            System.out.println("Current time: " + System.currentTimeMillis() + "  entryDateTime: " + entryDateTime + "  stayTime: " + stayTime);
             
             float fifteenMinuteLotsStayed = (stayTime / FIFTEEN_MINUTES) + 1;
-            System.out.println("amount of fifteen minute lots: " + fifteenMinuteLotsStayed);
             
             return fifteenMinuteLotsStayed * FIFTEEN_MINUTE_PRICE;
 	}
