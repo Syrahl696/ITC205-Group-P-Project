@@ -6,107 +6,118 @@ public class AdhocTicket implements IAdhocTicket {
 	
 	private String carparkId;
 	private int ticketNo;
-	private long entryDateTime;
-	private long paidDateTime;
-	private long exitDateTime;
-	private float charge;
+	private long entryDateTime = 0;
+	private long paidDateTime = 0;
+	private long exitDateTime = 0;
+	private float charge = 0;
 	private String barcode;
 
 	
 	
+        //Adhoc ticket constructor, assigning values and setting enter time to current time
 	public AdhocTicket(String carparkId, int ticketNo, String barcode) {
-		//TDO Implement constructor
+            this.carparkId = carparkId;
+            this.ticketNo = ticketNo;
+            this.barcode = barcode;
+
 	}
 
 
+        //returns ticketNo Integer
 	@Override
 	public int getTicketNo() {
-		// TODO Auto-generated method stub
-		return 0;
+		return ticketNo;
 	}
 
 
+        //returns barcode String
 	@Override
 	public String getBarcode() {
-		// TODO Auto-generated method stub
-		return null;
+		return barcode;
 	}
 
 
+        //returns carParkId String
 	@Override
 	public String getCarparkId() {
-		// TODO Auto-generated method stub
-		return null;
+		return carparkId;
 	}
 
-
+        
+        //sets the enter time from given long value
 	@Override
 	public void enter(long dateTime) {
-		// TODO Auto-generated method stub
-		
+                this.entryDateTime = dateTime;		
 	}
 
 
+        //returns entryTime long
 	@Override
 	public long getEntryDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return entryDateTime;
 	}
 
-
+        
+        //returns boolean if ticket is valid, if it has an entry time and no exit time
 	@Override
 	public boolean isCurrent() {
-		// TODO Auto-generated method stub
-		return false;
+            return entryDateTime != 0 && exitDateTime == 0;
 	}
 
 
+        //assigns the paid charge to the Ticket from given float and exit long
 	@Override
 	public void pay(long dateTime, float charge) {
-		// TODO Auto-generated method stub
-		
+            this.charge = charge;
+            this.paidDateTime = dateTime;	
 	}
 
 
+        //returns the paidDateTime long
 	@Override
 	public long getPaidDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+            return paidDateTime;
 	}
 
 
+        //returns boolean if ticket has had charge assigned to it, if it has been paid for
+        //determine whether this method checks if ticket was paid within 15 minutes. 
 	@Override
-	public boolean isPaid() { //make sure to check if more than 15 minutes have elapsed before payment, according to case study
-		// TODO Auto-generated method stub
-		return false;
+
+	public boolean isPaid() {
+            long currentMilli = System.currentTimeMillis() - getPaidDateTime();
+            long fifteenMinutes = 900000;
+            return (paidDateTime != 0) && (currentMilli <= fifteenMinutes);
+
 	}
 
 
+        //returns the assigned charge of the ticket, not used for paying of ticket. 
 	@Override
 	public float getCharge() {
-		// TODO Auto-generated method stub
-		return 0;
+		return charge;
 	}
 
 
+        //assigns given long dateTime to exitDateTime
 	@Override
 	public void exit(long dateTime) {
-		// TODO Auto-generated method stub
+            this.exitDateTime = dateTime;
 		
 	}
 
 
+        //returns exitDateTime long
 	@Override
 	public long getExitDateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return exitDateTime;
 	}
 
 
+        //returns boolean, if exitDateTime has a value
 	@Override
 	public boolean hasExited() {
-		// TODO Auto-generated method stub
-		return false;
+            return exitDateTime != 0;
 	}
 
 	

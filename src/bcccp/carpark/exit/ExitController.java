@@ -61,7 +61,7 @@ public class ExitController
      */
     @Override
 	public void ticketInserted(String ticketStr) {          
-            
+        if (insideSensor.carIsDetected()){    
             if (carpark.getAdhocTicket(ticketStr) != null){
                 adhocTicket = carpark.getAdhocTicket(ticketStr);
                 if (adhocTicket.isPaid()){
@@ -70,30 +70,22 @@ public class ExitController
                 }
                 else {
                     flagValid = false;
-                    ui.display("Ticket not paid.");
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ExitController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    
                     ui.display("Remove Unpaid Ticket");
                     }
             }
-            else if (carpark.isSeasonTicketValid(ticketStr) & carpark.isSeasonTicketInUse(ticketStr)){
-                flagValid = true;
-                ui.display("Take Ticket");
-                
+            else if (carpark.isSeasonTicketValid(ticketStr)){
+                if (carpark.isSeasonTicketInUse(ticketStr)){                      
+                    flagValid = true;
+                    ui.display("Take Ticket");
+                }
             }
             else{
                 flagValid = false;
-                ui.display("Invalid Ticket");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ExitController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
                 ui.display("Remove Invalid Ticket");
             }
+        }
 		
 	}
 

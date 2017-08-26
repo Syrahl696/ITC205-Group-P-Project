@@ -7,8 +7,6 @@ import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Carpark implements ICarpark {
 	
@@ -18,6 +16,8 @@ public class Carpark implements ICarpark {
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
+        final long FIFTEEN_MINUTES = 900000;
+        final float FIFTEEN_MINUTE_PRICE = 4;
 	
     /**
      * Constructs a Carpark object with the name, capacity, and the data access objects passed to it.
@@ -83,103 +83,142 @@ public class Carpark implements ICarpark {
 
 
 
+        //create and return new adhoc ticket
 	@Override
 	public IAdhocTicket issueAdhocTicket() {
-		// TODO Auto-generated method stub
-		return null;
+
+            return adhocTicketDAO.createTicket(carparkId);
 	}
 
     /**
      * Also notifies all observers, allowing them to take an action if the carpark is full.
+     * @param ticket
      */
     @Override
-	public void recordAdhocTicketEntry(IAdhocTicket ticket) { //should this have the ticket passed to it?
-		// TODO Auto-generated method stub
-                if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
-                    for (int i = 0; i < observers.size(); i++){
-                        observers.get(i).notifyCarparkEvent();
-                    }
 
+	public void recordAdhocTicketEntry(IAdhocTicket ticket) {
+            
+            adhocTicketDAO.addToCurrentList(ticket);
+            numberOfCarsParked++;
+            if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
+
+                for (int i = 0; i < observers.size(); i++){
+                    observers.get(i).notifyCarparkEvent();
                 }
+
+            }
 		
 	}
 
 
 
 	@Override
-	public IAdhocTicket getAdhocTicket(String barcode) { //I would assume this would return null if the given ticket is not an adhoc ticket.
-		// TODO Auto-generated method stub
-		return null;
+
+	public IAdhocTicket getAdhocTicket(String barcode) { 
+            //return adhocTicket object, or null if not found
+		return adhocTicketDAO.findTicketByBarcode(barcode);
+
+	}
+
+
+
+        //decided on calculating per 15 minutes, with a charge of $4 an hour
+	@Override
+	public float calculateAdHocTicketCharge(long entryDateTime) {
+            long stayTime = System.currentTimeMillis() - entryDateTime;
+            
+            float fifteenMinuteLotsStayed = (stayTime / FIFTEEN_MINUTES) + 1;
+            
+            return fifteenMinuteLotsStayed * FIFTEEN_MINUTE_PRICE;
 	}
 
 
 
 	@Override
-	public float calculateAddHocTicketCharge(long entryDateTime) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
+	public void recordAdhocTicketExit(IAdhocTicket ticket) {
+            numberOfCarsParked--;
+            
+            adhocTicketDAO.removeFromCurrentList(ticket);
 
-
-	@Override
-	public void recordAdhocTicketExit(IAdhocTicket ticket) { // consider putting the check for empty carpark in this method or another? - nevermind
-		// TODO Auto-generated method stub
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
                 }
+
 		
 	}
 
 
 
+/**
+ * registers season ticket
+ * @see bcccp.tickets.season.ISeasonTicketDAO#registerTicket(seasonTicket) 
+ * @param seasonTicket 
+ */
 	@Override
 	public void registerSeasonTicket(ISeasonTicket seasonTicket) {
-		// TODO Auto-generated method stub
+		seasonTicketDAO.registerTicket(seasonTicket);
 		
 	}
 
 
-
+/**
+ * deregisters season ticket
+ * @see bcccp.tickets.season.ISeasonTicketDAO#deregisterTicket(seasonTicket) 
+ * @param seasonTicket 
+ */
 	@Override
 	public void deregisterSeasonTicket(ISeasonTicket seasonTicket) {
-		// TODO Auto-generated method stub
+		seasonTicketDAO.deregisterTicket(seasonTicket);
 		
 	}
 
 
-
+/**
+ * Finds season ticket by Id and if it exists and is still valid returns true else returns false 
+ * @see bcccp.tickets.season.ISeasonTicketDAO#findTicketById(String ticketId)
+ * @param ticketId
+ * @return boolean
+ */
 	@Override
 	public boolean isSeasonTicketValid(String ticketId) {
-		// TODO Auto-generated method stub
-		return false;
+		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
+                return (seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod());
 	}
 
 
-
+/**
+ * Finds season ticket by Id and then returns whether or not it is in use
+ * @see bcccp.tickets.season.ISeasonTicketDAO#findTicketById(String ticketId) 
+ * @param ticketId
+ * @return boolean
+ */
 	@Override
 	public boolean isSeasonTicketInUse(String ticketId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+            ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
+            return seasonTicket.getCurrentUsageRecord() != null;
+        }
 
 
-
+/**
+ * Records season ticket entry and increments number of cars parked by one
+ * @param ticketId 
+ */
 	@Override
 	public void recordSeasonTicketEntry(String ticketId) {
-		// TODO Auto-generated method stub
-		
+		seasonTicketDAO.recordTicketEntry(ticketId);
+                
 	}
 
 
-
+/**
+ * Records season ticket exit and decrements number of cars parked by one
+ * @param ticketId 
+ */
 	@Override
-	public void recordSeasonTicketExit(String ticketId) { // consider putting the check for empty carpark in this method or another? - nevermind
-		// TODO Auto-generated method stub
-		
-	}
+	public void recordSeasonTicketExit(String ticketId) {
+		seasonTicketDAO.recordTicketExit(ticketId);
 
-	
-	
+}
 
 }
