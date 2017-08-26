@@ -70,10 +70,12 @@ public class EntryController
                     return;
                     //TODO if carpark is full, halt, if it empties, resume
                 }
-                adhocTicket = carpark.issueAdhocTicket();
-                ui.printTicket(adhocTicket.getCarparkId(), adhocTicket.getTicketNo(),
-                        adhocTicket.getEntryDateTime(), adhocTicket.getBarcode());
-                ui.display("Take Ticket");
+                if (outsideSensor.carIsDetected()){
+                    adhocTicket = carpark.issueAdhocTicket();
+                    ui.printTicket(adhocTicket.getCarparkId(), adhocTicket.getTicketNo(),
+                            adhocTicket.getEntryDateTime(), adhocTicket.getBarcode());
+                    ui.display("Take Ticket");
+                }
 		
 	}
 
@@ -84,18 +86,17 @@ public class EntryController
      */
     @Override
 	public void ticketInserted(String barcode) {
-            if (carpark.isSeasonTicketValid(barcode) & !carpark.isSeasonTicketInUse(barcode)){ //Season tickets don't appear to have a barcode, but the method had 'barcode' as the input string...
-                seasonTicketId = barcode;
-                ui.display("Take Ticket");
+            if (outsideSensor.carIsDetected()){
+            if (carpark.isSeasonTicketValid(barcode)){
+                if(!carpark.isSeasonTicketInUse(barcode)){ //Season tickets don't appear to have a barcode, but the method had 'barcode' as the input string...
+                    seasonTicketId = barcode;
+                    ui.display("Take Ticket");
+                    }
             }
             else {
-                ui.display("Invalid Ticket");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(EntryController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
                 ui.display("Remove Invalid Ticket");
+            }
             }
             
 	}

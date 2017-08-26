@@ -7,8 +7,6 @@ import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Carpark implements ICarpark {
 	
@@ -19,7 +17,7 @@ public class Carpark implements ICarpark {
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
         final long FIFTEEN_MINUTES = 900000;
-        final float FIFTEEN_MINUTE_PRICE = 1;
+        final float FIFTEEN_MINUTE_PRICE = 4;
 	
     /**
      * Constructs a Carpark object with the name, capacity, and the data access objects passed to it.
@@ -94,6 +92,7 @@ public class Carpark implements ICarpark {
 
     /**
      * Also notifies all observers, allowing them to take an action if the carpark is full.
+     * @param ticket
      */
     @Override
 
@@ -127,10 +126,8 @@ public class Carpark implements ICarpark {
 	@Override
 	public float calculateAdHocTicketCharge(long entryDateTime) {
             long stayTime = System.currentTimeMillis() - entryDateTime;
-            System.out.println("Current time: " + System.currentTimeMillis() + "  entryDateTime: " + entryDateTime + "  stayTime: " + stayTime);
             
             float fifteenMinuteLotsStayed = (stayTime / FIFTEEN_MINUTES) + 1;
-            System.out.println("amount of fifteen minute lots: " + fifteenMinuteLotsStayed);
             
             return fifteenMinuteLotsStayed * FIFTEEN_MINUTE_PRICE;
 	}
@@ -186,10 +183,7 @@ public class Carpark implements ICarpark {
 	@Override
 	public boolean isSeasonTicketValid(String ticketId) {
 		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
-		if ((seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod())){
-			return true;
-		}
-                return false;
+                return (seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod());
 	}
 
 
@@ -201,8 +195,9 @@ public class Carpark implements ICarpark {
  */
 	@Override
 	public boolean isSeasonTicketInUse(String ticketId) {
-		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
+            ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
             return seasonTicket.getCurrentUsageRecord() != null;
+        }
 
 
 /**
@@ -211,9 +206,7 @@ public class Carpark implements ICarpark {
  */
 	@Override
 	public void recordSeasonTicketEntry(String ticketId) {
-		// TODO Auto-generated method stub
 		seasonTicketDAO.recordTicketEntry(ticketId);
-		numberOfCarsParked++;
                 
 	}
 
@@ -225,6 +218,7 @@ public class Carpark implements ICarpark {
 	@Override
 	public void recordSeasonTicketExit(String ticketId) {
 		seasonTicketDAO.recordTicketExit(ticketId);
-		numberOfCarsParked--;
+
+}
 
 }
