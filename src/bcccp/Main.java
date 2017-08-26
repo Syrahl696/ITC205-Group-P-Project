@@ -72,7 +72,7 @@ public class Main {
 					xis.setVisible(true);
 					xgate.setVisible(true);
 					xos.setVisible(true);
-					
+					System.out.println("Test");
 				} 
 				catch (Exception e) {
 					e.printStackTrace();
