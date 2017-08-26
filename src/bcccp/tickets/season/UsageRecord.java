@@ -7,41 +7,55 @@ public class UsageRecord implements IUsageRecord {
 	long endDateTime;
 	
 	
-	
+	/**
+         * UsageRecord constructor, assigning ticketId value and setting entry time to current time
+         * @param ticketId
+         * @param startDateTime 
+         */
 	public UsageRecord(String ticketId, long startDateTime) {
-		//TODO Implement constructor
+            this.ticketId = ticketId;
+            this.startDateTime = startDateTime;
 	}
 
 
-
+/**
+ * @param endDateTime
+ * @see bcccp.tickets.season.IUsageRecord#getEndTime() 
+ */
 	@Override
 	public void finalise(long endDateTime) {
-		// TODO Auto-generated method stub
+                this.endDateTime = endDateTime;
 		
 	}
 
 
-
+/**
+ * @return startDateTime
+ * @see bcccp.tickets.season.IUsageRecord#getStartTime() 
+ */
 	@Override
 	public long getStartTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return startDateTime;
 	}
 
 
-
+/**
+ * @return endDateTime
+ * @see bcccp.tickets.season.IUsageRecord#getEndTime() 
+ */
 	@Override
 	public long getEndTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return endDateTime;
 	}
 
 
-
+/**
+ * @return endDateTime
+ * @see bcccp.tickets.season.IUsageRecord#getId() 
+ */
 	@Override
 	public String getSeasonTicketId() {
-		// TODO Auto-generated method stub
-		return null;
+		return ticketId;
 	}
 	
 	
