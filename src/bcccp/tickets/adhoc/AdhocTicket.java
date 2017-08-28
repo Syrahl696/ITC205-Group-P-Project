@@ -11,6 +11,9 @@ public class AdhocTicket implements IAdhocTicket {
 	private long exitDateTime = 0;
 	private float charge = 0;
 	private String barcode;
+        private STATE state;
+        
+        private enum STATE {ISSUED, CURRENT, PAID, EXITED };
 
 	
 	
