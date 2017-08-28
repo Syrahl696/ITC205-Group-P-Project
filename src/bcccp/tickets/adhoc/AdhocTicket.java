@@ -22,6 +22,7 @@ public class AdhocTicket implements IAdhocTicket {
             this.carparkId = carparkId;
             this.ticketNo = ticketNo;
             this.barcode = barcode;
+            this.state = STATE.ISSUED;
 
 	}
 
@@ -50,7 +51,8 @@ public class AdhocTicket implements IAdhocTicket {
         //sets the enter time from given long value
 	@Override
 	public void enter(long dateTime) {
-                this.entryDateTime = dateTime;		
+                this.entryDateTime = dateTime;	
+                this.state = STATE.CURRENT;
 	}
 
 
@@ -64,7 +66,7 @@ public class AdhocTicket implements IAdhocTicket {
         //returns boolean if ticket is valid, if it has an entry time and no exit time
 	@Override
 	public boolean isCurrent() {
-            return entryDateTime != 0 && exitDateTime == 0;
+            return this.state == STATE.CURRENT;
 	}
 
 
@@ -72,7 +74,8 @@ public class AdhocTicket implements IAdhocTicket {
 	@Override
 	public void pay(long dateTime, float charge) {
             this.charge = charge;
-            this.paidDateTime = dateTime;	
+            this.paidDateTime = dateTime;
+            this.state = STATE.PAID;
 	}
 
 
@@ -88,9 +91,7 @@ public class AdhocTicket implements IAdhocTicket {
 	@Override
 
 	public boolean isPaid() {
-            long currentMilli = System.currentTimeMillis() - getPaidDateTime();
-            long fifteenMinutes = 900000;
-            return (paidDateTime != 0) && (currentMilli <= fifteenMinutes);
+            return this.state == STATE.PAID;
 
 	}
 
@@ -106,6 +107,7 @@ public class AdhocTicket implements IAdhocTicket {
 	@Override
 	public void exit(long dateTime) {
             this.exitDateTime = dateTime;
+            this.state = STATE.EXITED;
 		
 	}
 
@@ -120,9 +122,23 @@ public class AdhocTicket implements IAdhocTicket {
         //returns boolean, if exitDateTime has a value
 	@Override
 	public boolean hasExited() {
-            return exitDateTime != 0;
+            return this.state == STATE.EXITED;
 	}
 
+        //not sure what this does yet, but was in Jim's example
+        public String toString() {
+		Date entryDate = new Date(entryDateTime);
+		Date paidDate = new Date(paidDateTime);
+		Date exitDate = new Date(exitDateTime);
+
+		return "Carpark    : " + carparkId + "\n" +
+		       "Ticket No  : " + ticketNo + "\n" +
+		       "Entry Time : " + entryDate + "\n" + 
+		       "Paid Time  : " + paidDate + "\n" + 
+		       "Exit Time  : " + exitDate + "\n" +
+		       "State      : " + state + "\n" +
+		       "Barcode    : " + barcode;		
+	}
 	
 	
 }
