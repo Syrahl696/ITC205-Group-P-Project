@@ -1,30 +1,37 @@
 package bcccp.tickets.adhoc;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdhocTicketDAO  implements IAdhocTicketDAO  {
 
-	private IAdhocTicketFactory factory;
+	private IAdhocTicketFactory adhocTicketFactory;
 	private int currentTicketNo;
-        private List<IAdhocTicket> currentAdhocTickets;
+        //using a hashmap instrad of List
+        private Map<String, IAdhocTicket> currentAdhocTickets;
 
 	
 	//AdhocTicketDAO constructor. assigning factory and setting currentTicketNo = 1
 	public AdhocTicketDAO(IAdhocTicketFactory factory) {
-                this.factory = factory;
+                this.adhocTicketFactory = factory;
                 this.currentTicketNo = 1;
-                this.currentAdhocTickets = new ArrayList();
+                currentAdhocTickets = new HashMap<>();
 	}
 
 
 
         //createTicket method, calls AdhocTicketFactory passing in carpark Id and current ticket no. 
-        //increments currentTicket no, then returns new ticket
+        //increments currentTicket no, and adds to current list. then returns new ticket
 	@Override
 	public IAdhocTicket createTicket(String carparkId) {
-             AdhocTicket newTicket = (AdhocTicket) factory.make(carparkId, currentTicketNo);
+             AdhocTicket newTicket = (AdhocTicket) adhocTicketFactory.make(carparkId, currentTicketNo);
                 currentTicketNo++;
+                //add new ticket to hasMap
+                currentAdhocTickets.put(newTicket.getBarcode(), newTicket);
+                
 		return newTicket;
 	}
 
@@ -33,13 +40,8 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
         //searches currentAdhocTickets list for given barcode. Returns found ticket, or null if not found
 	@Override
 	public IAdhocTicket findTicketByBarcode(String findBarcode) {
-            for (int i = 0; i < currentAdhocTickets.size(); i++) {
-            if (currentAdhocTickets.get(i).getBarcode() == null ? findBarcode == null : currentAdhocTickets.get(i).getBarcode().equals(findBarcode)) {
-                return currentAdhocTickets.get(i);
-            }
-            
-        }
-            return null;
+            //now much simpler with hashMap
+            return currentAdhocTickets.get(findBarcode);
 
 	}
 
@@ -48,21 +50,11 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
         //returns list of currentAdhocTickets
 	@Override
 	public List<IAdhocTicket> getCurrentTickets() {
-		return currentAdhocTickets;
+            //convert hashMap to an arrayList and then return
+		return Collections.unmodifiableList(new ArrayList<IAdhocTicket>(currentAdhocTickets.values()));
 	}
 
-        
-        //method to remove a given ticket from currrentAdhocTickets;  called from Carpark Class
-        @Override
-        public void removeFromCurrentList(IAdhocTicket ticket) {   
-            currentAdhocTickets.remove(ticket);
-        }
-        
-        //method to add a given ticket to currentAdhocTickets    called from Carpark Class
-        @Override
-        public void addToCurrentList(IAdhocTicket ticket) {
-            currentAdhocTickets.add(ticket);
-        }
+//removed the addtoCurrentList and removefromCurrentList methods, no longer required. 
 	
 	
 }

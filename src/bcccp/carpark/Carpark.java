@@ -98,7 +98,7 @@ public class Carpark implements ICarpark {
 
 	public void recordAdhocTicketEntry(IAdhocTicket ticket) {
             
-            adhocTicketDAO.addToCurrentList(ticket);
+            //no longer adding ticket to currentList
             numberOfCarsParked++;
             if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
 
@@ -139,7 +139,7 @@ public class Carpark implements ICarpark {
 	public void recordAdhocTicketExit(IAdhocTicket ticket) {
             numberOfCarsParked--;
             
-            adhocTicketDAO.removeFromCurrentList(ticket);
+            //no longer removing ticket from currentList
 
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
