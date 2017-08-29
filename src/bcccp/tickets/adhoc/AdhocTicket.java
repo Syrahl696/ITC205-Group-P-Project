@@ -19,6 +19,16 @@ public class AdhocTicket implements IAdhocTicket {
 	
         //Adhoc ticket constructor, assigning values and setting enter time to current time
 	public AdhocTicket(String carparkId, int ticketNo, String barcode) {
+            if (carparkId.length() == 0 || carparkId == null) {
+                throw new RuntimeException("carparkId is empty");
+            }
+            if (ticketNo <= 0) {
+                throw new RuntimeException("TicketNo is less than zero");
+            }
+            if (barcode.length() == 0 || barcode == null) {
+                throw new RuntimeException("barcode is empty");
+            }
+            
             this.carparkId = carparkId;
             this.ticketNo = ticketNo;
             this.barcode = barcode;
@@ -51,6 +61,10 @@ public class AdhocTicket implements IAdhocTicket {
         //sets the enter time from given long value
 	@Override
 	public void enter(long dateTime) {
+            if(dateTime <= 0) {
+                throw new RuntimeException("Entry Datetime is less than zero");
+            }
+            
                 this.entryDateTime = dateTime;	
                 this.state = STATE.CURRENT;
 	}
@@ -73,6 +87,10 @@ public class AdhocTicket implements IAdhocTicket {
         //assigns the paid charge to the Ticket from given float and exit long
 	@Override
 	public void pay(long dateTime, float charge) {
+            if (dateTime <= this.entryDateTime) {
+                throw new RuntimeException("Paid date time is less than or equal to entry date time");
+            }
+            
             this.charge = charge;
             this.paidDateTime = dateTime;
             this.state = STATE.PAID;
@@ -106,9 +124,14 @@ public class AdhocTicket implements IAdhocTicket {
         //assigns given long dateTime to exitDateTime
 	@Override
 	public void exit(long dateTime) {
+            if (dateTime <= this.paidDateTime) {
+            throw new RuntimeException("ExitdateTime is less than or equal to paid date time");
+            }
+            
             this.exitDateTime = dateTime;
             this.state = STATE.EXITED;
 		
+
 	}
 
 

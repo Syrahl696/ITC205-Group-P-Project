@@ -16,6 +16,10 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
 	
 	//AdhocTicketDAO constructor. assigning factory and setting currentTicketNo = 1
 	public AdhocTicketDAO(IAdhocTicketFactory factory) {
+            if (factory == null) {
+                throw new RuntimeException("AdhocTicketFactory is null");
+            }
+            
                 this.adhocTicketFactory = factory;
                 this.currentTicketNo = 1;
                 currentAdhocTickets = new HashMap<>();
@@ -27,6 +31,10 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
         //increments currentTicket no, and adds to current list. then returns new ticket
 	@Override
 	public IAdhocTicket createTicket(String carparkId) {
+            if (carparkId.length() == 0 || carparkId == null) {
+                throw new RuntimeException("carparkId is empty");
+            }
+            
              AdhocTicket newTicket = (AdhocTicket) adhocTicketFactory.make(carparkId, currentTicketNo);
                 currentTicketNo++;
                 //add new ticket to hasMap

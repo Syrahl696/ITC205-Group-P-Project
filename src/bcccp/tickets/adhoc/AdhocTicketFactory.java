@@ -8,6 +8,13 @@ public class AdhocTicketFactory implements IAdhocTicketFactory {
         //Constructor uses given carparkId and ticketno and generates barcode, then creates ticket. 
 	@Override
 	public IAdhocTicket make(String carparkId, int ticketNo) {
+             if (carparkId.length() == 0 || carparkId == null) {
+                throw new RuntimeException("carparkId is empty");
+            }
+             if (ticketNo <= 0) {
+                 throw new RuntimeException("ticketNo is less than or equal to zero");
+             }
+            
             
             //get current miliseconds assign to dateTime
             long dateTime = System.currentTimeMillis();
