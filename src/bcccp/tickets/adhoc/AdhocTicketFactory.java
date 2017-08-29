@@ -13,11 +13,13 @@ public class AdhocTicketFactory implements IAdhocTicketFactory {
             long dateTime = System.currentTimeMillis();
 
             
-            //create SimpleDateFormat object, supply formatting
-            SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyyHHmmss");
-            
-            //use formatted to convert dateTIme to correct format, add ticketNo and assign to barcode
-            String barcode =  Integer.toString(ticketNo) + formatter.format(dateTime);
+            //create SimpleDateFormat with correct format, then convert to long value (int cannot take the size of number)
+            String formatter = new SimpleDateFormat("ddMMyyyyHHmmss").format(dateTime);
+            long date = Long.parseLong(formatter);
+
+            //create barcode by converting ticketNo and date to HexString. 
+            String barcode =  "A" + Integer.toHexString(ticketNo) + Long.toHexString(date);
+            System.out.println("New barcode: " + barcode);
             
             
             //create new ticket with carparkId, ticketNo & barcode
