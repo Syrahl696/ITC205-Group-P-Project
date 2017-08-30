@@ -18,7 +18,7 @@ public class SeasonTicket implements ISeasonTicket {
 	private long startValidPeriod;
 	private long endValidPeriod;
 	
-        /**
+                /**
          * Instantiates new Season Ticket
          * @param ticketId
          * @param carparkId
@@ -28,11 +28,39 @@ public class SeasonTicket implements ISeasonTicket {
 	public SeasonTicket (String ticketId, 
 			             String carparkId, 
 			             long startValidPeriod,
-			             long endValidPeriod) {
+			             long endValidPeriod) {            
+            //Throws a RuntimeException if the ticket id string is empty or null.
+            if (ticketId == null || ticketId == "") {
+                throw new RuntimeException("the ticket id string is empty or null");
+                    }
+            
+            //Throws a RuntimeException if the carpark name is empty or null
+            if (carparkId == null || carparkId == "") {
+                throw new RuntimeException("the carpark name is empty or null");
+                    }
+            
+            //Throws a RuntimeException if the starting date is less than or equal to zero
+            if (startValidPeriod <= 0) {
+                throw new RuntimeException("the starting date is less than or equal to zero");
+                    }
+            
+            //Throws a RuntimeException if the end date is less than or equal to the starting date
+            if (endValidPeriod <= startValidPeriod) {
+                throw new RuntimeException("the end date is less than or equal to the starting date");
+                    }
+                //A unique string identifying the season ticket.
                 this.ticketId = ticketId;
+                
+                //A string identifying the carpark name of the carpark for which the season ticket is issued.
 		this.carparkId = carparkId;
+                
+                //A long specifying the starting date for which the season ticket is issued
 		this.startValidPeriod = startValidPeriod;
+                
+                //A long specifying the end date for which the season ticket is issued
 		this.endValidPeriod = endValidPeriod;
+                
+                //Initialises an arraylist of usages
                 this.usages = new ArrayList<>();
 	}
 /**
