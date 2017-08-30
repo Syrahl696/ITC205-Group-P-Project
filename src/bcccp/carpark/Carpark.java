@@ -13,6 +13,7 @@ public class Carpark implements ICarpark {
 	private List<ICarparkObserver> observers;
 	private String carparkId;
 	private int capacity;
+        private int seasonCapacity;
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
@@ -27,15 +28,22 @@ public class Carpark implements ICarpark {
      * @param adhocTicketDAO
      * @param seasonTicketDAO
      */
-    public Carpark(String name, int capacity, 
+    public Carpark(String name, int capacity, int seasonCapacity,
 			IAdhocTicketDAO adhocTicketDAO, 
-			ISeasonTicketDAO seasonTicketDAO) {
+			ISeasonTicketDAO seasonTicketDAO) throws RuntimeException {
             this.carparkId = name;
             this.capacity = capacity;
+            
+            //Sets the season capacity to between 0 and 10 percent of total capacity.
+            if (capacity / seasonCapacity * 10 >= 1 || seasonCapacity < 0){
+                this.seasonCapacity = seasonCapacity;
+            } else { throw new RuntimeException("Invalid number of season ticket spaces");}
+            
             this.numberOfCarsParked = 0;
             this.seasonTicketDAO = seasonTicketDAO;
             this.adhocTicketDAO = adhocTicketDAO;
             this.observers = new ArrayList<>();
+        
 	}
 
     /**
