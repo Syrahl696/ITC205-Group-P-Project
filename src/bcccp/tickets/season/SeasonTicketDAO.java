@@ -82,17 +82,18 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
 /**
  * Records ticket entry method,gets the key for the specified season tickets key and if not null 
  * record start usage method, calls IUsageRecordFactory passing in ticketId and System.currentTimeMillis() 
+ * @throws RuntimeException if season ticket identified by ticketId is not in the internal store
  * @param ticketId 
  */
 	@Override
 	public void recordTicketEntry(String ticketId) {
 		Object value = seasonTickets.get(ticketId);
-               if (value != null) {
-                   IUsageRecord record = factory.make(ticketId, System.currentTimeMillis());
-			seasonTickets.get(ticketId).recordUsage(record);
+               if (value == null) {
+                   throw new RuntimeException("season ticket identified by ticketId is not in the internal store");
                }
-	}
-
+                   IUsageRecord record = factory.make(ticketId, System.currentTimeMillis());
+                   seasonTickets.get(ticketId).recordUsage(record);
+        }
 
 /**
  * Records ticket exit method,gets the key for the specified season tickets key and if not null 
