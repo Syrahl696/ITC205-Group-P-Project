@@ -7,12 +7,20 @@ public class UsageRecord implements IUsageRecord {
 	long endDateTime;
 	
 	
-	/**
+/**
          * UsageRecord constructor, assigning ticketId value and setting entry time to current time
+         * @throws RuntimeException if the string identifying the season ticket is null or empty
+         * @throws RuntimeException if the start time is less than or equal to zero
          * @param ticketId
          * @param startDateTime 
          */
 	public UsageRecord(String ticketId, long startDateTime) {
+                if (ticketId == null || ticketId == "") {
+                    throw new RuntimeException("the string identifying the season ticket is null or empty");
+                    }
+                if (startDateTime <= 0) {
+                    throw new RuntimeException("the start time is less than or equal to zero");
+                    }
             this.ticketId = ticketId;
             this.startDateTime = startDateTime;
 	}
