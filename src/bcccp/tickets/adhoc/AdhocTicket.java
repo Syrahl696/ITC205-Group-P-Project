@@ -130,7 +130,6 @@ public class AdhocTicket implements IAdhocTicket {
             
             this.exitDateTime = dateTime;
             this.state = STATE.EXITED;
-		
 
 	}
 

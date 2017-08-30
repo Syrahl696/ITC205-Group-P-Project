@@ -52,6 +52,10 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
             return currentAdhocTickets.get(findBarcode);
 
 	}
+        
+        public void removeCurrentTicket(IAdhocTicket ticket) {
+            currentAdhocTickets.remove(ticket.getBarcode(), ticket);
+        }
 
 
 

@@ -139,11 +139,13 @@ public class Carpark implements ICarpark {
 	public void recordAdhocTicketExit(IAdhocTicket ticket) {
             numberOfCarsParked--;
             
-            //no longer removing ticket from currentList
+            //need to remove ticket from current AdhocTicketList
+            adhocTicketDAO.removeCurrentTicket(ticket);
 
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
                 }
+                
 
 		
 	}
