@@ -27,11 +27,15 @@ public class UsageRecord implements IUsageRecord {
 
 
 /**
+ * @throws RuntimeException if the end time is less than or equal to zero
  * @param endDateTime
  * @see bcccp.tickets.season.IUsageRecord#getEndTime() 
  */
 	@Override
 	public void finalise(long endDateTime) {
+            if (endDateTime <= 0) {
+                    throw new RuntimeException("the end time is less than or equal to zero");
+                    }
                 this.endDateTime = endDateTime;
 		
 	}
