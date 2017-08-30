@@ -11,7 +11,7 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
         private HashMap<String, ISeasonTicket> seasonTickets = new HashMap();
 	
 	/**
-         * @throws  RuntimeException if the reference to the adhocTicketFactory is null
+         * @throws  RuntimeException if the reference to the UsageRecordFactory is null
          * SeasonTicket constructor, assigning factory
          * @param factory 
          */
@@ -19,22 +19,23 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
            if (factory == null){
             throw new RuntimeException("reference to the UsageRecordFactory is null");
         }
-                     //An instance of a class implementing the IAdhocTicketFactory
+                     //An instance of a class implementing the IUsageRecordFactory
                      this.factory = factory;
 
 	}
 
 /**
  * Registers ticket to hashmap with ticket.getId() as key and ticket as value
+ * @throws RuntimeException if ticket is null
  * @param ticket 
  */
 	@Override
 	public void registerTicket(ISeasonTicket ticket) {
-		// TODO Auto-generated method stub
+        if (ticket == null){
+            throw new RuntimeException("ticket is null");
+        }
                 seasonTickets.put(ticket.getId(), ticket);
                  }
-	
-
 
 /**
  * Gets the key for the specified season tickets key and if not null removes season ticket from hashmap
