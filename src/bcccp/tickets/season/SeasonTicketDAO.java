@@ -39,18 +39,17 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
 
 /**
  * Gets the key for the specified season tickets key and if not null removes season ticket from hashmap
+ * @throws RuntimeException if ticket is null
  * @param ticket 
  */
         @Override
 	public void deregisterTicket(ISeasonTicket ticket) {
-               /*if(seasonTickets.containsKey(ticket.getId())){
-			seasonTickets.remove(ticket.getId());
-		}*/
                Object value = seasonTickets.get(ticket.getId());
-               if (value != null) {
-                        seasonTickets.remove(ticket.getId());
-            }
-	}
+               if (value == null) {
+                   throw new RuntimeException("ticket is null");
+               }
+               seasonTickets.remove(ticket.getId());  
+}
 
 
 /**
