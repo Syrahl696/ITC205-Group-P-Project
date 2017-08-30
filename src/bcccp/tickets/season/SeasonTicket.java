@@ -107,7 +107,7 @@ public class SeasonTicket implements ISeasonTicket {
 	}
 /**
  * records a new UsageRecord as current
- * @throws a RuntimeException if UsageRecord is null
+ * @throws RuntimeException if UsageRecord is null
  * @param record 
  */
 	@Override
@@ -126,15 +126,23 @@ public class SeasonTicket implements ISeasonTicket {
 	}
 
         /**
-         * end season Ticket usage method, then adds to usages Arraylist and makes the ticket no longer in use
+         * records a time for the end of the current usage in the current UsageRecord
+         * @throws RuntimeException if the season ticket is not currently in use
+         * @throws RuntimeException if the specified end dateTime is less than or equal to the starting time of the current UsageRecord
          * @param dateTime 
          */
 	@Override
 	public void endUsage(long dateTime) {
+            if (currentUsage==null){
+                throw new RuntimeException("UsageRecord is null");
+	}
+            if (dateTime <= currentUsage.getStartTime() ){
+                throw new RuntimeException("the specified end dateTime is less than or equal to the starting time of the current UsageRecord");
+	}
 		currentUsage.finalise(dateTime);
 		usages.add(currentUsage);
 		currentUsage = null;
-	}
+                }
 
         /**
          * Returns ArrayList of Usages from records
