@@ -205,11 +205,18 @@ public class Carpark implements ICarpark {
 
 
 /**
- * Records season ticket entry and increments number of cars parked by one
+ * causes a new usage record to be created and associated with a season ticket
+ * @throws RuntimeException if the season ticket associated with ticketId does not exist, or is currently in use
  * @param ticketId 
  */
 	@Override
 	public void recordSeasonTicketEntry(String ticketId) {
+            if (seasonTicketDAO.findTicketById(ticketId) == null){
+            throw new RuntimeException("season ticket associated with ticketId does not exist");
+        }
+            if (isSeasonTicketInUse(ticketId) == true){
+                throw new RuntimeException("season ticket associated with ticketId is currently in use");
+        }
 		seasonTicketDAO.recordTicketEntry(ticketId);
                 
 	}
