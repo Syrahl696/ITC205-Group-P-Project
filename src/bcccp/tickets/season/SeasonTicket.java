@@ -106,13 +106,16 @@ public class SeasonTicket implements ISeasonTicket {
 		
 	}
 /**
- *  Records current usage
+ * records a new UsageRecord as current
+ * @throws a RuntimeException if UsageRecord is null
  * @param record 
  */
 	@Override
 	public void recordUsage(IUsageRecord record) {
-                currentUsage = record;
-		
+            if (record==null){
+                throw new RuntimeException("Runtime Exception: UsageRecord is null");
+            }
+                currentUsage = record;		
 	}
 /**
  * @return currentUsage
