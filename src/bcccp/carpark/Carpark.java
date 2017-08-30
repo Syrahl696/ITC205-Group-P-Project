@@ -25,6 +25,7 @@ public class Carpark implements ICarpark {
      *
      * @param name
      * @param capacity
+     * @param seasonCapacity
      * @param adhocTicketDAO
      * @param seasonTicketDAO
      */
@@ -36,15 +37,12 @@ public class Carpark implements ICarpark {
                 this.carparkId = name;
             } else { throw new RuntimeException("Invalid carpark name");}
             
-            //Sets the number of available spaces in the carpark, throws exception at less than 0 value
-            if (capacity <= 0){
+            //Sets the number of total available spaces in the carpark (inlcuding season spaces), throws exception at less than 0 value
+            //Sets the season ticket capacity to between 0 and 10 percent of total capacity, throws runtimeException outside those values.
+            if (capacity > 0 && seasonCapacity >= 0 && capacity / seasonCapacity * 10 >= 1){
                 this.capacity = capacity;
-            } else { throw new RuntimeException("Invalid number of parking spaces");}
-            
-            //Sets the season capacity to between 0 and 10 percent of total capacity.
-            if (capacity / seasonCapacity * 10 >= 1 || seasonCapacity < 0){
                 this.seasonCapacity = seasonCapacity;
-            } else { throw new RuntimeException("Invalid number of season ticket spaces");}
+            } else { throw new RuntimeException("Invalid number of parking spaces");}
             
             //Sets the carpark to be empty
             this.numberOfCarsParked = 0;
@@ -99,8 +97,8 @@ public class Carpark implements ICarpark {
      */
     @Override
 	public boolean isFull() {
-		// TODO Include logic to reserve spots for Season Ticket holders
-		return (numberOfCarsParked >= capacity);
+            //Returns true if the number of number of adhoc ticket holders parked and the
+            return (numberOfCarsParked + seasonTicketDAO.getNumberOfTickets() >= capacity);
         }
 
 
