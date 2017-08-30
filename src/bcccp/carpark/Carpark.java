@@ -31,17 +31,31 @@ public class Carpark implements ICarpark {
     public Carpark(String name, int capacity, int seasonCapacity,
 			IAdhocTicketDAO adhocTicketDAO, 
 			ISeasonTicketDAO seasonTicketDAO) throws RuntimeException {
-            this.carparkId = name;
-            this.capacity = capacity;
+            //Sets the name of the carpark, throws exception at null value
+            if (name != null){            
+                this.carparkId = name;
+            } else { throw new RuntimeException("Invalid carpark name");}
+            
+            //Sets the number of available spaces in the carpark, throws exception at less than 0 value
+            if (capacity <= 0){
+                this.capacity = capacity;
+            } else { throw new RuntimeException("Invalid number of parking spaces");}
             
             //Sets the season capacity to between 0 and 10 percent of total capacity.
             if (capacity / seasonCapacity * 10 >= 1 || seasonCapacity < 0){
                 this.seasonCapacity = seasonCapacity;
             } else { throw new RuntimeException("Invalid number of season ticket spaces");}
             
+            //Sets the carpark to be empty
             this.numberOfCarsParked = 0;
+            
+            //Assigns a SeasonTicketDAO to this carpark
             this.seasonTicketDAO = seasonTicketDAO;
+            
+            //Assigns an AdhocTicketDAO to this carpark
             this.adhocTicketDAO = adhocTicketDAO;
+            
+            //Initialises an arraylist of observers
             this.observers = new ArrayList<>();
         
 	}
