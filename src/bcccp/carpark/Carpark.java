@@ -151,12 +151,16 @@ public class Carpark implements ICarpark {
 
 
 /**
- * registers season ticket
+ * registers season ticket with the carpark so that the season ticket may be used to access the carpark
+ * @throws RuntimeException if the carpark the season ticket is associated with is not the same as the carpark name
  * @see bcccp.tickets.season.ISeasonTicketDAO#registerTicket(seasonTicket) 
  * @param seasonTicket 
  */
 	@Override
 	public void registerSeasonTicket(ISeasonTicket seasonTicket) {
+            if (seasonTicket.getCarparkId() != carparkId){
+            throw new RuntimeException("the carpark the season ticket is associated with is not the same as the carpark name");
+        }
 		seasonTicketDAO.registerTicket(seasonTicket);
 		
 	}
