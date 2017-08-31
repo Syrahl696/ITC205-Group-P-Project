@@ -161,6 +161,8 @@ public class AdhocTicket implements IAdhocTicket {
 		       "State      : " + state + "\n" +
 		       "Barcode    : " + barcode;		
 	}
+        
+        
 	
 	
 }
