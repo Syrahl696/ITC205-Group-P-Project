@@ -79,23 +79,24 @@ public class PaystationController
      */
     @Override
 	public void ticketInserted(String barcode) {
-		if (carpark.getAdhocTicket(barcode) != null){
-                    adhocTicket = carpark.getAdhocTicket(barcode);
-                
-                    if (adhocTicket.isPaid()){
-                        ui.display("Already Paid");
-                        
-                    }
-                    else {
-                    
-                    //TODO Verify ticket based on date and time in barcode
-                    charge = carpark.calculateAdHocTicketCharge(adhocTicket.getEntryDateTime());
-                    ui.display("Please pay: $" + String.valueOf(charge));
-                    }
-                } 
-                else{
-                    ui.display("Invalid Ticket");
-                }
+		if (state_ == STATE.IDLE) {
+			adhocTicket = carpark.getAdhocTicket(barcode);
+			if (adhocTicket != null) {
+				charge = carpark.calculateAdHocTicketCharge(adhocTicket.getEntryDateTime());
+				ui.display("Pay " + String.format("%.2f", charge));
+				setState(STATE.WAITING);
+			}
+			else {
+				ui.beep();
+				ui.display("Take Rejected Ticket");
+				setState(STATE.REJECTED);
+				log("ticketInserted: ticket is not current");				
+			}
+		}
+		else {
+			ui.beep();
+			log("ticketInserted: called while in incorrect state");				
+		}
         } 
 
     /**
@@ -103,11 +104,25 @@ public class PaystationController
      */
     @Override
 	public void ticketPaid() {
-		adhocTicket.pay(System.currentTimeMillis(), charge); //TODO: Sort out date format
-                ui.printTicket(carpark.getName(), adhocTicket.getTicketNo(),
-                        adhocTicket.getEntryDateTime(), adhocTicket.getPaidDateTime(),
-                        charge, adhocTicket.getBarcode());
-		ui.display("Take Ticket"/*"Take Ticket & Leave in <15 min"*/); //full version won't fit
+		if (state_ == STATE.WAITING) {
+			long payTime = System.currentTimeMillis();
+			
+			adhocTicket.pay(payTime, charge);
+			
+			String carparkId = adhocTicket.getCarparkId();
+			int ticketNo = adhocTicket.getTicketNo();
+			long entryTime = adhocTicket.getEntryDateTime();
+			long paidTime = adhocTicket.getPaidDateTime();
+			float charge = adhocTicket.getCharge();
+			String barcode = adhocTicket.getBarcode();
+			
+			ui.printTicket(carparkId, ticketNo, entryTime, paidTime, charge, barcode);
+			setState(STATE.PAID);
+		}
+		else {
+			ui.beep();
+			log("ticketPaid: called while in incorrect state");				
+		}
 	}
 
     /**
@@ -115,10 +130,13 @@ public class PaystationController
      */
     @Override
 	public void ticketTaken() {
-		ui.display("");
-		
+		if (state_ == STATE.IDLE) {
+			ui.beep();
+			log("ticketTaken: called while in incorrect state");				
+		}
+		else {
+			setState(STATE.IDLE);
+		}
 	}
-
-	
 	
 }
