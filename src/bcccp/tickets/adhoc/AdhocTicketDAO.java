@@ -48,8 +48,14 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
         //searches currentAdhocTickets list for given barcode. Returns found ticket, or null if not found
 	@Override
 	public IAdhocTicket findTicketByBarcode(String findBarcode) {
-            //now much simpler with hashMap
-            return currentAdhocTickets.get(findBarcode);
+            //update the currentTickets here, if has exited than remove
+            IAdhocTicket ticket = currentAdhocTickets.get(findBarcode);
+            
+            if (ticket.hasExited()) {
+                currentAdhocTickets.remove(ticket.getBarcode(), ticket);
+            }
+            
+            return ticket;
 
 	}
         
