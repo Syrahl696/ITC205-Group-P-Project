@@ -84,6 +84,8 @@ public class ExitController
 				if (adhocTicket != null) {
 					adhocTicket.exit(exitTime);
 					carpark.recordAdhocTicketExit();
+                                        //Calls for the AdhocTicketDAO to return a reference to this ticket, updating the list of current tickets in the process.
+                                        carpark.getAdhocTicket(adhocTicket.getBarcode()); 
 					log(adhocTicket.toString() );
 				}
 				else if (seasonTicketId != null) {
