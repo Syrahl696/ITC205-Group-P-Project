@@ -119,14 +119,11 @@ public class Carpark implements ICarpark {
      * Also notifies all observers, allowing them to take an action if the carpark is full.
      * @param ticket
      */
-    @Override
-
-	public void recordAdhocTicketEntry(IAdhocTicket ticket) {
+        @Override
+	public void recordAdhocTicketEntry() {
             
-            adhocTicketDAO.addToCurrentList(ticket);
             numberOfCarsParked++;
             if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
-
                 for (int i = 0; i < observers.size(); i++){
                     observers.get(i).notifyCarparkEvent();
                 }
