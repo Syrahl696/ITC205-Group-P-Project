@@ -5,6 +5,10 @@ import bcccp.tickets.adhoc.IAdhocTicket;
 
 public class PaystationController 
 		implements IPaystationController {
+    
+        private enum STATE { IDLE, WAITING, REJECTED, PAID } 
+	
+	private STATE state_;
 	
 	private IPaystationUI ui;	
 	private ICarpark carpark;
@@ -22,11 +26,44 @@ public class PaystationController
                 this.ui = ui;
                 entryControllerRegister(); //Registers the entry controller as a responder to those sensors, 
                                            //as the controller for that UI, and as an observer to the carpark object.
+                setState(STATE.IDLE);	
                 
 	}
         private void entryControllerRegister() {
 
                 ui.registerController(this);
+	}
+        
+        private void setState(STATE newState) {
+		switch (newState) {
+		
+		case IDLE: 
+			state_ = STATE.IDLE;
+			ui_.display("Idle");
+			
+			log("setState: IDLE");
+			break;
+			
+		case WAITING: 
+			state_ = STATE.WAITING;
+			log("setState: WAITING");
+			break;
+			
+		case REJECTED: 
+			state_ = STATE.WAITING;
+			log("setState: WAITING");
+			break;
+			
+		case PAID: 
+			state_ = STATE.PAID;
+			ui_.display("Paid");
+			log("setState: PAID");
+			break;			
+			
+		default: 
+			break;
+			
+		}			
 	}
 
     /**
