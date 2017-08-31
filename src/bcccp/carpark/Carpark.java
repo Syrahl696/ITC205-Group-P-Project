@@ -97,7 +97,8 @@ public class Carpark implements ICarpark {
      */
     @Override
 	public boolean isFull() {
-            //Returns true if the number of number of adhoc ticket holders parked and the
+            //Returns true if the number of number of adhoc ticket holders and 
+            //the number of registered season tickets meets or exceeds the carpark's capacity.
             return (numberOfCarsParked + seasonTicketDAO.getNumberOfTickets() >= capacity);
         }
 
