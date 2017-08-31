@@ -157,14 +157,10 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-
-	public void recordAdhocTicketExit(IAdhocTicket ticket) {
+	public void recordAdhocTicketExit() {
             numberOfCarsParked--;
-            
-            adhocTicketDAO.removeFromCurrentList(ticket);
-
                 for (int i = 0; i < observers.size(); i++){
-                        observers.get(i).notifyCarparkEvent();
+                    observers.get(i).notifyCarparkEvent();
                 }
 
 		
