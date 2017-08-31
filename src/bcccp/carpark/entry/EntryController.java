@@ -187,19 +187,30 @@ public class EntryController
      */
     @Override
 	public void buttonPushed() {
-		if (carpark.isFull()){
-                    ui.display("Carpark Full");
-                    return;
-                    //TODO if carpark is full, halt, if it empties, resume
-                }
-                if (outsideSensor.carIsDetected()){
-                    adhocTicket = carpark.issueAdhocTicket();
-                    ui.printTicket(adhocTicket.getCarparkId(), adhocTicket.getTicketNo(),
-                            adhocTicket.getEntryDateTime(), adhocTicket.getBarcode());
-                    ui.display("Take Ticket");
-                }
+		if (state_ == STATE.WAITING) {
+			if (!carpark.isFull()) {
+				adhocTicket = carpark.issueAdhocTicket();
+				
+				String carparkId = adhocTicket.getCarparkId();
+				int ticketNo = adhocTicket.getTicketNo();
+				entryTime = System.currentTimeMillis();
+				//entryTime = adhocTicket.getEntryDateTime();
+				String barcode = adhocTicket.getBarcode();
+				
+				ui.printTicket(carparkId, ticketNo, entryTime, barcode);
+				setState(STATE.ISSUED);
+			}
+			else {
+				setState(STATE.FULL);
+			}
+		}
+		else {
+			ui.beep();
+			log("ButtonPushed: called while in incorrect state");
+		}
 		
 	}
+	
 
     /**
      * Checks that season ticket is valid and not in use, 
@@ -208,87 +219,137 @@ public class EntryController
      */
     @Override
 	public void ticketInserted(String barcode) {
-            if (outsideSensor.carIsDetected()){
-            if (carpark.isSeasonTicketValid(barcode)){
-                if(!carpark.isSeasonTicketInUse(barcode)){ //Season tickets don't appear to have a barcode, but the method had 'barcode' as the input string...
-                    seasonTicketId = barcode;
-                    ui.display("Take Ticket");
-                    }
-            }
-            else {
-                
-                ui.display("Remove Invalid Ticket");
-            }
-            }
-            
+        		if (state_ == STATE.WAITING) {
+			try {
+				if (carpark.isSeasonTicketValid(barcode) &&
+					!carpark.isSeasonTicketInUse(barcode)) {
+					this.seasonTicketId = barcode;
+					setState(STATE.VALIDATED);
+				}
+				else {
+					ui.beep();
+					seasonTicketId = null;
+					log("ticketInserted: invalid ticket id");				
+				}
+			}
+			catch (NumberFormatException e) {
+				ui.beep();
+				seasonTicketId = null;
+				log("ticketInserted: invalid ticket id");				
+			}
+		}
+		else {
+			ui.beep();
+			log("ticketInserted: called while in incorrect state");
+		}
+		
 	}
 
     /**
-     *Raises the gate after the ticket has been taken. and displays Enter Carpark.
+     *Sets the state after the ticket has been taken.
      */
     @Override
 	public void ticketTaken() {
-                if (seasonTicketId != null || adhocTicket != null){
-                    entryGate.raise();
-                    ui.display("Enter Carpark");
-                } else {
-                    ui.display("Push Button");
-                }
-		
+		if (state_ == STATE.ISSUED || state_ == STATE.VALIDATED ) {
+			setState(STATE.TAKEN);
+		}
+		else {
+			ui.beep();
+			log("ticketTaken: called while in incorrect state");
+		}
 		
 	}
 
     /**
-     *If a car leaves, double check that carpark is no longer full,
-     * then call carEventDetected to check wheter a car is waiting and if one is,
-     * display Push Button, if there is not, clear the screen.
+     *If a car leaves, and the entry controller is in the FULL state,
+     * check whether the carpark is no longer full and update the state accordingly.
+     *
      */
     @Override
 	public void notifyCarparkEvent() {
-                if (!carpark.isFull()){
-                    this.carEventDetected(outsideSensor.getId(), outsideSensor.carIsDetected());
-                } else {
-                    ui.display("Carpark Full");
-                }
+                if (state_ == STATE.FULL) {
+			if (!carpark.isFull()) {
+				setState(STATE.WAITING);
+			}
+		}
 		
 	}
 
     /**
      * If the inside or outside sensor detects a car entering or leaving it's area of influence, 
-     * performs an appropriate action. Accepts a sensorID and a boolean detected value as input.
+     * performs an appropriate action based on the sensor, the detection, and the state of the controller. Accepts a sensorID and a boolean detected value as input.
      * @param detectorId
      * @param detected
      */
     @Override
 	public void carEventDetected(String detectorId, boolean detected) {
+            
+            log("carEventDetected: " + detectorId + ", car Detected: " + detected );
+		
+		switch (state_) {
+		
+		case BLOCKED: 
+			if (detectorId.equals(insideSensor.getId()) && !detected) {
+				setState(prevState_);
+			}
+			break;
+			
+		case IDLE: 
+			log("eventDetected: IDLE");
+			if (detectorId.equals(outsideSensor.getId()) && detected) {
+				log("eventDetected: setting state to WAITING");
+				setState(STATE.WAITING);
+			}
+			else if (detectorId.equals(insideSensor.getId()) && detected) {
+				setState(STATE.BLOCKED);
+			}
+			break;
+			
+		case WAITING: 
+		case FULL: 
+		case VALIDATED: 
+		case ISSUED: 
+			if (detectorId.equals(outsideSensor.getId()) && !detected) {
+				setState(STATE.IDLE);
+			}
+			else if (detectorId.equals(insideSensor.getId()) && detected) {
+				setState(STATE.BLOCKED);
+			}
+			break;
+			
+		case TAKEN: 
+			if (detectorId.equals(outsideSensor.getId()) && !detected) {
+				setState(STATE.IDLE);
+			}
+			else if (detectorId.equals(insideSensor.getId()) && detected) {
+				setState(STATE.ENTERING);
+			}
+			break;
+			
+		case ENTERING: 
+			if (detectorId.equals(outsideSensor.getId()) && !detected) {
+				setState(STATE.ENTERED);
+			}
+			else if (detectorId.equals(insideSensor.getId()) && !detected) {
+				setState(STATE.TAKEN);
+			}
+			break;
+			
+		case ENTERED: 
+			if (detectorId.equals(outsideSensor.getId()) && detected) {
+				setState(STATE.ENTERING);
+			}
+			else if (detectorId.equals(insideSensor.getId()) && !detected) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		default: 
+			break;
+			
+		}
+		
                 
-		if ((detectorId == null ? outsideSensor.getId() == null : detectorId.equals(outsideSensor.getId())) & detected){ //checks to see if the sensor is the outside sensor and if a car is detected
-                    ui.display("Push Button");
-                }
-                if ((detectorId == null ? outsideSensor.getId() == null : detectorId.equals(outsideSensor.getId())) & !detected){ //checks to see if the sensor is the outside sensor and if a car is not detected
-                    ui.display("");
-                }
-                if ((detectorId == null ? insideSensor.getId() == null : detectorId.equals(insideSensor.getId())) & detected){ // car entering
-                    flagEntering = true;
-                }
-                if ((detectorId == null ? insideSensor.getId() == null : detectorId.equals(insideSensor.getId())) & !detected){ //checks to see if the sensor is the outside sensor and if a car is not detected
-                    if (flagEntering){
-                        flagEntering = false;
-                        entryGate.lower();
-                        if (adhocTicket != null){
-                            carpark.recordAdhocTicketEntry(adhocTicket); //see comment on this method in Carpark, that method should probably need the ticket to be passed to it but it currently doesn't
-                            adhocTicket = null;
-                        }
-                        else if (seasonTicketId != null){
-                            carpark.recordSeasonTicketEntry(seasonTicketId); //see comment on this method in Carpark
-                            seasonTicketId = null;
-                        }
-                        
-                        else{
-                            //ALARM!!!
-                        }
-                    }
-                }
 		
 	}
 
