@@ -81,6 +81,10 @@ public class Carpark implements ICarpark {
 		}
 		
 	}
+        
+        private void log(String message) {
+		System.out.println("Carpark : " + message);
+	}
 
     /**
      *Returns the name of this carpark.

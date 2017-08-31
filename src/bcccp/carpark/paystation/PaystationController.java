@@ -34,6 +34,10 @@ public class PaystationController
                 ui.registerController(this);
 	}
         
+        private void log(String message) {
+		System.out.println("PaystationController : " + message);
+	}
+        
         private void setState(STATE newState) {
 		switch (newState) {
 		

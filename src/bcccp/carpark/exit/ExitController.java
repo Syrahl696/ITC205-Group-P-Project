@@ -63,6 +63,10 @@ public class ExitController
 		
 	}
         
+        private void log(String message) {
+		System.out.println("EntryController : " + message);
+	}
+        
         private void setState(STATE newState) {
 		switch (newState) {
 		
