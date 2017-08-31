@@ -12,6 +12,12 @@ import java.util.logging.Logger;
 public class ExitController 
 		implements ICarSensorResponder,
 		           IExitController {
+    
+        private enum STATE { IDLE, WAITING, PROCESSED, REJECTED, TAKEN, EXITING, EXITED, BLOCKED } 
+	
+	private STATE state;
+	private STATE prevState;
+	private String message;
 	
 	private IGate exitGate;
 	private ICarSensor insideSensor;
@@ -45,6 +51,9 @@ public class ExitController
                 this.ui = ui;
                 exitControllerRegister();  //Registers the entry controller as a responder to those sensors
                                            //and as the controller for that UI.
+                                           
+                prevState = STATE.IDLE;		
+		setState(STATE.IDLE);                           
 	}
         
         private void exitControllerRegister() {
@@ -52,6 +61,109 @@ public class ExitController
                 insideSensor.registerResponder(this);
                 ui.registerController(this);
 		
+	}
+        
+        private void setState(STATE newState) {
+		switch (newState) {
+		
+		case BLOCKED: 
+			log("setState: BLOCKED");
+			prevState = state;
+			state = STATE.BLOCKED;
+			message = "Blocked";
+			ui.display(message);
+			break;
+			
+		case IDLE: 
+			log("setState: IDLE");
+			if (prevState == STATE.EXITED) {
+				if (adhocTicket != null) {
+					adhocTicket.exit(exitTime);
+					carpark.recordAdhocTicketExit();
+					log(adhocTicket.toString() );
+				}
+				else if (seasonTicketId != null) {
+					carpark.recordSeasonTicketExit(seasonTicketId);
+				}
+			}
+			adhocTicket = null;
+			seasonTicketId = null;
+			
+			message = "Idle";
+			state = STATE.IDLE;
+			prevState = state;
+			ui.display(message);
+			if (is.carIsDetected()) {
+				setState(STATE.WAITING);
+			}
+			if (exitGate.isRaised()) {
+				exitGate.lower();
+			}
+			exitTime = 0;
+			break;
+			
+		case WAITING: 
+			log("setState: WAITING");
+			message = "Insert Ticket";
+			state = STATE.WAITING;
+			prevState = state;
+			ui.display(message);
+			if (!is.carIsDetected()) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		case PROCESSED: 
+			log("setState: PROCESSED");
+			message = "Take Processed Ticket";
+			state = STATE.PROCESSED;
+			prevState = state;
+			ui.display(message);
+			if (!is.carIsDetected()) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		case REJECTED: 
+			log("setState: REJECTED");
+			message = "Take Rejected Ticket";
+			state = STATE.REJECTED;
+			prevState = state;
+			ui.display(message);
+			if (!is.carIsDetected()) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		case TAKEN: 
+			log("setState: TAKEN");
+			message = "Ticket Taken";
+			state = STATE.TAKEN;
+			prevState = state;
+			ui.display(message);
+			break;
+			
+		case EXITING: 
+			log("setState: EXITING");
+			message = "Exiting";
+			state = STATE.EXITING;
+			prevState = state;
+			ui.display(message);
+			break;
+			
+		case EXITED: 
+			log("setState: EXITED");
+			message = "Exited";
+			state = STATE.EXITED;
+			prevState = state;
+			ui.display(message);
+			break;
+			
+		default: 
+			break;
+			
+		}
+				
 	}
 
     /**
