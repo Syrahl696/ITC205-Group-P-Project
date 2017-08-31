@@ -2,6 +2,10 @@ package bcccp.carpark;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
@@ -184,10 +188,41 @@ public class Carpark implements ICarpark {
  * @param ticketId
  * @return boolean
  */
-	@Override
+@Override
 	public boolean isSeasonTicketValid(String ticketId) {
+            
 		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
-                return (seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod());
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                boolean businessHours = false;
+                try {
+                String string1 = "14:00:00";
+                Date time1 = sdf.parse(string1);
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(time1);
+
+                String string2 = "17:00:00";
+                Date time2 = sdf.parse(string2);
+                Calendar calendar2 = Calendar.getInstance();
+                calendar2.setTime(time2);
+
+                Calendar calendar3 = Calendar.getInstance();
+                String currentTime = sdf.format(calendar3.getTime());
+                Date time3 = sdf.parse(currentTime);
+                calendar3.setTime(time3);
+
+                Date x = calendar3.getTime();
+                if (x.after(calendar1.getTime()) && (x.before(calendar2.getTime()))) {
+                    businessHours = true;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                }
+                
+                Calendar c = Calendar.getInstance();
+                int day= c.get(Calendar.DAY_OF_WEEK);     
+                
+                return ((seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod() &&
+                        (businessHours == true) && (day >= 2) && (day <= 6)));
 	}
 
 
