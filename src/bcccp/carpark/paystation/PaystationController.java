@@ -43,7 +43,7 @@ public class PaystationController
 		
 		case IDLE: 
 			state_ = STATE.IDLE;
-			ui_.display("Idle");
+			ui.display("Idle");
 			
 			log("setState: IDLE");
 			break;
@@ -60,7 +60,7 @@ public class PaystationController
 			
 		case PAID: 
 			state_ = STATE.PAID;
-			ui_.display("Paid");
+			ui.display("Paid");
 			log("setState: PAID");
 			break;			
 			

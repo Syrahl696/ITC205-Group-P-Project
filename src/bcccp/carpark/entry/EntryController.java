@@ -97,11 +97,11 @@ public class EntryController
 			state_ = STATE.IDLE;
 			prevState_ = state_;
 			ui.display(message);
-			if (outsideEntrySensor_.carIsDetected()) {
+			if (outsideSensor.carIsDetected()) {
 				setState(STATE.WAITING);
 			}
-			if (entryGate_.isRaised()) {
-				entryGate_.lower();
+			if (entryGate.isRaised()) {
+				entryGate.lower();
 			}
 			ui.discardTicket();
 			break;
@@ -112,7 +112,7 @@ public class EntryController
 			state_ = STATE.WAITING;
 			prevState_ = state_;
 			ui.display(message);
-			if (!outsideEntrySensor_.carIsDetected()) {
+			if (!outsideSensor.carIsDetected()) {
 				setState(STATE.IDLE);
 			}
 			break;
@@ -131,7 +131,7 @@ public class EntryController
 			state_ = STATE.VALIDATED;
 			prevState_ = state_;
 			ui.display(message);
-			if (!outsideEntrySensor_.carIsDetected()) {
+			if (!outsideSensor.carIsDetected()) {
 				setState(STATE.IDLE);
 			}
 			break;
@@ -142,7 +142,7 @@ public class EntryController
 			state_ = STATE.ISSUED;
 			prevState_ = state_;
 			ui.display(message);
-			if (!outsideEntrySensor_.carIsDetected()) {
+			if (!outsideSensor.carIsDetected()) {
 				setState(STATE.IDLE);
 			}
 			break;
@@ -153,7 +153,7 @@ public class EntryController
 			state_ = STATE.TAKEN;
 			prevState_ = state_;
 			ui.display(message);
-			entryGate_.raise();
+			entryGate.raise();
 			break;
 			
 		case ENTERING: 

@@ -97,7 +97,7 @@ public class ExitController
 			state = STATE.IDLE;
 			prevState = state;
 			ui.display(message);
-			if (is.carIsDetected()) {
+			if (insideSensor.carIsDetected()) {
 				setState(STATE.WAITING);
 			}
 			if (exitGate.isRaised()) {
@@ -112,7 +112,7 @@ public class ExitController
 			state = STATE.WAITING;
 			prevState = state;
 			ui.display(message);
-			if (!is.carIsDetected()) {
+			if (!insideSensor.carIsDetected()) {
 				setState(STATE.IDLE);
 			}
 			break;
@@ -123,7 +123,7 @@ public class ExitController
 			state = STATE.PROCESSED;
 			prevState = state;
 			ui.display(message);
-			if (!is.carIsDetected()) {
+			if (!insideSensor.carIsDetected()) {
 				setState(STATE.IDLE);
 			}
 			break;
@@ -134,7 +134,7 @@ public class ExitController
 			state = STATE.REJECTED;
 			prevState = state;
 			ui.display(message);
-			if (!is.carIsDetected()) {
+			if (!insideSensor.carIsDetected()) {
 				setState(STATE.IDLE);
 			}
 			break;
