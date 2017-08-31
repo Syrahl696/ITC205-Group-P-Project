@@ -183,7 +183,7 @@ public class Carpark implements ICarpark {
 
 
 /**
- * Finds season ticket by Id and if it exists and is still valid returns true else returns false 
+ * Finds season ticket by Id and if it exists, is still valid and it is within business hours returns true else returns false 
  * @see bcccp.tickets.season.ISeasonTicketDAO#findTicketById(String ticketId)
  * @param ticketId
  * @return boolean
@@ -195,23 +195,27 @@ public class Carpark implements ICarpark {
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                 boolean businessHours = false;
                 try {
-                String string1 = "14:00:00";
-                Date time1 = sdf.parse(string1);
+                //sets opening business hours at 7am
+                String time1 = "07:00:00";
+                Date openingTime = sdf.parse(time1);
                 Calendar calendar1 = Calendar.getInstance();
-                calendar1.setTime(time1);
+                calendar1.setTime(openingTime);
 
-                String string2 = "17:00:00";
-                Date time2 = sdf.parse(string2);
+                //sets closing business hours at 7pm
+                String time2 = "19:00:00";
+                Date closingTime = sdf.parse(time2);
                 Calendar calendar2 = Calendar.getInstance();
-                calendar2.setTime(time2);
+                calendar2.setTime(closingTime);
 
+                //sets current time
                 Calendar calendar3 = Calendar.getInstance();
-                String currentTime = sdf.format(calendar3.getTime());
-                Date time3 = sdf.parse(currentTime);
-                calendar3.setTime(time3);
+                String time3 = sdf.format(calendar3.getTime());
+                Date currentTime = sdf.parse(time3);
+                calendar3.setTime(currentTime);
 
-                Date x = calendar3.getTime();
-                if (x.after(calendar1.getTime()) && (x.before(calendar2.getTime()))) {
+                //tests if current time is between opening time and closing time
+                Date current = calendar3.getTime();
+                if (current.after(calendar1.getTime()) && (current.before(calendar2.getTime()))) {
                     businessHours = true;
                 }
             } catch (ParseException e) {
@@ -219,6 +223,7 @@ public class Carpark implements ICarpark {
                 }
                 
                 Calendar c = Calendar.getInstance();
+                //Retrieves current day as integer from 1-7 Sunday =1, Saturday = 7
                 int day= c.get(Calendar.DAY_OF_WEEK);     
                 
                 return ((seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod() &&
