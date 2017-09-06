@@ -39,7 +39,9 @@ public class Carpark implements ICarpark {
             
             //Sets the number of total available spaces in the carpark (inlcuding season spaces), throws exception at less than 0 value
             //Sets the season ticket capacity to between 0 and 10 percent of total capacity, throws runtimeException outside those values.
-            if (capacity > 0 && seasonCapacity >= 0 && capacity / seasonCapacity * 10 >= 1){
+            //Special case implemented for 0 Season Ticket capacity, allowing construction while preventing division by 0.
+            if (capacity > 0 && seasonCapacity > 0 && capacity / seasonCapacity * 10 >= 1 || 
+                    capacity > 0 && seasonCapacity == 0){
                 this.capacity = capacity;
                 this.seasonCapacity = seasonCapacity;
             } else { throw new RuntimeException("Invalid number of parking spaces");}

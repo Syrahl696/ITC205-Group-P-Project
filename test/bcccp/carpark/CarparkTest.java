@@ -23,13 +23,15 @@ import static org.mockito.Mockito.*;
  * @author Ryan Smith
  */
 public class CarparkTest {
-    Carpark instance;
+    static Carpark instance;
     public CarparkTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
-        
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        instance = new Carpark("Bathurst Chase", 3, 0, dummyAdhocDAO, dummySeasonDAO);
     }
     
     @AfterClass
@@ -37,11 +39,7 @@ public class CarparkTest {
     }
     
     @Before
-    public void setUp() {
-        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
-        instance = new Carpark("Bathurst Chase", 3, 0, dummyAdhocDAO, dummySeasonDAO);
-        
+    public void setUp() {      
     }
     
     @After
