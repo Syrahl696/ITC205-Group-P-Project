@@ -7,6 +7,10 @@ import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
+import java.sql.Time;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Carpark implements ICarpark {
 	
@@ -16,8 +20,10 @@ public class Carpark implements ICarpark {
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
-        final long FIFTEEN_MINUTES = 900000;
-        final float FIFTEEN_MINUTE_PRICE = 4;
+        final float BH_RATE = 4;
+        final float OOH_RATE = 2;
+
+        
 	
     /**
      * Constructs a Carpark object with the name, capacity, and the data access objects passed to it.
@@ -96,7 +102,7 @@ public class Carpark implements ICarpark {
      */
     @Override
 
-	public void recordAdhocTicketEntry(IAdhocTicket ticket) {
+	public void recordAdhocTicketEntry() {
             
             //no longer adding ticket to currentList
             numberOfCarsParked++;
@@ -125,22 +131,17 @@ public class Carpark implements ICarpark {
         //decided on calculating per 15 minutes, with a charge of $4 an hour
 	@Override
 	public float calculateAdHocTicketCharge(long entryDateTime) {
-            long stayTime = System.currentTimeMillis() - entryDateTime;
-            
-            float fifteenMinuteLotsStayed = (stayTime / FIFTEEN_MINUTES) + 1;
-            
-            return fifteenMinuteLotsStayed * FIFTEEN_MINUTE_PRICE;
+            Date current = new Date();
+            return calcCharge(entryDateTime, current.getTime());
 	}
 
 
 
 	@Override
-
-	public void recordAdhocTicketExit(IAdhocTicket ticket) {
+	public void recordAdhocTicketExit() {
             numberOfCarsParked--;
             
-            //need to remove ticket from current AdhocTicketList
-            adhocTicketDAO.removeCurrentTicket(ticket);
+            //removal of ticket now done from exit controller
 
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
@@ -222,5 +223,99 @@ public class Carpark implements ICarpark {
 		seasonTicketDAO.recordTicketExit(ticketId);
 
 }
+        
+        public float calcCharge(long start, long end) {
+            Date startTime = new Date(start);//need to truncate to nearest minute
+            Date endTime = new Date(end);//need to truncate
+            
+            int curDay = startTime.getDay();
+            int endDay = endTime.getDay();
+            
+            float charge = 0;
+            Date curStartTime = startTime;
+            
+            while (curDay != endDay) {
+                System.out.println("current day does not equal end day");
+                Date curEndTime = startTime;//should set time to midnight
+                curEndTime.setHours(23);
+                curEndTime.setMinutes(59);
+                curEndTime.setSeconds(59);
+                charge += calcDayCharge(curStartTime, curEndTime, curDay);
+                curStartTime = curEndTime;
+                curDay++;
+                if (curDay == 8) {
+                    curDay = 1;
+                }
+   
+            }
+            System.out.println("current day is now end day");
+            charge += calcDayCharge(curStartTime, endTime, endDay);
+            return charge;
+        }
+            
+            //have to solve the midnight problem, because business days have different charges
+
+        //need a Date variable to represent the start of BH and end of BH. 
+            public float calcDayCharge(Date startDate, Date endDate, int day) {
+                //set BH and OH  9 - 5pm
+                
+                Time startTime = new Time(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
+                Time endTime = new Time(endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
+                Time startBH = new Time(9, 0, 0);
+                Time endBH = new Time(17, 0, 0);
+                
+     
+            float dayCharge = 0;
+            if (isBusinessDay(day)) {
+                System.out.println("start time " + startTime.getTime());
+                System.out.println("endBH" + endBH.getTime());
+                System.out.println(startTime.after(endBH));
+                
+                
+                
+                if (endTime.before(startBH) || startTime.after(endBH)) {
+                    dayCharge = (endTime.getMinutes() - startTime.getMinutes()) * OOH_RATE;
+                    System.out.println("all OOH");
+                }
+                else if (startTime.after(startBH) && endTime.before(endBH)) {
+                    dayCharge = (endTime.getMinutes() - startTime.getMinutes()) * BH_RATE;
+                    System.out.println("all BH");
+                }
+                else if (startTime.before(startBH) && endTime.before(endBH)) {
+                    dayCharge = (startBH.getMinutes() - startTime.getMinutes()) * OOH_RATE;
+                    dayCharge += (endTime.getMinutes() - startBH.getMinutes()) * BH_RATE;
+                    System.out.println("OOH then BH");
+                }
+                else if (startTime.after(startBH) && startTime.before(endBH) && endTime.before(endBH)) {
+                    dayCharge = (endBH.getMinutes() - startTime.getMinutes()) * BH_RATE;
+                    dayCharge += (endTime.getMinutes() - endBH.getMinutes()) * OOH_RATE;
+                    System.out.println("BH then OOH");
+                }
+                else if (startTime.before(startBH) && endTime.after(endBH)) {
+                    dayCharge = (startBH.getMinutes() - startTime.getMinutes()) * OOH_RATE;
+                    dayCharge += (endBH.getMinutes() - startBH.getMinutes()) * BH_RATE;
+                    dayCharge += (endTime.getMinutes() - endBH.getMinutes()) * OOH_RATE;
+                    System.out.println("OOH - BH - OOH");
+                }
+                else {
+                    System.out.println("time error");
+                }
+            }
+            else {
+                dayCharge = (endTime.getMinutes() - startTime.getMinutes()) * OOH_RATE;
+                System.out.println("All OOH");
+            }
+            return dayCharge;
+        }
+        
+        public boolean isBusinessDay(int day) {
+            if (day > 0 && day < 6) {
+                System.out.println("it is a business day: " + day);
+                return true;
+            }
+            else
+                return false;
+        }
+        
 
 }
