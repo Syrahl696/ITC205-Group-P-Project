@@ -226,7 +226,7 @@ public class Carpark implements ICarpark {
                 //Retrieves current day as integer from 1-7 Sunday =1, Saturday = 7
                 int day= c.get(Calendar.DAY_OF_WEEK);     
                 
-                return ((seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod() &&
+                return ((seasonTicket != null) && (System.currentTimeMillis() <= seasonTicket.getEndValidPeriod() &&
                         (businessHours == true) && (day >= 2) && (day <= 6)));
 	}
 
