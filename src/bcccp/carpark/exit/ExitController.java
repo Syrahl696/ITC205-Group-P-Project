@@ -64,7 +64,7 @@ public class ExitController
 	}
         
         private void log(String message) {
-		System.out.println("EntryController : " + message);
+		System.out.println("ExitController : " + message);
 	}
         
         private void setState(STATE newState) {
@@ -249,7 +249,7 @@ public class ExitController
 		switch (state) {
 		
 		case BLOCKED: 
-			if (detectorId.equals(insideSensor.getId()) && !detected) {
+			if (detectorId.equals(outsideSensor.getId()) && !detected) {
 				setState(prevState);
 			}
 			break;
