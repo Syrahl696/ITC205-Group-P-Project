@@ -28,7 +28,7 @@ import org.junit.runners.Suite;
     EntryControllerTest.class, 
     ExitControllerTest.class,
     PaystationControllerTest.class})
-public class NewTestSuite {
+public class RyanSmithUnitTestSuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
