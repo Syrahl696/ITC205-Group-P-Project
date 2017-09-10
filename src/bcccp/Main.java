@@ -85,7 +85,7 @@ public class Main {
     IAdhocTicket ticket1 = adhocTicketDAO.createTicket("Bathurst Chase");
     Date newDate = new Date();
     System.out.println(newDate.getTime());
-    ticket1.enter(newDate.getTime()-360000);
+    ticket1.enter(newDate.getTime()-89400000);
     
     float num = carpark.calculateAdHocTicketCharge(ticket1.getEntryDateTime());
     System.out.println(num);

@@ -144,12 +144,8 @@ public class Carpark implements ICarpark {
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
                 }
-                
-
-		
+	
 	}
-
-
 
 /**
  * registers season ticket
