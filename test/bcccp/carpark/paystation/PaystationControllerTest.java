@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Ryan Smith
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING) //Test methods in sequence, to lower code reuse.
 public class PaystationControllerTest {
     
     static Carpark mockCarpark;
@@ -31,6 +31,7 @@ public class PaystationControllerTest {
         mockCarpark = mock(Carpark.class);
         mockUI = mock(IPaystationUI.class);
         
+        //create a static instance for testing multiple methods in sequence
         instance = new PaystationController(mockCarpark, mockUI);
     }
     
@@ -53,14 +54,18 @@ public class PaystationControllerTest {
     public void test1TicketInserted() {
         System.out.println("ticketInserted");
         
+        //Initialise behaviour of mocks
         String barcode = "A1111";        
         AdhocTicket ticket = mock(AdhocTicket.class);
         when(mockCarpark.getAdhocTicket(barcode)).thenReturn(ticket);
         when(mockCarpark.calculateAdHocTicketCharge(any(long.class))).thenReturn(10.00f);
         
+        //Begin test
         instance.ticketInserted(barcode);
         
+        //Test that the system entered the correct states as a result of this method.
         verify(mockUI, times(1)).display("Pay 10.00");
+        //a beep indicates an error that may not have been caught otherwise.
         verify(mockUI, never()).beep();
     }
 
@@ -70,10 +75,13 @@ public class PaystationControllerTest {
     @Test
     public void test2TicketPaid() {
         System.out.println("ticketPaid");
-
+        
+        //Begin test
         instance.ticketPaid();
         
+        //Test that the system entered the correct states as a result of this method.
         verify(mockUI, times(1)).display("Paid");
+        //a beep indicates an error that may not have been caught otherwise.
         verify(mockUI, never()).beep();
     }
 
@@ -86,6 +94,8 @@ public class PaystationControllerTest {
 
         instance.ticketTaken();
         
+        //Internally changes state to Waiting. No public methods are called to verify this change.
+        //a beep indicates an error that may not have been caught otherwise.        
         verify(mockUI, never()).beep();
     }
     

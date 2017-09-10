@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Ryan Smith
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING) //Test methods in sequence, to lower code reuse.
 public class ExitControllerTest {
     
     static Carpark mockCarpark;
@@ -39,9 +39,11 @@ public class ExitControllerTest {
 	mockIS = mock(ICarSensor.class);
 	mockUI = mock(IExitUI.class);
         
+        //Initialise behaviour of mocks
         when(mockIS.getId()).thenReturn("InsideSensor");
         when(mockIS.carIsDetected()).thenReturn(true);
-                
+        
+        //create static instances for testing multiple methods in sequence
         seasonInstance = new ExitController(mockCarpark, mockGate, mockIS, mockOS, mockUI);
         adhocInstance = new ExitController(mockCarpark, mockGate, mockIS, mockOS, mockUI);
     }
@@ -65,7 +67,7 @@ public class ExitControllerTest {
     public void test1TicketInserted() {
         System.out.println("ticketInserted");
         
-        
+        //Initialise behaviour of mocks
         String sBarcode = "S1111";
         String aBarcode = "A1111";        
         when(mockCarpark.isSeasonTicketValid(sBarcode)).thenReturn(true);
@@ -75,14 +77,17 @@ public class ExitControllerTest {
         when(mockCarpark.getAdhocTicket(aBarcode)).thenReturn(ticket);
         when(ticket.isPaid()).thenReturn(true);
 
-        
+        //Begin tests
         seasonInstance.carEventDetected("InsideSensor", true);
         seasonInstance.ticketInserted(sBarcode);
         
         adhocInstance.carEventDetected("InsideSensor", true);
         adhocInstance.ticketInserted(aBarcode);
         
+        //Test that the system entered the correct states as a result of this method.
         verify(mockUI, times(2)).display("Take Processed Ticket");
+        //a beep indicates an error that may not have been caught otherwise
+        verify(mockUI, never()).beep();
     }
 
     /**
@@ -92,10 +97,14 @@ public class ExitControllerTest {
     public void test2TicketTaken() {
         System.out.println("ticketTaken");
         
+        //Begin test
         seasonInstance.ticketTaken();
         
+        //Test that the system entered the correct states as a result of this method.
         verify(mockGate, times(1)).raise();
         verify(mockUI, times(1)).display("Ticket Taken");
+        //a beep indicates an error that may not have been caught otherwise
+        verify(mockUI, never()).beep();
     }
 
     /**
@@ -104,17 +113,22 @@ public class ExitControllerTest {
     @Test
     public void test3CarEventDetected() {
         System.out.println("carEventDetected");
+        
         //SetState checks this directly to switch between Idle and Waiting as appropriate,
         //so I have to simulate a car entering and leaving.
         when(mockIS.carIsDetected()).thenReturn(false);
+        
+        //Create a new instance for these tests
         ExitController carEventInstance = new ExitController(mockCarpark, mockGate, mockIS, mockOS, mockUI);        
         
+        //Initialise behaviour of mocks
         when(mockIS.getId()).thenReturn("InsideSensor");
         when(mockOS.getId()).thenReturn("OutsideSensor");
         String sBarcode = "S1111";
         when(mockCarpark.isSeasonTicketValid(sBarcode)).thenReturn(true);
         when(mockCarpark.isSeasonTicketInUse(sBarcode)).thenReturn(true);
         
+        //Begin tests
         //From Idle to Blocked and back
         carEventInstance.carEventDetected("OutsideSensor", true);
         carEventInstance.carEventDetected("OutsideSensor", false);
@@ -170,6 +184,7 @@ public class ExitControllerTest {
         //To Idle after having exited.
         carEventInstance.carEventDetected("OutsideSensor", false);
         
+        //Test that the system entered the correct state as a result of this method.
         //should have entered Waiting 4 times (after 2 from previous tests)
         verify(mockUI, times(6)).display("Insert Ticket");
         //should have entered Blocked 2 times
@@ -180,6 +195,8 @@ public class ExitControllerTest {
         verify(mockUI, times(3)).display("Exiting");
         //should have entered Exited state 2 times
         verify(mockUI, times(2)).display("Exited");
+        //a beep indicates an error that may not have been caught otherwise
+        verify(mockUI, never()).beep();
     }
 }
     

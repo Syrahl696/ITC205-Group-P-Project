@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Ryan Smith
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING) //Test methods in sequence, to lower code reuse.
 public class EntryControllerTest {
     
     static Carpark mockCarpark;
@@ -41,9 +41,11 @@ public class EntryControllerTest {
 	mockIS = mock(ICarSensor.class);
 	mockUI = mock(IEntryUI.class);
         
+        //initialise behaviour of mocks
         when(mockOS.getId()).thenReturn("OutsideSensor");
         when(mockOS.carIsDetected()).thenReturn(true);
-                
+        
+        //create static instances for testing multiple methods in sequence
         seasonInstance = new EntryController(mockCarpark, dummyGate, mockOS, mockIS, mockUI);
         adhocInstance = new EntryController(mockCarpark, dummyGate, mockOS, mockIS, mockUI);
         isFullInstance = new EntryController(mockCarpark, dummyGate, mockOS, mockIS, mockUI);
@@ -80,22 +82,24 @@ public class EntryControllerTest {
         //Put the system in the correct state using the appropriate action
         adhocInstance.carEventDetected("OutsideSensor", true);
        
-        //test the class
+        //Begin test
         adhocInstance.buttonPushed();
         
         
-        //Make a new instance for a branch use case
+        //Use a new instance for a branch use case
         
         //Set the state of the new insance to the correct state to test a different case
         when(mockCarpark.isFull()).thenReturn(true);
         isFullInstance.carEventDetected("OutsideSensor", true);
        
-        //Test!
+        //Begin test
         isFullInstance.buttonPushed();
         
         //Test that the system entered the correct states as a result of this method.
         verify(mockUI, times(1)).display("Take Ticket");
         verify(mockUI, times(1)).display("Carpark Full");
+        //a beep indicates an error that may not have been caught otherwise.
+        verify(mockUI, never()).beep();
         
     }
 
@@ -114,13 +118,14 @@ public class EntryControllerTest {
         when(mockCarpark.isSeasonTicketValid(barcode)).thenReturn(true);
         when(mockCarpark.isSeasonTicketInUse(barcode)).thenReturn(false);
         
-        
+        //Begin tests
         seasonInstance.carEventDetected("OutsideSensor", true);
         seasonInstance.ticketInserted(barcode);
         
+        //Test that the system entered the correct state as a result of this method.
         verify(mockUI, times(1)).display("Ticket Validated");
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        //a beep indicates an error that may not have been caught otherwise.
+        verify(mockUI, never()).beep();
     }
 
     /**
@@ -129,13 +134,15 @@ public class EntryControllerTest {
     @Test
     public void test3TicketTaken() {
         System.out.println("ticketTaken");
-
+        
+        //Begin tests
         seasonInstance.ticketTaken();
         adhocInstance.ticketTaken();
         
+        //Test that the system entered the correct states as a result of this method.
         verify(mockUI, times(2)).display("Ticket Taken");
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        //a beep indicates an error that may not have been caught otherwise.
+        verify(mockUI, never()).beep();
     }
 
     /**
@@ -145,17 +152,17 @@ public class EntryControllerTest {
     public void test4NotifyCarparkEvent() {
         System.out.println("notifyCarparkEvent");
         
+        //Initialise behaviour of mocks
         when(mockCarpark.isFull()).thenReturn(false);
         
+        //Begin tests
         isFullInstance.notifyCarparkEvent();
         
-        //verify that the waiting state has been entered 4 times thus far
-        //3 times, once each for the 3 instances used for testing, a 4th time by this test
+        //Test that the system entered the correct state as a result of this method.
+        //Waiting state should be called total of 4 times (was entered 3 times in prior tests.
         verify(mockUI, times(4)).display("Push Button");
-        
-        
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        //a beep indicates an error that may not have been caught otherwise.
+        verify(mockUI, never()).beep();
     }
 
     /**
@@ -165,6 +172,8 @@ public class EntryControllerTest {
     public void test5CarEventDetected() {
         System.out.println("carEventDetected");
         
+        //Initialise behaviour of mocks
+        
         //SetState checks this directly to switch between Idle and Waiting as appropriate,
         //so I have to simulate a car entering and leaving.
         when(mockOS.carIsDetected()).thenReturn(false);
@@ -173,6 +182,7 @@ public class EntryControllerTest {
         when(mockOS.getId()).thenReturn("OutsideSensor");
         when(mockIS.getId()).thenReturn("InsideSensor");
         
+        //Begin tests
         
         //From Idle to Blocked and back
         carEventInstance.carEventDetected("InsideSensor", true);
@@ -229,6 +239,7 @@ public class EntryControllerTest {
         //To Idle after having entered.
         carEventInstance.carEventDetected("InsideSensor", false);
         
+        //Test that the system entered the correct states as a result of this method.
         //should have entered Waiting 4 times (after 4 from previous tests)
         verify(mockUI, times(8)).display("Push Button");
         //should have entered Blocked 2 times
@@ -239,6 +250,8 @@ public class EntryControllerTest {
         verify(mockUI, times(3)).display("Entering");
         //should have entered Entered state 2 times
         verify(mockUI, times(2)).display("Entered");
+        //a beep indicates an error that may not have been caught otherwise.
+        verify(mockUI, never()).beep();
     }
     
 }
