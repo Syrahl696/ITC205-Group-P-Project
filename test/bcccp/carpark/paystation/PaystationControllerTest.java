@@ -5,24 +5,33 @@
  */
 package bcccp.carpark.paystation;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import bcccp.carpark.*;
+import bcccp.tickets.adhoc.AdhocTicket;
+import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.runners.MethodSorters;
+import static org.mockito.Mockito.*;
 
 /**
  *
  * @author Ryan Smith
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PaystationControllerTest {
+    
+    static Carpark mockCarpark;
+    static IPaystationUI mockUI;
+    static PaystationController instance;
     
     public PaystationControllerTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        mockCarpark = mock(Carpark.class);
+        mockUI = mock(IPaystationUI.class);
+        
+        instance = new PaystationController(mockCarpark, mockUI);
     }
     
     @AfterClass
@@ -41,37 +50,43 @@ public class PaystationControllerTest {
      * Test of ticketInserted method, of class PaystationController.
      */
     @Test
-    public void testTicketInserted() {
+    public void test1TicketInserted() {
         System.out.println("ticketInserted");
-        String barcode = "";
-        PaystationController instance = null;
+        
+        String barcode = "A1111";        
+        AdhocTicket ticket = mock(AdhocTicket.class);
+        when(mockCarpark.getAdhocTicket(barcode)).thenReturn(ticket);
+        when(mockCarpark.calculateAdHocTicketCharge(any(long.class))).thenReturn(10.00f);
+        
         instance.ticketInserted(barcode);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        verify(mockUI, times(1)).display("Pay 10.00");
+        verify(mockUI, never()).beep();
     }
 
     /**
      * Test of ticketPaid method, of class PaystationController.
      */
     @Test
-    public void testTicketPaid() {
+    public void test2TicketPaid() {
         System.out.println("ticketPaid");
-        PaystationController instance = null;
+
         instance.ticketPaid();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        verify(mockUI, times(1)).display("Paid");
+        verify(mockUI, never()).beep();
     }
 
     /**
      * Test of ticketTaken method, of class PaystationController.
      */
     @Test
-    public void testTicketTaken() {
+    public void test3TicketTaken() {
         System.out.println("ticketTaken");
-        PaystationController instance = null;
+
         instance.ticketTaken();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        verify(mockUI, never()).beep();
     }
     
 }
