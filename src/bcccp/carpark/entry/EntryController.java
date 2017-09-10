@@ -348,11 +348,5 @@ public class EntryController
 			break;
 			
 		}
-		
-                
-		
 	}
-
-	
-	
 }

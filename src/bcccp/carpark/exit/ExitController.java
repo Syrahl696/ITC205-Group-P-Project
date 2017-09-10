@@ -306,11 +306,5 @@ public class ExitController
 			break;
 			
 		}
-		
-		
-	}
-
-	
-	
+        }
 }
-

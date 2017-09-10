@@ -138,5 +138,4 @@ public class PaystationController
 			setState(STATE.IDLE);
 		}
 	}
-	
 }
