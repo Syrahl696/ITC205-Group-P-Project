@@ -28,7 +28,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-                                    /*
+
 					CarSensor eos = new CarSensor("Entry Outside Sensor", 20, 100);
 					Gate egate = new Gate(20, 320);
 					CarSensor eis = new CarSensor("Entry Inside Sensor", 20, 440);
@@ -76,19 +76,7 @@ public class Main {
 					xgate.setVisible(true);
 					xos.setVisible(true);
 					System.out.println("Test");
-                                        */
-                                        
-                                        IAdhocTicketDAO adhocTicketDAO = new AdhocTicketDAO(new AdhocTicketFactory());
-                                         ISeasonTicketDAO seasonTicketDAO = new SeasonTicketDAO(new UsageRecordFactory());
-                                        Carpark carpark = new Carpark("Bathurst Chase", 3, adhocTicketDAO, seasonTicketDAO);
-    
-    IAdhocTicket ticket1 = adhocTicketDAO.createTicket("Bathurst Chase");
-    Date newDate = new Date();
-    System.out.println(newDate.getTime());
-    ticket1.enter(newDate.getTime()-89400000);
-    
-    float num = carpark.calculateAdHocTicketCharge(ticket1.getEntryDateTime());
-    System.out.println(num);
+
 				} 
 				catch (Exception e) {
 					e.printStackTrace();
