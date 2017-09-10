@@ -1,0 +1,64 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bcccp.tickets.season;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+/**
+ *
+ * @author Smitz
+ */
+public class UsageRecordFactoryTest {
+    
+    public UsageRecordFactoryTest() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of make method, of class UsageRecordFactory.
+     */
+    @Test
+    public void testMake() {
+        System.out.println("make");
+        
+        String ticketId = "S1111";
+        long startDateTime = 1L;
+        
+        UsageRecordFactory instance = new UsageRecordFactory();
+        instance = new UsageRecordFactory();
+       
+        IUsageRecord expResult = new UsageRecord ("S1111", 1L);
+        
+        IUsageRecord result = instance.make(ticketId, startDateTime);
+        
+        //Asserts that the object is correct implementation
+        Assert.assertTrue(result instanceof IUsageRecord);
+        //assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+    
+}
