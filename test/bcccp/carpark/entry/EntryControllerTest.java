@@ -8,9 +8,6 @@ package bcccp.carpark.entry;
 import bcccp.carpark.*;
 import bcccp.tickets.adhoc.AdhocTicket;
 import org.junit.*;
-import static org.junit.Assert.*;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 import static org.mockito.Mockito.*;
 
@@ -188,7 +185,7 @@ public class EntryControllerTest {
         //Waiting, Full, Issued, and Validated all use the same switch case
         //to transition to Blocked if the inside sensor is tripped
         //and to Idle if the car leaves the outside sensor.
-        //So I'll only test this code (newt 3 lines) once, using the Waiting state.
+        //So I'll only test this code (next 3 lines) once, using the Waiting state.
         
         //From Waiting to Blocked and back
         carEventInstance.carEventDetected("InsideSensor", true);
@@ -222,6 +219,7 @@ public class EntryControllerTest {
         carEventInstance.carEventDetected("InsideSensor", true);
         
         //To Entered
+        when(mockOS.carIsDetected()).thenReturn(false); //SetState checks this directly...
         carEventInstance.carEventDetected("OutsideSensor", false);
         
         //Back to Entering and back to Entered
@@ -229,7 +227,6 @@ public class EntryControllerTest {
         carEventInstance.carEventDetected("OutsideSensor", false);
         
         //To Idle after having entered.
-        when(mockOS.carIsDetected()).thenReturn(false); //SetState checks this directly...
         carEventInstance.carEventDetected("InsideSensor", false);
         
         //should have entered Waiting 4 times (after 4 from previous tests)

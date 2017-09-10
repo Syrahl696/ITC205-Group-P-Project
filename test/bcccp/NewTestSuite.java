@@ -7,6 +7,7 @@ package bcccp;
 
 import bcccp.carpark.CarparkTest;
 import bcccp.carpark.entry.EntryControllerTest;
+import bcccp.carpark.exit.ExitControllerTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,7 +23,7 @@ import org.junit.runners.Suite;
  * @author Ryan Smith
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CarparkTest.class, EntryControllerTest.class})
+@Suite.SuiteClasses({CarparkTest.class, EntryControllerTest.class, ExitControllerTest.class})
 public class NewTestSuite {
 
     @BeforeClass
@@ -42,7 +43,7 @@ public class NewTestSuite {
     }
     
     public static void main(String[] args) {
-      Result result = JUnitCore.runClasses(CarparkTest.class, EntryControllerTest.class);
+      Result result = JUnitCore.runClasses(CarparkTest.class, EntryControllerTest.class, ExitControllerTest.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());
