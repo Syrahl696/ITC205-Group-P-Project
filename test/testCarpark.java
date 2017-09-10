@@ -7,6 +7,7 @@ import org.junit.*;
 
 import bcccp.carpark.Carpark;
 import bcccp.carpark.ICarpark;
+import bcccp.carpark.ICarparkObserver;
 import bcccp.tickets.adhoc.*;
 
 import bcccp.tickets.season.ISeasonTicketDAO;
@@ -40,13 +41,33 @@ public class testCarpark {
 	
 	@Test
 	public void testRecordAdhocTicketEntry() {
-		//test carpark size, as well as the notifyCarparkEvent
+		adhocDAO = mock(AdhocTicketDAO.class);
+		seasonDAO = mock(SeasonTicketDAO.class);
+		//0 car spaces, force carpark to be full
+		sut = new Carpark("test carpark", 0, adhocDAO, seasonDAO);
+		ICarparkObserver observer = mock(ICarparkObserver.class);
+		sut.register(observer);
+		
+		sut.recordAdhocTicketEntry();
+		
+		//verify that observer was acted upon
+		verify(observer, times(1)).notifyCarparkEvent();
 		
 	}
 	
 	@Test
 	public void testRecordAdhocTicketExit() {
-		//test carpark size, as well as the notifyCarparkEvent
+		adhocDAO = mock(AdhocTicketDAO.class);
+		seasonDAO = mock(SeasonTicketDAO.class);
+
+		sut = new Carpark("test carpark", 3, adhocDAO, seasonDAO);
+		ICarparkObserver observer = mock(ICarparkObserver.class);
+		sut.register(observer);
+		
+		sut.recordAdhocTicketExit();
+		
+		//verify that observer was acted upon
+		verify(observer, times(1)).notifyCarparkEvent();
 		
 	}
 	

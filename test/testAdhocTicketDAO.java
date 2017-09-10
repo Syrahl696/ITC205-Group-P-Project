@@ -46,11 +46,6 @@ public class testAdhocTicketDAO {
 		sut = null;
 	}
 	
-	@Test
-	public void testConstructor() {
-		
-
-	}
 	
 	@Test
 	public void testCreateTicket() {

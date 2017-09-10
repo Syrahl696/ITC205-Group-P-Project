@@ -42,6 +42,15 @@ public class testAdhocTicket {
 	
 	@Test
 	public void testConstructor() {
+		String carparkName = "test carpark";
+		int ticketNo = 1;
+		String barcode = "123456";
+		
+		sut = new AdhocTicket(carparkName, ticketNo, barcode);
+		
+		assertEquals(sut.getCarparkId(), carparkName);
+		assertEquals(sut.getTicketNo(), ticketNo);
+		assertEquals(sut.getBarcode(), barcode);
 		
 	}
 	
