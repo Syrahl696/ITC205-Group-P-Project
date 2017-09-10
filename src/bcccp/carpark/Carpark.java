@@ -125,12 +125,7 @@ public class Carpark implements ICarpark {
 	public void recordAdhocTicketEntry() {
             
             numberOfCarsParked++;
-            if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
-                for (int i = 0; i < observers.size(); i++){
-                    observers.get(i).notifyCarparkEvent();
-                }
 
-            }
 		
 	}
 
