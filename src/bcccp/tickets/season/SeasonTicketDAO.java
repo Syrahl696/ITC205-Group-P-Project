@@ -58,7 +58,7 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
  */
 	@Override
 	public int getNumberOfTickets() {
-		return seasonTickets.size();
+		return this.seasonTickets.size();
 	}
 
 
