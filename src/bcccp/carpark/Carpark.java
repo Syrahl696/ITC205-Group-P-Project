@@ -213,26 +213,26 @@ public class Carpark implements ICarpark {
                 boolean businessHours = false;
                 try {
                 //sets opening business hours at 7am
-                String time1 = "07:00:00";
-                Date openingTime = sdf.parse(time1);
-                Calendar calendar1 = Calendar.getInstance();
-                calendar1.setTime(openingTime);
+                String stringOpeningTime = "07:00:00";
+                Date openingTime = sdf.parse(stringOpeningTime);
+                Calendar calenderOpeningTime = Calendar.getInstance();
+                calenderOpeningTime.setTime(openingTime);
 
                 //sets closing business hours at 7pm
-                String time2 = "19:00:00";
-                Date closingTime = sdf.parse(time2);
-                Calendar calendar2 = Calendar.getInstance();
-                calendar2.setTime(closingTime);
+                String stringClosingTime = "19:00:00";
+                Date closingTime = sdf.parse(stringClosingTime);
+                Calendar calenderClosingTime = Calendar.getInstance();
+                calenderClosingTime.setTime(closingTime);
 
                 //sets current time
-                Calendar calendar3 = Calendar.getInstance();
-                String time3 = sdf.format(calendar3.getTime());
-                Date currentTime = sdf.parse(time3);
-                calendar3.setTime(currentTime);
+                Calendar calendarCurrentTime = Calendar.getInstance();
+                String stringCurrentTime = sdf.format(calendarCurrentTime.getTime());
+                Date currentTime = sdf.parse(stringCurrentTime);
+                calendarCurrentTime.setTime(currentTime);
 
                 //tests if current time is between opening time and closing time
-                Date current = calendar3.getTime();
-                if (current.after(calendar1.getTime()) && (current.before(calendar2.getTime()))) {
+                Date current = calendarCurrentTime.getTime();
+                if (current.after(calenderOpeningTime.getTime()) && (current.before(calenderClosingTime.getTime()))) {
                     businessHours = true;
                 }
             } catch (ParseException e) {
