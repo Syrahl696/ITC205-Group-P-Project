@@ -18,8 +18,8 @@ public class Carpark implements ICarpark {
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
-        final float BH_RATE = 4; //convert to cost per minute
-        final float OOH_RATE = 2;  //convert to cost per minute
+    final float BH_RATE = 4; 
+    final float OOH_RATE = 2;
 
         
 	
@@ -229,23 +229,35 @@ public class Carpark implements ICarpark {
             int endDay = endTime.getDay();
             
             float charge = 0;
-            Date curStartTime = startTime;
+            Date curStartTime = new Date(startTime.getTime()+1000);           
             
             while (curDay != endDay) {
+            	System.out.println(curDay + " , " + endDay);
                 System.out.println("current day does not equal end day");
-                Date curEndTime = startTime;//should set time to midnight
+                Date curEndTime = new Date(startTime.getTime());   //should set time to midnight
                 curEndTime.setHours(23);
                 curEndTime.setMinutes(59);
                 curEndTime.setSeconds(59);
+                
+                if (curStartTime.getHours() == 23 && curStartTime.getMinutes() == 59 && curStartTime.getSeconds() == 59) {
+                		curStartTime.setHours(0);
+                		curStartTime.setMinutes(0);
+                		curStartTime.setSeconds(0);
+                }
                 charge += calcDayCharge(curStartTime, curEndTime, curDay);
-                curStartTime = curEndTime;
+                curStartTime = new Date(curEndTime.getTime());
                 curDay++;
-                if (curDay == 8) {
-                    curDay = 1;
+                if (curDay == 7) {
+                    curDay = 0;
                 }
    
             }
             System.out.println("current day is now end day");
+            if (curStartTime.getHours() == 23 && curStartTime.getMinutes() == 59 && curStartTime.getSeconds() == 59) {
+        		curStartTime.setHours(0);
+        		curStartTime.setMinutes(0);
+        		curStartTime.setSeconds(0);
+        }
             charge += calcDayCharge(curStartTime, endTime, endDay);
             return charge;
         }
@@ -258,8 +270,8 @@ public class Carpark implements ICarpark {
                 
                 Time startTime = new Time(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
                 Time endTime = new Time(endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
-                Time startBH = new Time(9, 0, 0);
-                Time endBH = new Time(17, 0, 0);
+                Time startBH = new Time(7, 0, 0);
+                Time endBH = new Time(19, 0, 0);
                 System.out.println(startTime.getTime() + " " + startTime.getHours() + " " + startTime.getMinutes());
                 System.out.println(endTime.getTime() + " " + endTime.getHours() + " " + endTime.getMinutes());
                 
@@ -269,27 +281,32 @@ public class Carpark implements ICarpark {
                 
                 
                 if (endTime.before(startBH) || startTime.after(endBH)) {
-                    dayCharge = ((getMinutes(endTime) - getMinutes(startTime))/60) * OOH_RATE;
+                    dayCharge = (float) (((getMinutes(endTime) - getMinutes(startTime))/60.0) * OOH_RATE);
+                    dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
                     System.out.println("all OOH");
                 }
                 else if (startTime.after(startBH) && endTime.before(endBH)) {
-                    dayCharge = ((getMinutes(endTime) - getMinutes(startTime))/60) * BH_RATE;
+                    dayCharge = (float) (((getMinutes(endTime) - getMinutes(startTime))/60.0) * BH_RATE);
+                    dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
                     System.out.println("all BH");
                 }
                 else if (startTime.before(startBH) && endTime.before(endBH)) {
-                    dayCharge = ((getMinutes(startBH) - getMinutes(startTime))/60) * OOH_RATE;
-                    dayCharge += ((getMinutes(endTime) - getMinutes(startBH))/60) * BH_RATE;
+                    dayCharge = (float) (((getMinutes(startBH) - getMinutes(startTime))/60.0) * OOH_RATE);
+                    dayCharge += ((getMinutes(endTime) - getMinutes(startBH))/60.0) * BH_RATE;
+                    dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
                     System.out.println("OOH then BH");
                 }
-                else if (startTime.after(startBH) && startTime.before(endBH) && endTime.before(endBH)) {
-                    dayCharge = ((getMinutes(endBH) - getMinutes(startTime))/60) * BH_RATE;
-                    dayCharge += ((getMinutes(endTime) - getMinutes(endBH))/60) * OOH_RATE;
+                else if (startTime.after(startBH) && startTime.before(endBH) && endTime.after(endBH)) {
+                    dayCharge = (float) (((getMinutes(endBH) - getMinutes(startTime))/60.0) * BH_RATE);
+                    dayCharge += ((getMinutes(endTime) - getMinutes(endBH))/60.0) * OOH_RATE;
+                    dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
                     System.out.println("BH then OOH");
                 }
                 else if (startTime.before(startBH) && endTime.after(endBH)) {
-                    dayCharge = ((getMinutes(startBH) - getMinutes(startTime))/60) * OOH_RATE;
-                    dayCharge += ((getMinutes(endBH) - getMinutes(startBH))/60) * BH_RATE;
-                    dayCharge += ((getMinutes(endTime) - getMinutes(endBH))/60) * OOH_RATE;
+                    dayCharge = (float) (((getMinutes(startBH) - getMinutes(startTime))/60.0) * OOH_RATE);
+                    dayCharge += ((getMinutes(endBH) - getMinutes(startBH))/60.0) * BH_RATE;
+                    dayCharge += ((getMinutes(endTime) - getMinutes(endBH))/60.0) * OOH_RATE;
+                    dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
                     System.out.println("OOH - BH - OOH");
                 }
                 else {
@@ -297,8 +314,9 @@ public class Carpark implements ICarpark {
                 }
             }
             else {
-                dayCharge = ((getMinutes(endTime) - getMinutes(startTime))/60) * OOH_RATE;
-                System.out.println((getMinutes(endTime) - getMinutes(startTime))/60);
+                dayCharge = (float) (((getMinutes(endTime) - getMinutes(startTime))/60.0) * OOH_RATE);
+                dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
+                System.out.println(dayCharge);
                 System.out.println("All OOH");
             }
             System.out.println("dayCharge: " + dayCharge);
@@ -306,7 +324,7 @@ public class Carpark implements ICarpark {
         }
         
         public boolean isBusinessDay(int day) {
-            if (day > 0 && day < 6) {
+            if (day > 0 && day < 5) {
                 System.out.println("it is a business day: " + day);
                 return true;
             }
@@ -318,6 +336,9 @@ public class Carpark implements ICarpark {
             int minutes = 0;
             minutes += time.getMinutes();
             minutes += (time.getHours() * 60);
+            if (time.getSeconds() >= 30) {
+            	minutes++;
+            }
             
             return minutes;
         }
