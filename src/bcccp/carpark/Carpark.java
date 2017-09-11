@@ -18,8 +18,8 @@ public class Carpark implements ICarpark {
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
-    final float BH_RATE = 4; 
-    final float OOH_RATE = 2;
+        final float BH_RATE = 4; 
+        final float OOH_RATE = 2;
 
         
 	
@@ -88,7 +88,7 @@ public class Carpark implements ICarpark {
 
 
         //create and return new adhoc ticket
-	@Override
+    @Override
 	public IAdhocTicket issueAdhocTicket() {
 
             return adhocTicketDAO.createTicket(carparkId);
@@ -99,7 +99,6 @@ public class Carpark implements ICarpark {
      * @param ticket
      */
     @Override
-
 	public void recordAdhocTicketEntry() {
             
             //no longer adding ticket to currentList
@@ -109,15 +108,12 @@ public class Carpark implements ICarpark {
                 for (int i = 0; i < observers.size(); i++){
                     observers.get(i).notifyCarparkEvent();
                 }
-
-            }
-		
+            }	
 	}
 
 
 
-	@Override
-
+    @Override
 	public IAdhocTicket getAdhocTicket(String barcode) { 
             //return adhocTicket object, or null if not found
 		return adhocTicketDAO.findTicketByBarcode(barcode);
@@ -127,7 +123,7 @@ public class Carpark implements ICarpark {
 
 
         //decided on calculating per 15 minutes, with a charge of $4 an hour
-	@Override
+    @Override
 	public float calculateAdHocTicketCharge(long entryDateTime) {
             Date current = new Date();
             return calcCharge(entryDateTime, current.getTime());
@@ -135,7 +131,7 @@ public class Carpark implements ICarpark {
 
 
 
-	@Override
+    @Override
 	public void recordAdhocTicketExit() {
             numberOfCarsParked--;
             
@@ -144,7 +140,6 @@ public class Carpark implements ICarpark {
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
                 }
-	
 	}
 
 /**
@@ -152,7 +147,7 @@ public class Carpark implements ICarpark {
  * @see bcccp.tickets.season.ISeasonTicketDAO#registerTicket(seasonTicket) 
  * @param seasonTicket 
  */
-	@Override
+    @Override
 	public void registerSeasonTicket(ISeasonTicket seasonTicket) {
 		seasonTicketDAO.registerTicket(seasonTicket);
 		
@@ -164,7 +159,7 @@ public class Carpark implements ICarpark {
  * @see bcccp.tickets.season.ISeasonTicketDAO#deregisterTicket(seasonTicket) 
  * @param seasonTicket 
  */
-	@Override
+    @Override
 	public void deregisterSeasonTicket(ISeasonTicket seasonTicket) {
 		seasonTicketDAO.deregisterTicket(seasonTicket);
 		
@@ -177,7 +172,7 @@ public class Carpark implements ICarpark {
  * @param ticketId
  * @return boolean
  */
-	@Override
+    @Override
 	public boolean isSeasonTicketValid(String ticketId) {
 		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
                 return (seasonTicket != null) && (System.currentTimeMillis() >= seasonTicket.getEndValidPeriod());
@@ -190,7 +185,7 @@ public class Carpark implements ICarpark {
  * @param ticketId
  * @return boolean
  */
-	@Override
+    @Override
 	public boolean isSeasonTicketInUse(String ticketId) {
             ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
             return seasonTicket.getCurrentUsageRecord() != null;
@@ -201,7 +196,7 @@ public class Carpark implements ICarpark {
  * Records season ticket entry and increments number of cars parked by one
  * @param ticketId 
  */
-	@Override
+    @Override
 	public void recordSeasonTicketEntry(String ticketId) {
 		seasonTicketDAO.recordTicketEntry(ticketId);
                 
@@ -212,12 +207,12 @@ public class Carpark implements ICarpark {
  * Records season ticket exit and decrements number of cars parked by one
  * @param ticketId 
  */
-	@Override
+    @Override
 	public void recordSeasonTicketExit(String ticketId) {
 		seasonTicketDAO.recordTicketExit(ticketId);
 
 }
-        
+
         public float calcCharge(long start, long end) {
             Date startTime = new Date(start);//need to truncate to nearest minute
             Date endTime = new Date(end);//need to truncate
@@ -265,20 +260,19 @@ public class Carpark implements ICarpark {
             //have to solve the midnight problem, because business days have different charges
 
         //need a Date variable to represent the start of BH and end of BH. 
-            public float calcDayCharge(Date startDate, Date endDate, int day) {
+        public float calcDayCharge(Date startDate, Date endDate, int day) {
                 //set BH and OH  9 - 5pm
                 
-                Time startTime = new Time(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
-                Time endTime = new Time(endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
-                Time startBH = new Time(7, 0, 0);
-                Time endBH = new Time(19, 0, 0);
-                System.out.println(startTime.getTime() + " " + startTime.getHours() + " " + startTime.getMinutes());
-                System.out.println(endTime.getTime() + " " + endTime.getHours() + " " + endTime.getMinutes());
+            Time startTime = new Time(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
+            Time endTime = new Time(endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
+            Time startBH = new Time(7, 0, 0);
+            Time endBH = new Time(19, 0, 0);
+            System.out.println(startTime.getTime() + " " + startTime.getHours() + " " + startTime.getMinutes());
+            System.out.println(endTime.getTime() + " " + endTime.getHours() + " " + endTime.getMinutes());
                 
      
             float dayCharge = (float) 0.0;
-            if (isBusinessDay(day)) {
-                
+            if (isBusinessDay(day)) { 
                 
                 if (endTime.before(startBH) || startTime.after(endBH)) {
                     dayCharge = (float) (((getMinutes(endTime) - getMinutes(startTime))/60.0) * OOH_RATE);
@@ -338,8 +332,7 @@ public class Carpark implements ICarpark {
             minutes += (time.getHours() * 60);
             if (time.getSeconds() >= 30) {
             	minutes++;
-            }
-            
+            } 
             return minutes;
         }
         
