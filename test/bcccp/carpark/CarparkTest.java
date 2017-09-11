@@ -178,7 +178,7 @@ public class CarparkTest {
         
         SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        Carpark instance = new Carpark("Bathurst Chase", 3, dummyAdhocDAO, dummySeasonDAO);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
         SeasonTicket dummySeason = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
         
         instance.registerSeasonTicket(dummySeason);
@@ -195,7 +195,7 @@ public class CarparkTest {
         
         SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        Carpark instance = new Carpark("Bathurst Chase", 3, dummyAdhocDAO, dummySeasonDAO);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
         SeasonTicket dummySeason = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
         
         instance.registerSeasonTicket(dummySeason);
@@ -215,7 +215,7 @@ public class CarparkTest {
         UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
         SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        Carpark instance = new Carpark("Bathurst Chase", 3, dummyAdhocDAO, dummySeasonDAO);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
         SeasonTicket dummySeason = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
 
         instance.registerSeasonTicket(dummySeason);
@@ -240,7 +240,7 @@ public class CarparkTest {
         UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
         SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        Carpark instance = new Carpark("Bathurst Chase", 3, dummyAdhocDAO, dummySeasonDAO);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
         String ticketId = "S1111";
         
         instance.registerSeasonTicket(dummySeason);
@@ -266,7 +266,7 @@ public class CarparkTest {
         UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
         SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        Carpark instance = new Carpark("Bathurst Chase", 3, dummyAdhocDAO, dummySeasonDAO);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
         String ticketId = "S1111";
         
         instance.registerSeasonTicket(dummySeasonTicket);
@@ -287,7 +287,7 @@ public class CarparkTest {
         UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
         SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        Carpark instance = new Carpark("Bathurst Chase", 3, dummyAdhocDAO, dummySeasonDAO);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
         String ticketId = dummySeason.getId();
         
         instance.registerSeasonTicket(dummySeason);
