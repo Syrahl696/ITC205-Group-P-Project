@@ -12,6 +12,12 @@ import java.util.logging.Logger;
 public class ExitController 
 		implements ICarSensorResponder,
 		           IExitController {
+    
+        private enum STATE { IDLE, WAITING, PROCESSED, REJECTED, TAKEN, EXITING, EXITED, BLOCKED } 
+	
+	private STATE state;
+	private STATE prevState;
+	private String message;
 	
 	private IGate exitGate;
 	private ICarSensor insideSensor;
@@ -45,6 +51,9 @@ public class ExitController
                 this.ui = ui;
                 exitControllerRegister();  //Registers the entry controller as a responder to those sensors
                                            //and as the controller for that UI.
+                                           
+                prevState = STATE.IDLE;		
+		setState(STATE.IDLE);                           
 	}
         
         private void exitControllerRegister() {
@@ -52,6 +61,119 @@ public class ExitController
                 insideSensor.registerResponder(this);
                 ui.registerController(this);
 		
+	}
+        
+        private void log(String message) {
+		System.out.println("ExitController : " + message);
+	}
+        
+        private void setState(STATE newState) {
+		switch (newState) {
+		
+		case BLOCKED: 
+			log("setState: BLOCKED");
+			prevState = state;
+			state = STATE.BLOCKED;
+			message = "Blocked";
+			ui.display(message);
+			break;
+			
+		case IDLE: 
+			log("setState: IDLE");
+			if (prevState == STATE.EXITED) {
+				if (adhocTicket != null) {
+					adhocTicket.exit(exitTime);
+					carpark.recordAdhocTicketExit();
+                                        //Calls for the AdhocTicketDAO to return a reference to this ticket, updating the list of current tickets in the process.
+                                        carpark.getAdhocTicket(adhocTicket.getBarcode()); 
+					log(adhocTicket.toString() );
+				}
+				else if (seasonTicketId != null) {
+					carpark.recordSeasonTicketExit(seasonTicketId);
+				}
+			}
+			adhocTicket = null;
+			seasonTicketId = null;
+			
+			message = "Idle";
+			state = STATE.IDLE;
+			prevState = state;
+			ui.display(message);
+			if (insideSensor.carIsDetected()) {
+				setState(STATE.WAITING);
+			}
+			if (exitGate.isRaised()) {
+				exitGate.lower();
+			}
+			exitTime = 0;
+			break;
+			
+		case WAITING: 
+			log("setState: WAITING");
+			message = "Insert Ticket";
+			state = STATE.WAITING;
+			prevState = state;
+			ui.display(message);
+			if (!insideSensor.carIsDetected()) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		case PROCESSED: 
+			log("setState: PROCESSED");
+			message = "Take Processed Ticket";
+			state = STATE.PROCESSED;
+			prevState = state;
+			ui.display(message);
+			if (!insideSensor.carIsDetected()) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		case REJECTED: 
+			log("setState: REJECTED");
+			message = "Take Rejected Ticket";
+			state = STATE.REJECTED;
+			prevState = state;
+			ui.display(message);
+			if (!insideSensor.carIsDetected()) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		case TAKEN: 
+			log("setState: TAKEN");
+			message = "Ticket Taken";
+			state = STATE.TAKEN;
+			prevState = state;
+			ui.display(message);
+			break;
+			
+		case EXITING: 
+			log("setState: EXITING");
+			message = "Exiting";
+			state = STATE.EXITING;
+			prevState = state;
+			ui.display(message);
+			break;
+			
+		case EXITED: 
+			log("setState: EXITED");
+			message = "Exited";
+			state = STATE.EXITED;
+			prevState = state;
+			ui.display(message);
+			break;
+			
+		default: 
+			break;
+			
+		}
+				
+	}
+        
+        private boolean isAdhocTicket(String barcode) {
+		return barcode.substring(0,1).equals("A");
 	}
 
     /**
@@ -61,31 +183,35 @@ public class ExitController
      */
     @Override
 	public void ticketInserted(String ticketStr) {          
-        if (insideSensor.carIsDetected()){    
-            if (carpark.getAdhocTicket(ticketStr) != null){
-                adhocTicket = carpark.getAdhocTicket(ticketStr);
-                if (adhocTicket.isPaid()){
-                    flagValid = true;
-                    ui.display("Take Ticket");
-                }
-                else {
-                    flagValid = false;
-                    
-                    ui.display("Remove Unpaid Ticket");
-                    }
-            }
-            else if (carpark.isSeasonTicketValid(ticketStr)){
-                if (carpark.isSeasonTicketInUse(ticketStr)){                      
-                    flagValid = true;
-                    ui.display("Take Ticket");
-                }
-            }
-            else{
-                flagValid = false;
-                
-                ui.display("Remove Invalid Ticket");
-            }
-        }
+        if (state == STATE.WAITING) {
+			if (isAdhocTicket(ticketStr)) {
+				adhocTicket = carpark.getAdhocTicket(ticketStr);
+				exitTime = System.currentTimeMillis();
+				if (adhocTicket != null && adhocTicket.isPaid()) {
+					setState(STATE.PROCESSED);
+				}
+				else {
+					ui.beep();
+					setState(STATE.REJECTED);						
+				}
+			}
+			else if (carpark.isSeasonTicketValid(ticketStr) &&
+					 carpark.isSeasonTicketInUse(ticketStr)){					
+				seasonTicketId = ticketStr;
+				setState(STATE.PROCESSED);
+			}
+			else {
+				ui.beep();
+				setState(STATE.REJECTED);						
+			}
+		}
+		else {
+			ui.beep();
+			ui.discardTicket();
+			log("ticketInserted: called while in incorrect state");
+			setState(STATE.REJECTED);						
+		}
+		
 		
 	}
 
@@ -94,13 +220,18 @@ public class ExitController
      */
     @Override
 	public void ticketTaken() {
-            if (flagValid){
-		exitGate.raise();
-                ui.display("Thank You");
-                flagValid = false;
-            } else {
-                ui.display("Insert Ticket");
-            }
+            if (state == STATE.PROCESSED)  {
+			exitGate.raise();
+			setState(STATE.TAKEN);
+		}
+		else if (state == STATE.REJECTED) {
+			setState(STATE.WAITING);
+		}
+		else {
+			ui.beep();
+			log("ticketTaken: called while in incorrect state");
+		}
+		
 		
 	}
 
@@ -112,36 +243,68 @@ public class ExitController
      */
     @Override
 	public void carEventDetected(String detectorId, boolean detected) {
-            if ((detectorId == null ? insideSensor.getId() == null : detectorId.equals(insideSensor.getId())) & detected){ //checks to see if the sensor is the outside sensor and if a car is detected
-                    ui.display("Insert Ticket");
-                }
-                if ((detectorId == null ? insideSensor.getId() == null : detectorId.equals(insideSensor.getId())) & !detected){ //checks to see if the sensor is the outside sensor and if a car is not detected
-                    ui.display("");
-                }
-		if ((detectorId == null ? outsideSensor.getId() == null : detectorId.equals(outsideSensor.getId())) & detected){ // car entering
-                    flagLeaving = true;
-                }
-                if ((detectorId == null ? outsideSensor.getId() == null : detectorId.equals(outsideSensor.getId())) & !detected){ //checks to see if the sensor is the outside sensor and if a car is not detected
-                    if (flagLeaving){
-                        flagLeaving = false;
-                        exitGate.lower();
-                        if (adhocTicket != null){
-                            adhocTicket.exit(exitTime);
-                            carpark.recordAdhocTicketExit(adhocTicket); //see comment on this method in Carpark, that method should probably need the ticket to be passed to it but it currently doesn't
-                        }   
-                            
-                        }
-                        else if (seasonTicketId != null){
-                            carpark.recordSeasonTicketExit(seasonTicketId); //see comment on this method in Carpark
-                        }
-                        
-                        else{
-                            //Meh.
-                        }
+            
+		log("carEventDetected: " + detectorId + ", car Detected: " + detected );
 		
-	}
-
-	
-	
-}
+		switch (state) {
+		
+		case BLOCKED: 
+			if (detectorId.equals(outsideSensor.getId()) && !detected) {
+				setState(prevState);
+			}
+			break;
+			
+		case IDLE: 
+			log("eventDetected: IDLE");
+			if (detectorId.equals(insideSensor.getId()) && detected) {
+				log("eventDetected: setting state to WAITING");
+				setState(STATE.WAITING);
+			}
+			else if (detectorId.equals(outsideSensor.getId()) && detected) {
+				setState(STATE.BLOCKED);
+			}
+			break;
+			
+		case WAITING: 
+		case PROCESSED: 
+			if (detectorId.equals(insideSensor.getId()) && !detected) {
+				setState(STATE.IDLE);
+			}
+			else if (detectorId.equals(outsideSensor.getId()) && detected) {
+				setState(STATE.BLOCKED);
+			}
+			break;
+			
+		case TAKEN: 
+			if (detectorId.equals(insideSensor.getId()) && !detected) {
+				setState(STATE.IDLE);
+			}
+			else if (detectorId.equals(outsideSensor.getId()) && detected) {
+				setState(STATE.EXITING);
+			}
+			break;
+			
+		case EXITING: 
+			if (detectorId.equals(insideSensor.getId()) && !detected) {
+				setState(STATE.EXITED);
+			}
+			else if (detectorId.equals(outsideSensor.getId()) && !detected) {
+				setState(STATE.TAKEN);
+			}
+			break;
+			
+		case EXITED: 
+			if (detectorId.equals(insideSensor.getId()) && detected) {
+				setState(STATE.EXITING);
+			}
+			else if (detectorId.equals(outsideSensor.getId()) && !detected) {
+				setState(STATE.IDLE);
+			}
+			break;
+			
+		default: 
+			break;
+			
+		}
+        }
 }
