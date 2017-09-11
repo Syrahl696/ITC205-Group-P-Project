@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -35,7 +36,7 @@ public class testAdhocTicketDAO {
 		ticketFactory = new AdhocTicketFactory();
 		
 		sut = new AdhocTicketDAO(ticketFactory);
-		currentAdhocTickets = new HashMap<>();
+		
 		
 		
 		
@@ -82,15 +83,16 @@ public class testAdhocTicketDAO {
 	public void testGetCurrentTickets() {
 		ticketFactory = new AdhocTicketFactory();
 		sut = new AdhocTicketDAO(ticketFactory);
+		currentAdhocTickets = new HashMap<>();
 		
 		ticket = sut.createTicket("test carpark");
 		ticket2 = sut.createTicket("test carpark");
 		currentAdhocTickets.put(ticket.getBarcode(), ticket);
 		currentAdhocTickets.put(ticket2.getBarcode(), ticket2);
 		
-		ArrayList<IAdhocTicket> retrievedTickets = (ArrayList<IAdhocTicket>) sut.getCurrentTickets();
+		List<IAdhocTicket> retrievedTickets = (List<IAdhocTicket>) sut.getCurrentTickets();
 		
-		ArrayList<IAdhocTicket> adhocTickets = (ArrayList<IAdhocTicket>) Collections.unmodifiableList(new ArrayList<IAdhocTicket>(currentAdhocTickets.values()));
+		List<IAdhocTicket> adhocTickets = (List<IAdhocTicket>) Collections.unmodifiableList(new ArrayList<IAdhocTicket>(currentAdhocTickets.values()));
 		
 		assertEquals(adhocTickets, retrievedTickets);
 		
