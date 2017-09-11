@@ -5,6 +5,10 @@ import bcccp.tickets.adhoc.IAdhocTicket;
 
 public class PaystationController 
 		implements IPaystationController {
+    
+        private enum STATE { IDLE, WAITING, REJECTED, PAID } 
+	
+	private STATE state_;
 	
 	private IPaystationUI ui;	
 	private ICarpark carpark;
@@ -22,11 +26,48 @@ public class PaystationController
                 this.ui = ui;
                 entryControllerRegister(); //Registers the entry controller as a responder to those sensors, 
                                            //as the controller for that UI, and as an observer to the carpark object.
+                setState(STATE.IDLE);	
                 
 	}
         private void entryControllerRegister() {
 
                 ui.registerController(this);
+	}
+        
+        private void log(String message) {
+		System.out.println("PaystationController : " + message);
+	}
+        
+        private void setState(STATE newState) {
+		switch (newState) {
+		
+		case IDLE: 
+			state_ = STATE.IDLE;
+			ui.display("Idle");
+			
+			log("setState: IDLE");
+			break;
+			
+		case WAITING: 
+			state_ = STATE.WAITING;
+			log("setState: WAITING");
+			break;
+			
+		case REJECTED: 
+			state_ = STATE.WAITING;
+			log("setState: WAITING");
+			break;
+			
+		case PAID: 
+			state_ = STATE.PAID;
+			ui.display("Paid");
+			log("setState: PAID");
+			break;			
+			
+		default: 
+			break;
+			
+		}			
 	}
 
     /**
@@ -38,23 +79,24 @@ public class PaystationController
      */
     @Override
 	public void ticketInserted(String barcode) {
-		if (carpark.getAdhocTicket(barcode) != null){
-                    adhocTicket = carpark.getAdhocTicket(barcode);
-                
-                    if (adhocTicket.isPaid()){
-                        ui.display("Already Paid");
-                        
-                    }
-                    else {
-                    
-                    //TODO Verify ticket based on date and time in barcode
-                    charge = carpark.calculateAdHocTicketCharge(adhocTicket.getEntryDateTime());
-                    ui.display("Please pay: $" + String.valueOf(charge));
-                    }
-                } 
-                else{
-                    ui.display("Invalid Ticket");
-                }
+		if (state_ == STATE.IDLE) {
+			adhocTicket = carpark.getAdhocTicket(barcode);
+			if (adhocTicket != null) {
+				charge = carpark.calculateAdHocTicketCharge(adhocTicket.getEntryDateTime());
+				ui.display("Pay " + String.format("%.2f", charge));
+				setState(STATE.WAITING);
+			}
+			else {
+				ui.beep();
+				ui.display("Take Rejected Ticket");
+				setState(STATE.REJECTED);
+				log("ticketInserted: ticket is not current");				
+			}
+		}
+		else {
+			ui.beep();
+			log("ticketInserted: called while in incorrect state");				
+		}
         } 
 
     /**
@@ -62,11 +104,25 @@ public class PaystationController
      */
     @Override
 	public void ticketPaid() {
-		adhocTicket.pay(System.currentTimeMillis(), charge); //TODO: Sort out date format
-                ui.printTicket(carpark.getName(), adhocTicket.getTicketNo(),
-                        adhocTicket.getEntryDateTime(), adhocTicket.getPaidDateTime(),
-                        charge, adhocTicket.getBarcode());
-		ui.display("Take Ticket"/*"Take Ticket & Leave in <15 min"*/); //full version won't fit
+		if (state_ == STATE.WAITING) {
+			long payTime = System.currentTimeMillis();
+			
+			adhocTicket.pay(payTime, charge);
+			
+			String carparkId = adhocTicket.getCarparkId();
+			int ticketNo = adhocTicket.getTicketNo();
+			long entryTime = adhocTicket.getEntryDateTime();
+			long paidTime = adhocTicket.getPaidDateTime();
+			float charge = adhocTicket.getCharge();
+			String barcode = adhocTicket.getBarcode();
+			
+			ui.printTicket(carparkId, ticketNo, entryTime, paidTime, charge, barcode);
+			setState(STATE.PAID);
+		}
+		else {
+			ui.beep();
+			log("ticketPaid: called while in incorrect state");				
+		}
 	}
 
     /**
@@ -74,10 +130,12 @@ public class PaystationController
      */
     @Override
 	public void ticketTaken() {
-		ui.display("");
-		
+		if (state_ == STATE.IDLE) {
+			ui.beep();
+			log("ticketTaken: called while in incorrect state");				
+		}
+		else {
+			setState(STATE.IDLE);
+		}
 	}
-
-	
-	
 }

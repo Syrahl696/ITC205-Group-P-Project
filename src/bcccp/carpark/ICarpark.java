@@ -11,10 +11,10 @@ public interface ICarpark {
 	public boolean isFull();
 	
 	public IAdhocTicket issueAdhocTicket();
-	public void recordAdhocTicketEntry(IAdhocTicket ticket);
+	public void recordAdhocTicketEntry();
 	public IAdhocTicket getAdhocTicket(String barcode);
 	public float calculateAdHocTicketCharge(long entryDateTime);
-	public void recordAdhocTicketExit(IAdhocTicket ticket);
+	public void recordAdhocTicketExit();
 	
 	public void registerSeasonTicket(ISeasonTicket seasonTicket);
 	public void deregisterSeasonTicket(ISeasonTicket seasonTicket);
