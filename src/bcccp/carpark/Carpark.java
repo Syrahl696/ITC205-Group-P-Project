@@ -17,6 +17,7 @@ public class Carpark implements ICarpark {
 	private List<ICarparkObserver> observers;
 	private String carparkId;
 	private int capacity;
+        private int seasonCapacity;
 	private int numberOfCarsParked;
 	private IAdhocTicketDAO adhocTicketDAO;
 	private ISeasonTicketDAO seasonTicketDAO;
@@ -28,18 +29,39 @@ public class Carpark implements ICarpark {
      *
      * @param name
      * @param capacity
+     * @param seasonCapacity
      * @param adhocTicketDAO
      * @param seasonTicketDAO
      */
-    public Carpark(String name, int capacity, 
+    public Carpark(String name, int capacity, int seasonCapacity,
 			IAdhocTicketDAO adhocTicketDAO, 
-			ISeasonTicketDAO seasonTicketDAO) {
-            this.carparkId = name;
-            this.capacity = capacity;
+			ISeasonTicketDAO seasonTicketDAO) throws RuntimeException {
+            //Sets the name of the carpark, throws exception at null value
+            if (name != null){            
+                this.carparkId = name;
+            } else { throw new RuntimeException("Invalid carpark name");}
+            
+            //Sets the number of total available spaces in the carpark (inlcuding season spaces), throws exception at less than 0 value
+            //Sets the season ticket capacity to between 0 and 10 percent of total capacity, throws runtimeException outside those values.
+            //Special case implemented for 0 Season Ticket capacity, allowing construction while preventing division by 0.
+            if (capacity > 0 && seasonCapacity > 0 && capacity / seasonCapacity * 10 >= 1 || 
+                    capacity > 0 && seasonCapacity == 0){
+                this.capacity = capacity;
+                this.seasonCapacity = seasonCapacity;
+            } else { throw new RuntimeException("Invalid number of parking spaces");}
+            
+            //Sets the carpark to be empty
             this.numberOfCarsParked = 0;
+            
+            //Assigns a SeasonTicketDAO to this carpark
             this.seasonTicketDAO = seasonTicketDAO;
+            
+            //Assigns an AdhocTicketDAO to this carpark
             this.adhocTicketDAO = adhocTicketDAO;
+            
+            //Initialises an arraylist of observers
             this.observers = new ArrayList<>();
+        
 	}
 
     /**
@@ -65,6 +87,10 @@ public class Carpark implements ICarpark {
 		}
 		
 	}
+        
+        private void log(String message) {
+		System.out.println("Carpark : " + message);
+	}
 
     /**
      *Returns the name of this carpark.
@@ -81,8 +107,9 @@ public class Carpark implements ICarpark {
      */
     @Override
 	public boolean isFull() {
-		// TODO Include logic to reserve spots for Season Ticket holders
-		return (numberOfCarsParked >= capacity);
+            //Returns true if the number of number of adhoc ticket holders and 
+            //the number of registered season tickets meets or exceeds the carpark's capacity.
+            return (numberOfCarsParked + seasonTicketDAO.getNumberOfTickets() >= capacity);
         }
 
 
@@ -98,19 +125,11 @@ public class Carpark implements ICarpark {
      * Also notifies all observers, allowing them to take an action if the carpark is full.
      * @param ticket
      */
-    @Override
-
-	public void recordAdhocTicketEntry(IAdhocTicket ticket) {
+        @Override
+	public void recordAdhocTicketEntry() {
             
-            adhocTicketDAO.addToCurrentList(ticket);
             numberOfCarsParked++;
-            if (this.isFull()){ //If the carpark is full, notify all observers. Entry pillars will then display carpark full.
 
-                for (int i = 0; i < observers.size(); i++){
-                    observers.get(i).notifyCarparkEvent();
-                }
-
-            }
 		
 	}
 
@@ -139,18 +158,16 @@ public class Carpark implements ICarpark {
 
 
 	@Override
-
-	public void recordAdhocTicketExit(IAdhocTicket ticket) {
+	public void recordAdhocTicketExit() {
             numberOfCarsParked--;
-            
-            adhocTicketDAO.removeFromCurrentList(ticket);
-
                 for (int i = 0; i < observers.size(); i++){
-                        observers.get(i).notifyCarparkEvent();
+                    observers.get(i).notifyCarparkEvent();
                 }
 
 		
 	}
+
+
 
 
 
