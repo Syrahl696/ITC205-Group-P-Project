@@ -5,13 +5,9 @@ import static org.mockito.Mockito.*;
 
 import org.junit.*;
 
-import bcccp.carpark.Carpark;
-import bcccp.carpark.ICarpark;
+
 import bcccp.tickets.adhoc.*;
 
-import bcccp.tickets.season.ISeasonTicketDAO;
-
-import java.text.SimpleDateFormat;
 
 public class testAdhocTicketFactory {
 	

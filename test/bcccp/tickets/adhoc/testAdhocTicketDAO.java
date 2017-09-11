@@ -11,7 +11,6 @@ import bcccp.tickets.adhoc.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,10 +59,6 @@ public class testAdhocTicketDAO {
 		assertEquals(ticket.getCarparkId(), ticket2.getCarparkId());
 		assertEquals(ticket.getBarcode(), ticket2.getBarcode());
 		assertEquals(ticket.getTicketNo(), ticket2.getTicketNo());
-		//same as the factory issue
-		
-		//should retunrn a ticket created by the factory. can mock that bit. 
-		//has two parameters, not sure how to test that
 
 	}
 	

@@ -6,14 +6,11 @@ import static org.mockito.Mockito.*;
 import org.junit.*;
 
 import bcccp.carpark.Carpark;
-import bcccp.carpark.ICarpark;
 import bcccp.carpark.ICarparkObserver;
 import bcccp.tickets.adhoc.*;
 
-import bcccp.tickets.season.ISeasonTicketDAO;
 import bcccp.tickets.season.SeasonTicketDAO;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 	
@@ -93,13 +90,13 @@ public class testCarpark {
 		seasonDAO = mock(SeasonTicketDAO.class);
 		sut = new Carpark("test carpark", 3, adhocDAO, seasonDAO);
 		float charge = (float) 0.0;
-		float expectedCharge = (float) 0.0;
+
 		
 		Date start = new Date();
-		charge = sut.calculateAdHocTicketCharge(start.getTime()-900000);
+		charge = sut.calculateAdhocTicketCharge(start.getTime()-900000);
 		
 		assertTrue(charge != 0);
-		
+	
 		
 	}
 	
