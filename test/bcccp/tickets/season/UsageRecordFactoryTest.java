@@ -8,13 +8,14 @@ package bcccp.tickets.season;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  *
- * @author Smitz
+ * @author Corey Schmetzer
  */
 public class UsageRecordFactoryTest {
     
@@ -56,7 +57,8 @@ public class UsageRecordFactoryTest {
         
         //Asserts that the object is correct implementation
         Assert.assertTrue(result instanceof IUsageRecord);
-        //assertEquals(expResult, result);
+        assertEquals(expResult.getSeasonTicketId(), result.getSeasonTicketId());
+        assertEquals(expResult.getStartTime(), result.getStartTime());
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
