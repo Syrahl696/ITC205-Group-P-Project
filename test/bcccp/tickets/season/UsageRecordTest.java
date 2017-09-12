@@ -15,7 +15,7 @@ import org.junit.Ignore;
 
 /**
  *
- * @author Smitz
+ * @author Corey Schmetzer
  */
 public class UsageRecordTest {
 
@@ -50,6 +50,8 @@ public class UsageRecordTest {
         
 
         instance.finalise(endDateTime);
+        
+        assertEquals(instance.getEndTime(), endDateTime);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
