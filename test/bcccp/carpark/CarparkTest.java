@@ -197,83 +197,157 @@ public class CarparkTest {
     /**
      * Test of registerSeasonTicket method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testRegisterSeasonTicket() {
         System.out.println("registerSeasonTicket");
-        ISeasonTicket seasonTicket = null;
-        Carpark instance = null;
+        
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
+        ISeasonTicket seasonTicket = mock(ISeasonTicket.class);
+        
+        
+        when(seasonTicket.getCarparkId()).thenReturn("Bathurst Chase");
         instance.registerSeasonTicket(seasonTicket);
+        
+        
+        verify(seasonTicket, times(1)).getCarparkId();
+        verify(dummySeasonDAO, times(1)).registerTicket(seasonTicket);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of deregisterSeasonTicket method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testDeregisterSeasonTicket() {
         System.out.println("deregisterSeasonTicket");
-        ISeasonTicket seasonTicket = null;
-        Carpark instance = null;
+         
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
+        ISeasonTicket seasonTicket = mock(ISeasonTicket.class);
+        
+        when(seasonTicket.getCarparkId()).thenReturn("Bathurst Chase");
+        instance.registerSeasonTicket(seasonTicket);
+        
         instance.deregisterSeasonTicket(seasonTicket);
+        
+        verify(dummySeasonDAO, times(1)).deregisterTicket(seasonTicket);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of isSeasonTicketValid method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testIsSeasonTicketValid() {
-        System.out.println("isSeasonTicketValid");
-        String ticketId = "";
-        Carpark instance = null;
-        boolean expResult = false;
+        System.out.println("isSeasonTicketValid");       
+        
+        UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
+        SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
+        SeasonTicket dummySeason = mock(SeasonTicket.class);
+
+        when(dummySeason.getCarparkId()).thenReturn("Bathurst Chase");
+        when(dummySeason.getEndValidPeriod()).thenReturn(999999999999999L);
+        instance.registerSeasonTicket(dummySeason);
+        
+        String ticketId = dummySeason.getId();
+        boolean expResult = true;
         boolean result = instance.isSeasonTicketValid(ticketId);
+        
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of isSeasonTicketInUse method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testIsSeasonTicketInUse() {
         System.out.println("isSeasonTicketInUse");
-        String ticketId = "";
-        Carpark instance = null;
-        boolean expResult = false;
+        
+        SeasonTicket dummySeason = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
+        UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
+        SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
+        String ticketId = "S1111";
+        
+
+        instance.registerSeasonTicket(dummySeason);
+        
+        instance.recordSeasonTicketEntry(ticketId);
+
+        boolean expResult = true;
         boolean result = instance.isSeasonTicketInUse(ticketId);
+        
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of recordSeasonTicketEntry method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testRecordSeasonTicketEntry() {
         System.out.println("recordSeasonTicketEntry");
-        String ticketId = "";
-        Carpark instance = null;
-        instance.recordSeasonTicketEntry(ticketId);
+        
+        SeasonTicket dummySeason = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
+        UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
+        SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
+        SeasonTicketDAO spySeasonDAO = spy(dummySeasonDAO);
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, spySeasonDAO);
+        Carpark spyInstance = spy(instance);
+        String ticketId = dummySeason.getId();
+        
+        
+        spyInstance.registerSeasonTicket(dummySeason);
+        
+        spyInstance.recordSeasonTicketEntry(ticketId);
+        //verify(spySeasonDAO, times(1)).findTicketById(ticketId);
+        verify(spyInstance, times(1)).isSeasonTicketInUse(ticketId); 
+        verify(spySeasonDAO, times(1)).recordTicketEntry(ticketId);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of recordSeasonTicketExit method, of class Carpark.
      */
-    @Ignore
-    public void testRecordSeasonTicketExit() {
+    @Test
+    public void testRecordSeasonTicketExit() throws InterruptedException {
         System.out.println("recordSeasonTicketExit");
-        String ticketId = "";
-        Carpark instance = null;
-        instance.recordSeasonTicketExit(ticketId);
+        
+        SeasonTicket dummySeason = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
+        UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
+        SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
+        SeasonTicketDAO spySeasonDAO = spy(dummySeasonDAO);
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, spySeasonDAO);
+        Carpark spyInstance = spy(instance);
+        String ticketId = dummySeason.getId();
+        
+        spyInstance.registerSeasonTicket(dummySeason);
+        
+        spyInstance.recordSeasonTicketEntry(ticketId);
+        
+        //Implemented second delay to avoid exitTime equalling entryTime
+        TimeUnit.SECONDS.sleep(1);
+        
+        spyInstance.recordSeasonTicketExit(ticketId);
+        verify(spyInstance, times(2)).isSeasonTicketInUse(ticketId); 
+        verify(spySeasonDAO, times(1)).recordTicketExit(ticketId);
+        
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
     
 }
