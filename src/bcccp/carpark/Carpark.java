@@ -122,10 +122,10 @@ public class Carpark implements ICarpark {
 
 
 
-        //decided on calculating per 15 minutes, with a charge of $4 an hour
     @Override
 	public float calculateAdHocTicketCharge(long entryDateTime) {
             Date current = new Date();
+            //calcCharge from given entryDateTime and current as payingTime
             return calcCharge(entryDateTime, current.getTime());
 	}
 
@@ -134,8 +134,6 @@ public class Carpark implements ICarpark {
     @Override
 	public void recordAdhocTicketExit() {
             numberOfCarsParked--;
-            
-            //removal of ticket now done from exit controller
 
                 for (int i = 0; i < observers.size(); i++){
                         observers.get(i).notifyCarparkEvent();
@@ -214,118 +212,123 @@ public class Carpark implements ICarpark {
 }
 
         public float calcCharge(long start, long end) {
-            Date startTime = new Date(start);//need to truncate to nearest minute
-            Date endTime = new Date(end);//need to truncate
-            System.out.println(startTime.getTime());
-            System.out.println(endTime.getTime());
+            //create Date objects with given long values
+            Date startTime = new Date(start);
+            Date endTime = new Date(end);
             
-            
+            //get day Integers from start/end times
             int curDay = startTime.getDay();
             int endDay = endTime.getDay();
             
+            //initialize float = 0, currentStartTime = startTime
             float charge = 0;
-            Date curStartTime = new Date(startTime.getTime()+1000);           
+            Date curStartTime = new Date(startTime.getTime());           
             
+            //run while look as long as currentDay does not = endDay
             while (curDay != endDay) {
-            	System.out.println(curDay + " , " + endDay);
-                System.out.println("current day does not equal end day");
-                Date curEndTime = new Date(startTime.getTime());   //should set time to midnight
+                Date curEndTime = new Date(startTime.getTime());   //set endDay time to midnight. 
                 curEndTime.setHours(23);
                 curEndTime.setMinutes(59);
                 curEndTime.setSeconds(59);
                 
+                //if the start time is midnight, then have to set all values to 0. 
                 if (curStartTime.getHours() == 23 && curStartTime.getMinutes() == 59 && curStartTime.getSeconds() == 59) {
                 		curStartTime.setHours(0);
                 		curStartTime.setMinutes(0);
                 		curStartTime.setSeconds(0);
                 }
+                //call calcDayCharge method, passing in current values. 
                 charge += calcDayCharge(curStartTime, curEndTime, curDay);
+                //reset currentStartTime to endTime
                 curStartTime = new Date(curEndTime.getTime());
+                //increment day, check if passed into new week
                 curDay++;
                 if (curDay == 7) {
                     curDay = 0;
                 }
    
             }
-            System.out.println("current day is now end day");
+            //if current day is the same as end day, reset midnight to 0 values. 
             if (curStartTime.getHours() == 23 && curStartTime.getMinutes() == 59 && curStartTime.getSeconds() == 59) {
         		curStartTime.setHours(0);
         		curStartTime.setMinutes(0);
         		curStartTime.setSeconds(0);
         }
+            //call calc method. 
             charge += calcDayCharge(curStartTime, endTime, endDay);
+            //return accumulated charge
             return charge;
         }
-            
-            //have to solve the midnight problem, because business days have different charges
 
-        //need a Date variable to represent the start of BH and end of BH. 
+        //calcDayCharge checks for BH and OOH and determines correct charge
         public float calcDayCharge(Date startDate, Date endDate, int day) {
-                //set BH and OH  9 - 5pm
-                
+            
+            //create time objets from given Date objects
             Time startTime = new Time(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
             Time endTime = new Time(endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
+            //create Business Hours Time Objects
             Time startBH = new Time(7, 0, 0);
             Time endBH = new Time(19, 0, 0);
-            System.out.println(startTime.getTime() + " " + startTime.getHours() + " " + startTime.getMinutes());
-            System.out.println(endTime.getTime() + " " + endTime.getHours() + " " + endTime.getMinutes());
-                
-     
+
+            //initialize dayCharge
             float dayCharge = (float) 0.0;
+            //check if it is business day
             if (isBusinessDay(day)) { 
                 
+                //if isBusiness Day and all Out of Hours
                 if (endTime.before(startBH) || startTime.after(endBH)) {
                     dayCharge = (float) (((getMinutes(endTime) - getMinutes(startTime))/60.0) * OOH_RATE);
                     dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
-                    System.out.println("all OOH");
                 }
+                //if isBusiness Day and all in Business Hours
                 else if (startTime.after(startBH) && endTime.before(endBH)) {
                     dayCharge = (float) (((getMinutes(endTime) - getMinutes(startTime))/60.0) * BH_RATE);
                     dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
-                    System.out.println("all BH");
                 }
+                //if isBusiness Day and Out of Hours start / Business Hours end
                 else if (startTime.before(startBH) && endTime.before(endBH)) {
                     dayCharge = (float) (((getMinutes(startBH) - getMinutes(startTime))/60.0) * OOH_RATE);
                     dayCharge += ((getMinutes(endTime) - getMinutes(startBH))/60.0) * BH_RATE;
                     dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
-                    System.out.println("OOH then BH");
                 }
+                //if isBusinessDay and Business Hours start / Out of Hours end
                 else if (startTime.after(startBH) && startTime.before(endBH) && endTime.after(endBH)) {
                     dayCharge = (float) (((getMinutes(endBH) - getMinutes(startTime))/60.0) * BH_RATE);
                     dayCharge += ((getMinutes(endTime) - getMinutes(endBH))/60.0) * OOH_RATE;
                     dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
-                    System.out.println("BH then OOH");
                 }
+                //if isBusiness Day Out of Hours start / through Business Hours / Out of Hours end
                 else if (startTime.before(startBH) && endTime.after(endBH)) {
                     dayCharge = (float) (((getMinutes(startBH) - getMinutes(startTime))/60.0) * OOH_RATE);
                     dayCharge += ((getMinutes(endBH) - getMinutes(startBH))/60.0) * BH_RATE;
                     dayCharge += ((getMinutes(endTime) - getMinutes(endBH))/60.0) * OOH_RATE;
                     dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
-                    System.out.println("OOH - BH - OOH");
                 }
                 else {
+                    //else time error
                     System.out.println("time error");
                 }
             }
+            //else not Busines Day, all Out of Hours
             else {
                 dayCharge = (float) (((getMinutes(endTime) - getMinutes(startTime))/60.0) * OOH_RATE);
                 dayCharge = (float) (Math.round(dayCharge * 100.0) / 100.0);
                 System.out.println(dayCharge);
-                System.out.println("All OOH");
             }
-            System.out.println("dayCharge: " + dayCharge);
+            //return dayCharge
             return dayCharge;
         }
         
+        //isBusinessDay() takes int and returns true or false for Business Day
         public boolean isBusinessDay(int day) {
             if (day > 0 && day < 5) {
-                System.out.println("it is a business day: " + day);
                 return true;
             }
             else
                 return false;
         }
         
+        //getMinutes() takes a Time object and returns the amount of total minutes. Calculated from hours, minutes and seconds
         public int getMinutes(Time time) {
             int minutes = 0;
             minutes += time.getMinutes();

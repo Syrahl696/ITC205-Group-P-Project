@@ -24,6 +24,7 @@ public class testCarpark {
 	SeasonTicketDAO seasonDAO;
 	
 	@Test
+        //test for IssueAdhcoTicket method. 
 	public void testIssueAdhocTicket() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
@@ -38,6 +39,7 @@ public class testCarpark {
 	}
 	
 	@Test
+        //test for RecordAdhocTicketEntry
 	public void testRecordAdhocTicketEntry() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
@@ -54,6 +56,7 @@ public class testCarpark {
 	}
 	
 	@Test
+        //test for RescordAdhocTicketExit
 	public void testRecordAdhocTicketExit() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
@@ -70,6 +73,7 @@ public class testCarpark {
 	}
 	
 	@Test
+        //test for GetAdhocTicket
 	public void testGetAdhocTicket() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
@@ -85,6 +89,7 @@ public class testCarpark {
 	}
 	
 	@Test
+        //test for CalculateAdhocTicketCharge, only tests if value is returned. testCalcTicketCharge tests logic
 	public void testCaclulateAdhocTicketCharge() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
@@ -102,6 +107,7 @@ public class testCarpark {
 	
 	
 	@Test
+        //test for CalcTicketCharge, testing logic of method/ involved methods. Including isBusinessDay and calcCharge
 	public void testCalcTicketCharge() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
