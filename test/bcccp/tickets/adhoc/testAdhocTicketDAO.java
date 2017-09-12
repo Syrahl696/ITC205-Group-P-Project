@@ -34,9 +34,12 @@ public class testAdhocTicketDAO {
 		currentAdhocTicketsMap = spy(new HashMap<String, IAdhocTicket>());
 		ticketFactory = new AdhocTicketFactory();
 		
-		sut = new AdhocTicketDAO(ticketFactory);	
+		sut = new AdhocTicketDAO(ticketFactory);
+		
+		
+		
+		
 	}
-        
 	
 	@After
 	public void tearDown() throws Exception {
@@ -45,22 +48,24 @@ public class testAdhocTicketDAO {
 	
 	
 	@Test
-        //test for createTicket
 	public void testCreateTicket() {
-		ticketFactory = new AdhocTicketFactory();
+		ticketFactory = mock(AdhocTicketFactory.class);
+		IAdhocTicket mockTicket = new AdhocTicket("test carpark", 1, "barcode");
+		
+		when(ticketFactory.make("test carpark", 1)).thenReturn(mockTicket);
 		
 		sut = new AdhocTicketDAO(ticketFactory);
 		
 		ticket = sut.createTicket("test carpark");
-		ticket2 = new AdhocTicket("test carpark", 1, ticket.getBarcode());
+		ticket2 = new AdhocTicket("test carpark", 1, "barcode");
 		
 		assertEquals(ticket.getCarparkId(), ticket2.getCarparkId());
 		assertEquals(ticket.getBarcode(), ticket2.getBarcode());
 		assertEquals(ticket.getTicketNo(), ticket2.getTicketNo());
+
 	}
 	
 	@Test
-        //test for findticketbyBarcode
 	public void testFindTicketByBarcode() {
 		ticketFactory = new AdhocTicketFactory();
 		
@@ -72,9 +77,7 @@ public class testAdhocTicketDAO {
 		assertEquals(ticket, retrievedTicket);	
 	}
 	
-        
 	@Test
-        //test for getcurrentTickets
 	public void testGetCurrentTickets() {
 		ticketFactory = new AdhocTicketFactory();
 		sut = new AdhocTicketDAO(ticketFactory);
@@ -89,7 +92,8 @@ public class testAdhocTicketDAO {
 		
 		List<IAdhocTicket> adhocTickets = (List<IAdhocTicket>) Collections.unmodifiableList(new ArrayList<IAdhocTicket>(currentAdhocTickets.values()));
 		
-		assertEquals(adhocTickets, retrievedTickets);		
+		assertEquals(adhocTickets, retrievedTickets);
+		
 	}
 	
 

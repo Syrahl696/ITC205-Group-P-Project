@@ -30,17 +30,17 @@ public class testAdhocTicket {
 	@Before
 	public void setUp() throws Exception {
 		//dao and factory cannot be mock objects since they are required to be linked in order to create tickets
-		adhocFactory = new AdhocTicketFactory();
-		dao = new AdhocTicketDAO(adhocFactory);
+		adhocFactory = mock(IAdhocTicketFactory.class);
+		dao = mock(IAdhocTicketDAO.class);
 		seasondao = mock(ISeasonTicketDAO.class);
 		//carpark also cannot be mocked since the getid must match the ticket
 		carpark = new Carpark("test carpark", 3, dao, seasondao);
 
-		sut = dao.createTicket("test carpark");			
+		sut = dao.createTicket("test carpark");	
+		
 	}
 	
 	@Test
-        //testing AdhocTicket constructor
 	public void testConstructor() {
 		String carparkName = "test carpark";
 		int ticketNo = 1;
@@ -50,69 +50,69 @@ public class testAdhocTicket {
 		
 		assertEquals(sut.getCarparkId(), carparkName);
 		assertEquals(sut.getTicketNo(), ticketNo);
-		assertEquals(sut.getBarcode(), barcode);		
+		assertEquals(sut.getBarcode(), barcode);
+		
 	}
 	
 	@Test
-        //test for getCarparkId
-	public void testgetCarparkId() {
-		System.out.println("getCarparkId");
+	public void testgetCarparkId() {		
 		String expResult = "test carpark";
+		sut = new AdhocTicket(expResult, 1, "barcode");
+		
 		String result = sut.getCarparkId();
 		assertEquals(expResult, result);
+
 	}
 	
 	@Test
-        //test for geTicketNo
 	public void testgetTicketNo() {
+		int expResult = 5;
+		sut =  new AdhocTicket("test carpark", expResult, "barcode");
 		
-		sut = adhocFactory.make("test carpark", 2);
-		int expResult = 2;
 		int result = sut.getTicketNo();
 		assertEquals(result, expResult);
 	}
 	
 	@Test
-        //test for getBarcode
 	public void testgetBarcode() {
-		sut = adhocFactory.make("test carpark", 2);
-		long dateTime = System.currentTimeMillis();
-		String formatter = new SimpleDateFormat("ddMMyyyyHHmmss").format(dateTime);
-        long date = Long.parseLong(formatter);
-
-        String expBarcode =  "A" + Integer.toHexString(2) + Long.toHexString(date);
-        String barcode = sut.getBarcode();
-        
-        assertEquals(barcode, expBarcode);
-	}
-	
-	
-	@Test
-        //test for Enter
-	public void testEnter() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
-		sut.enter(123456789);
-		long expEnterResult = 123456789;
-		long enterResult = sut.getEntryDateTime();
+		String expResult = "barcode1234";
+		sut =  new AdhocTicket("test carpark", 1, "barcode1234");
 		
-		assertEquals(enterResult, expEnterResult);		
+		String result = sut.getBarcode();
+		assertEquals(result, expResult);
+
 	}
 	
+	
 	@Test
-        //test for getEntryDateTime
-	public void testgetEntryDateTime() {
+	public void testEnter() {
+		adhocFactory = new AdhocTicketFactory();
+		dao = new AdhocTicketDAO(adhocFactory);
+		
 		IAdhocTicket sut = dao.createTicket("test carpark");
 		sut.enter(123456789);
 		long expEnterResult = 123456789;
 		long enterResult = sut.getEntryDateTime();
 		
 		assertEquals(enterResult, expEnterResult);
+		
 	}
 	
 	@Test
-        //test for pay
-	public void testpay() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
+	public void testgetEntryDateTime() {
+	
+		sut = new AdhocTicket("test carpark", 1, "barcode");
+		long expEnterResult = 123456789;
+		sut.enter(expEnterResult);
+		
+		long enterResult = sut.getEntryDateTime();
+		
+		assertEquals(enterResult, expEnterResult);
+	}
+	
+	@Test
+	public void testpay() {		
+		sut = new AdhocTicket("test carpark", 1, "barcode");
 		sut.enter(123456780);
 		sut.pay(123456789, 10);
 		long expDateResult = 123456789;
@@ -121,13 +121,14 @@ public class testAdhocTicket {
 		double chargeResult = sut.getCharge();
 		
 		assertTrue(chargeResult == expChargeResult);
-		assertEquals(dateResult, expDateResult);		
+		assertEquals(dateResult, expDateResult);
+		
+		
 	}
 
 	@Test
-        //test for getPaidDateTime
 	public void testgetPaidDateTime() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
+		sut = new AdhocTicket("test carpark", 1, "barcode");
 		sut.enter(123456780);
 		sut.pay(123456789, 10);
 		long expDateResult = 123456789;
@@ -136,52 +137,55 @@ public class testAdhocTicket {
 		double chargeResult = sut.getCharge();
 		
 		assertTrue(chargeResult == expChargeResult);
-		assertEquals(dateResult, expDateResult);	
+		assertEquals(dateResult, expDateResult);
 	}
 	
 	@Test
-        //test for isCurrent
 	public void testisCurrent() {
+		//need to use current real objects since STATE.current is set when ticket initialized by DAO. 
+		adhocFactory = new AdhocTicketFactory();
+		dao = new AdhocTicketDAO(adhocFactory);
+		
 		IAdhocTicket sut = dao.createTicket("test carpark");
 		sut.enter(12345);
-		assertTrue(sut.isCurrent());				
+		assertTrue(sut.isCurrent());		
+		
 	}
 	
 	@Test
-        //test for isPaid
 	public void testIsPaid() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
+		sut = new AdhocTicket("test carpark", 1, "barcode");
 		sut.enter(12344);
 		sut.pay(12345, 10);
-		assertTrue(sut.isPaid());			
+		assertTrue(sut.isPaid());	
+		
 	}
 	
 	@Test
-        //test for Exit
 	public void testExit() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
+		sut = new AdhocTicket("test carpark", 1, "barcode");
 		sut.exit(123456789);
 		long expexitResult = 123456789;
 		long exitResult = sut.getExitDateTime();
 		
-		assertEquals(exitResult, expexitResult);		
+		assertEquals(exitResult, expexitResult);
+		
 	}
 	
 	@Test
-        //test for getExitDateTime
 	public void testgetExitDateTime() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
+		sut = new AdhocTicket("test carpark", 1, "barcode");
 		sut.exit(123456789);
 		long expexitResult = 123456789;
 		long exitResult = sut.getExitDateTime();
 		
-		assertEquals(exitResult, expexitResult);		
+		assertEquals(exitResult, expexitResult);
+		
 	}
 	
 	@Test
-        //test for getCharge
 	public void testgetCharge() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
+		sut = new AdhocTicket("test carpark", 1, "barcode");
 		sut.enter(123456780);
 		sut.pay(123456789, 10);
 		long expDateResult = 123456789;
@@ -190,13 +194,13 @@ public class testAdhocTicket {
 		double chargeResult = sut.getCharge();
 		
 		assertTrue(chargeResult == expChargeResult);
-		assertEquals(dateResult, expDateResult);		
+		assertEquals(dateResult, expDateResult);
+		
 	}
 	
 	@Test
-        //test for hasExited
 	public void testhasExited() {
-		IAdhocTicket sut = dao.createTicket("test carpark");
+		sut = new AdhocTicket("test carpark", 1, "barcode");
 		sut.exit(12344);
 		assertTrue(sut.hasExited());
 		

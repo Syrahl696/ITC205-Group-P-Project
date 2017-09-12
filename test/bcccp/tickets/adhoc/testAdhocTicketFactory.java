@@ -16,7 +16,7 @@ public class testAdhocTicketFactory {
 	IAdhocTicket ticket2;
 	
 	@Test
-	//test for make, done by comparing created ticket variables with ticket2
+	//not working yet
 	public void testMake() {
 		ticket = sut.make("test carpark", 1);
 		ticket2 = new AdhocTicket("test carpark", 1, ticket.getBarcode());
