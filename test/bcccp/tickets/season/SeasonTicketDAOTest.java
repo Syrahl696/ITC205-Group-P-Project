@@ -16,10 +16,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Smitz
+ * @author Corey Schmetzer
  */
 public class SeasonTicketDAOTest {
     
@@ -28,12 +32,6 @@ public class SeasonTicketDAOTest {
     
     @BeforeClass
     public static void setUpClass() {
-       /* dummyUsageRecordFactory = mock(UsageRecordFactory.class);
-        instance = new SeasonTicketDAO(dummyUsageRecordFactory);
-        dummySeasonTicket = mock(SeasonTicket.class);
-        HashMap<String, ISeasonTicket> mockMap = new HashMap();
-        mockMap.put(dummySeasonTicket.getId(), dummySeasonTicket);
-        mockMap.put(dummySeasonTicket.getId(), dummySeasonTicket);*/
     }
     
     @AfterClass
@@ -58,9 +56,11 @@ public class SeasonTicketDAOTest {
         UsageRecordFactory dummyUsageRecordFactory = mock(UsageRecordFactory.class);
         SeasonTicketDAO instance = new SeasonTicketDAO(dummyUsageRecordFactory);
         SeasonTicket dummySeasonTicket = mock(SeasonTicket.class);
-        //ISeasonTicket ticket = dummySeasonTicket;
         
+        when(dummySeasonTicket.getId()).thenReturn("S1111");
         instance.registerTicket(dummySeasonTicket);
+        assertTrue(instance.getNumberOfTickets() == 1);
+        assertTrue(instance.findTicketById("S1111") == dummySeasonTicket);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
@@ -75,10 +75,14 @@ public class SeasonTicketDAOTest {
         UsageRecordFactory dummyUsageRecordFactory = mock(UsageRecordFactory.class);
         SeasonTicketDAO instance = new SeasonTicketDAO(dummyUsageRecordFactory);
         SeasonTicket dummySeasonTicket = mock(SeasonTicket.class);
+        String ticketId = "S1111";
         
+        when(dummySeasonTicket.getId()).thenReturn("S1111");
         instance.registerTicket(dummySeasonTicket);
         
         instance.deregisterTicket(dummySeasonTicket);
+        assertTrue(instance.getNumberOfTickets() == 0);
+        assertTrue(instance.findTicketById("S1111") == null);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
@@ -117,10 +121,7 @@ public class SeasonTicketDAOTest {
         UsageRecordFactory dummyUsageRecordFactory = mock(UsageRecordFactory.class);
         SeasonTicketDAO instance = new SeasonTicketDAO(dummyUsageRecordFactory);
         SeasonTicket dummySeasonTicket = mock(SeasonTicket.class);
-        
-        HashMap<String, ISeasonTicket> mockMap= new HashMap();
-        mockMap.put(dummySeasonTicket.getId(), dummySeasonTicket);
-        
+
         instance.registerTicket(dummySeasonTicket);
         
         String ticketId = dummySeasonTicket.getId();
@@ -140,17 +141,18 @@ public class SeasonTicketDAOTest {
         System.out.println("recordTicketEntry");
 
         SeasonTicket dummySeasonTicket = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
-        IUsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
-        SeasonTicketDAO instance = new SeasonTicketDAO(dummyUsageRecordFactory);
+        ISeasonTicket spySeason = spy(dummySeasonTicket);
+        IUsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory();
+        IUsageRecordFactory spyUsageRecordFactory = spy(dummyUsageRecordFactory);
+        SeasonTicketDAO instance = new SeasonTicketDAO(spyUsageRecordFactory);
         
-        instance.registerTicket(dummySeasonTicket);
+        instance.registerTicket(spySeason);
 
-        HashMap<String, ISeasonTicket> mockMap= new HashMap();
-        mockMap.put(dummySeasonTicket.getId(), dummySeasonTicket);
-        
-        String ticketId = dummySeasonTicket.getId();
+        String ticketId = spySeason.getId();
         
         instance.recordTicketEntry(ticketId);
+        assertTrue(ticketId != null);
+        verify(spyUsageRecordFactory, times(1)).make(ticketId, System.currentTimeMillis());
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
@@ -163,23 +165,21 @@ public class SeasonTicketDAOTest {
         System.out.println("recordTicketEntry");
         
         SeasonTicket dummySeasonTicket = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
-        UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
-        SeasonTicketDAO instance = new SeasonTicketDAO(dummyUsageRecordFactory);
+        ISeasonTicket spySeason = spy(dummySeasonTicket);
+        IUsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory();
+        IUsageRecordFactory spyUsageRecordFactory = spy(dummyUsageRecordFactory);
+        SeasonTicketDAO instance = new SeasonTicketDAO(spyUsageRecordFactory);
         
         instance.registerTicket(dummySeasonTicket);
         
-        HashMap<String, ISeasonTicket> mockMap= new HashMap();
-        mockMap.put(dummySeasonTicket.getId(), dummySeasonTicket);
-        
         String ticketId = dummySeasonTicket.getId();
-        
         instance.recordTicketEntry(ticketId);
-        
-        
+                
         //Implemented second delay to avoid exitTime equalling entryTime
         TimeUnit.SECONDS.sleep(1);
         
         instance.recordTicketExit(ticketId);
+        assertTrue(ticketId != null);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
