@@ -230,8 +230,10 @@ public class CarparkTest {
         SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
         Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
-        SeasonTicket dummySeason = new SeasonTicket("S1111", "Bathurst Chase", 1504741164243L, 1594242000000L);
+        SeasonTicket dummySeason = mock(SeasonTicket.class);
 
+        when(dummySeason.getCarparkId()).thenReturn("Bathurst Chase");
+        when(dummySeason.getEndValidPeriod()).thenReturn(999999999999999L);
         instance.registerSeasonTicket(dummySeason);
         
         String ticketId = dummySeason.getId();
