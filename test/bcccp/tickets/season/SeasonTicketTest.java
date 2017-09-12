@@ -140,7 +140,17 @@ public class SeasonTicketTest {
         SeasonTicket instance = new SeasonTicket("S1111", "Bathurst Chase", 1L, 9999999999999L);
         IUsageRecord dummyRecord = mock(UsageRecord.class);
         
+        //Asserts that the seasonTicket is not currently in use
+        assertFalse(instance.inUse());
+        
         instance.recordUsage(dummyRecord);
+        
+        //Asserts that the seasonTicket is in use after going through method
+        assertTrue(instance.inUse());
+        
+        //Asserts that the seasonTicket has been added to the currentUsageRecords
+        dummyRecord = instance.getCurrentUsageRecord();
+        assertTrue(dummyRecord != null);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
@@ -160,6 +170,7 @@ public class SeasonTicketTest {
         IUsageRecord expResult = dummyRecord;
         IUsageRecord result = instance.getCurrentUsageRecord();
         
+        assertTrue(instance.inUse());
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
@@ -180,6 +191,10 @@ public class SeasonTicketTest {
         long dateTime = System.currentTimeMillis();
         
         instance.endUsage(dateTime);
+                
+        dummyRecord = instance.getCurrentUsageRecord();
+        assertFalse(instance.inUse());
+        assertTrue(dummyRecord == null);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
