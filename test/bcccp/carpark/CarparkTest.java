@@ -8,10 +8,7 @@ package bcccp.carpark;
 import bcccp.tickets.adhoc.AdhocTicketDAO;
 import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.SeasonTicket;
 import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
-import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,15 +16,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  *
- * @author Corey Schmetzer
+ * @author Ryan Smith
  */
 public class CarparkTest {
     public CarparkTest() {
@@ -35,7 +28,6 @@ public class CarparkTest {
     
     @BeforeClass
     public static void setUpClass() {
-
     }
     
     @AfterClass
@@ -43,7 +35,7 @@ public class CarparkTest {
     }
     
     @Before
-    public void setUp() {
+    public void setUp() {      
     }
     
     @After
@@ -53,55 +45,85 @@ public class CarparkTest {
     /**
      * Test of register method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testRegister() {
         System.out.println("register");
-        ICarparkObserver observer = null;
-        Carpark instance = null;
+        
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        ICarparkObserver observer = mock(ICarparkObserver.class);
+        Carpark instance = new Carpark("Bathurst Chase", 1, 0, dummyAdhocDAO, dummySeasonDAO);
+        
         instance.register(observer);
+                
+        instance.recordAdhocTicketEntry();
+        instance.recordAdhocTicketExit();
+        
+        verify(observer, times(1)).notifyCarparkEvent();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of deregister method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testDeregister() {
         System.out.println("deregister");
-        ICarparkObserver observer = null;
-        Carpark instance = null;
+        
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        ICarparkObserver observer = mock(ICarparkObserver.class);
+        Carpark instance = new Carpark("Bathurst Chase", 1, 0, dummyAdhocDAO, dummySeasonDAO);
+        
+        instance.register(observer);
+        
         instance.deregister(observer);
+        
+        instance.recordAdhocTicketEntry();
+        instance.recordAdhocTicketExit();
+        
+        verify(observer, times(0)).notifyCarparkEvent();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of getName method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testGetName() {
         System.out.println("getName");
-        Carpark instance = null;
-        String expResult = "";
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 3, 0, dummyAdhocDAO, dummySeasonDAO);
+
+        String expResult = "Bathurst Chase";
         String result = instance.getName();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of isFull method, of class Carpark.
      */
-    @Ignore
+    @Test
     public void testIsFull() {
         System.out.println("isFull");
-        Carpark instance = null;
-        boolean expResult = false;
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        Carpark instance = new Carpark("Bathurst Chase", 20, 2, dummyAdhocDAO, dummySeasonDAO);
+        when(dummySeasonDAO.getNumberOfTickets()).thenReturn(2);
+        for (int i = 0; i < 18; i++){
+            instance.recordAdhocTicketEntry();
+        }
+
+        boolean expResult = true;
         boolean result = instance.isFull();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -124,9 +146,8 @@ public class CarparkTest {
     @Ignore
     public void testRecordAdhocTicketEntry() {
         System.out.println("recordAdhocTicketEntry");
-        IAdhocTicket ticket = null;
         Carpark instance = null;
-        instance.recordAdhocTicketEntry(ticket);
+        instance.recordAdhocTicketEntry();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -167,9 +188,8 @@ public class CarparkTest {
     @Ignore
     public void testRecordAdhocTicketExit() {
         System.out.println("recordAdhocTicketExit");
-        IAdhocTicket ticket = null;
         Carpark instance = null;
-        instance.recordAdhocTicketExit(ticket);
+        instance.recordAdhocTicketExit();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
