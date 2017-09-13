@@ -24,7 +24,6 @@ public class testCarpark {
 	SeasonTicketDAO seasonDAO;
 	
 	@Test
-        //test for IssueAdhcoTicket method. 
 	public void testIssueAdhocTicket() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
@@ -39,7 +38,6 @@ public class testCarpark {
 	}
 	
 	@Test
-        //test for RecordAdhocTicketEntry
 	public void testRecordAdhocTicketEntry() {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);

@@ -90,8 +90,12 @@ public class Carpark implements ICarpark {
         //create and return new adhoc ticket
     @Override
 	public IAdhocTicket issueAdhocTicket() {
-
-            return adhocTicketDAO.createTicket(carparkId);
+            if (this.isFull()) {
+                throw new RuntimeException("carpark is Full");
+            }
+            else {
+                return adhocTicketDAO.createTicket(carparkId);
+            }
 	}
 
     /**
