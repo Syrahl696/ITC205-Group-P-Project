@@ -11,6 +11,7 @@ import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
+
 public class Carpark implements ICarpark {
 	
 	private List<ICarparkObserver> observers;
@@ -221,15 +222,17 @@ public class Carpark implements ICarpark {
             Date startTime = new Date(start);
             Date endTime = new Date(end);
             
-            Calendar calendar1 = Calendar.getInstance();
-            calendar1.setTime(startTime);
+            //Calendar calendar1 = Calendar.getInstance();
+            //calendar1.setTime(startTime);
             
-            Calendar calendar2 = Calendar.getInstance();
-            calendar2.setTime(endTime);
+            //Calendar calendar2 = Calendar.getInstance();
+            //calendar2.setTime(endTime);
             
             //get day Integers from start/end times
             int curDay = startTime.getDay();
             int endDay = endTime.getDay();
+            int daysBetweenDates = daysBetween(startTime, endTime);
+            System.out.println("days between: " + daysBetweenDates);
             
             //initialize float = 0, currentStartTime = startTime
             float charge = 0;
@@ -348,6 +351,10 @@ public class Carpark implements ICarpark {
             } 
             return minutes;
         }
+        
+        public int daysBetween(Date d1, Date d2){
+             return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+     }
         
 
 }
