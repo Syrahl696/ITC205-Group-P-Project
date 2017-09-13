@@ -97,7 +97,7 @@ public class PaystationController
 			ui.beep();
 			log("ticketInserted: called while in incorrect state");				
 		}
-        } 
+  } 
 
     /**
      * Registers the ticket as paid and prints an updated physical ticket.
