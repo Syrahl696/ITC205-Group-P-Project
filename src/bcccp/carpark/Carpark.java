@@ -358,12 +358,25 @@ public class Carpark implements ICarpark {
         	
         	startCal.setTime(d1);
         	endCal.setTime(d2);
+                
+                int currentYear = startCal.get(Calendar.YEAR);
+                int endYear = endCal.get(Calendar.YEAR);
+                
+                int days = 0;
+                
+               while (currentYear != endYear) {
+                   Calendar lastDayOfYear = new GregorianCalendar(currentYear, 11, 31);
+                   int dayDecember31 = lastDayOfYear.get(Calendar.DAY_OF_YEAR);
+                   
+                   days += dayDecember31 - (startCal.get(Calendar.DAY_OF_YEAR));
+                   
+                   currentYear++;
+                   startCal.set(currentYear, 0, 1);  //set current to Jan 1st of next year.            
+               }
         	
-        	int one = startCal.get(Calendar.DAY_OF_YEAR);
-        	int two = endCal.get(Calendar.DAY_OF_YEAR);
-        	
-        	System.out.println(two-one);
-        	return two-one;
+        	days += (endCal.get(Calendar.DAY_OF_YEAR)) - (startCal.get(Calendar.DAY_OF_YEAR));
+
+        	return days;
         	
         	}
         
