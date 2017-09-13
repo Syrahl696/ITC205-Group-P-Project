@@ -34,7 +34,7 @@ public class testAdhocTicket {
 		dao = mock(IAdhocTicketDAO.class);
 		seasondao = mock(ISeasonTicketDAO.class);
 		//carpark also cannot be mocked since the getid must match the ticket
-		carpark = new Carpark("test carpark", 3, dao, seasondao);
+		carpark = mock(Carpark.class);
 
 		sut = dao.createTicket("test carpark");	
 		
