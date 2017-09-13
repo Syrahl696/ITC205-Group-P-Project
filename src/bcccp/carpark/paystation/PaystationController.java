@@ -82,7 +82,7 @@ public class PaystationController
 		if (state_ == STATE.IDLE) {
 			adhocTicket = carpark.getAdhocTicket(barcode);
 			if (adhocTicket != null) {
-				charge = carpark.calculateAdHocTicketCharge(adhocTicket.getEntryDateTime());
+				charge = carpark.calculateAdhocTicketCharge(adhocTicket.getEntryDateTime());
 				ui.display("Pay " + String.format("%.2f", charge));
 				setState(STATE.WAITING);
 			}
