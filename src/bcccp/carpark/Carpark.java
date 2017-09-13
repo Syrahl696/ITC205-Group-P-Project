@@ -8,6 +8,7 @@ import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Carpark implements ICarpark {
@@ -215,10 +216,16 @@ public class Carpark implements ICarpark {
 
 }
 
-        public float calcCharge(long start, long end) {
+        private float calcCharge(long start, long end) {
             //create Date objects with given long values
             Date startTime = new Date(start);
             Date endTime = new Date(end);
+            
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(startTime);
+            
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.setTime(endTime);
             
             //get day Integers from start/end times
             int curDay = startTime.getDay();
@@ -247,10 +254,9 @@ public class Carpark implements ICarpark {
                 curStartTime = new Date(curEndTime.getTime());
                 //increment day, check if passed into new week
                 curDay++;
-                if (curDay == 7) {
+                 if (curDay == 7) {
                     curDay = 0;
                 }
-   
             }
             //if current day is the same as end day, reset midnight to 0 values. 
             if (curStartTime.getHours() == 23 && curStartTime.getMinutes() == 59 && curStartTime.getSeconds() == 59) {
@@ -265,7 +271,7 @@ public class Carpark implements ICarpark {
         }
 
         //calcDayCharge checks for BH and OOH and determines correct charge
-        public float calcDayCharge(Date startDate, Date endDate, int day) {
+        private float calcDayCharge(Date startDate, Date endDate, int day) {
             
             //create time objets from given Date objects
             Time startTime = new Time(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
@@ -324,7 +330,7 @@ public class Carpark implements ICarpark {
         }
         
         //isBusinessDay() takes int and returns true or false for Business Day
-        public boolean isBusinessDay(int day) {
+        private boolean isBusinessDay(int day) {
             if (day > 0 && day < 5) {
                 return true;
             }
@@ -333,7 +339,7 @@ public class Carpark implements ICarpark {
         }
         
         //getMinutes() takes a Time object and returns the amount of total minutes. Calculated from hours, minutes and seconds
-        public int getMinutes(Time time) {
+        private int getMinutes(Time time) {
             int minutes = 0;
             minutes += time.getMinutes();
             minutes += (time.getHours() * 60);

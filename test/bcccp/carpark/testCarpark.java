@@ -42,14 +42,14 @@ public class testCarpark {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
 		//0 car spaces, force carpark to be full
-		sut = new Carpark("test carpark", 0, adhocDAO, seasonDAO);
+		sut = new Carpark("test carpark", 1, adhocDAO, seasonDAO);
 		ICarparkObserver observer = mock(ICarparkObserver.class);
 		sut.register(observer);
 		
 		sut.recordAdhocTicketEntry();
 		
-		//verify that observer was acted upon
-		verify(observer, times(1)).notifyCarparkEvent();
+		//carpark should not be full
+		assertTrue(sut.isFull() == true);
 		
 	}
 	
@@ -58,14 +58,17 @@ public class testCarpark {
 		adhocDAO = mock(AdhocTicketDAO.class);
 		seasonDAO = mock(SeasonTicketDAO.class);
 
-		sut = new Carpark("test carpark", 3, adhocDAO, seasonDAO);
+		sut = new Carpark("test carpark", 1, adhocDAO, seasonDAO);
 		ICarparkObserver observer = mock(ICarparkObserver.class);
 		sut.register(observer);
+		sut.recordAdhocTicketEntry();
+		//first check is carpark is full
+		assertTrue(sut.isFull() == true);
 		
 		sut.recordAdhocTicketExit();
 		
-		//verify that observer was acted upon
-		verify(observer, times(1)).notifyCarparkEvent();
+		//now check if carpark is now not full
+		assertTrue(sut.isFull() == false);
 		
 	}
 	
@@ -207,7 +210,7 @@ public class testCarpark {
 		
 		//all Business Day stay
 		start = 1505189700000L; //Tuesday 2:15pm
-		end = 1505333700000L; //Thursday 6:15am
+		end = 1505848500000L; //Thursday 6:15am     //1505333700000L
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 113.5;  //4:45 BH + 5 OOH + 7 OOH + 12 BH + 5 OOH + 6:15 OOH  = 46.5 + 92
