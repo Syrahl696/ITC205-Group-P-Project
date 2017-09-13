@@ -114,7 +114,4 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
                         seasonTickets.get(ticketId).endUsage(System.currentTimeMillis());}
                
 	}
-	
-	
-	
-}
+
