@@ -9,6 +9,7 @@ import bcccp.carpark.CarparkTest;
 import bcccp.carpark.entry.EntryControllerTest;
 import bcccp.carpark.exit.ExitControllerTest;
 import bcccp.carpark.paystation.PaystationControllerTest;
+import bcccp.tickets.adhoc.testAdhocTicketDAO;
 import bcccp.tickets.season.SeasonTicketDAOTest;
 import bcccp.tickets.season.SeasonTicketTest;
 import bcccp.tickets.season.UsageRecordFactoryTest;

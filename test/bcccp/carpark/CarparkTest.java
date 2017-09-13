@@ -12,6 +12,9 @@ import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.SeasonTicket;
 import bcccp.tickets.season.SeasonTicketDAO;
 import bcccp.tickets.season.UsageRecordFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
@@ -263,23 +266,59 @@ public class CarparkTest {
     public void testIsSeasonTicketValid() {
         System.out.println("isSeasonTicketValid");       
         
-        UsageRecordFactory dummyUsageRecordFactory = new UsageRecordFactory ();
-        SeasonTicketDAO dummySeasonDAO = new SeasonTicketDAO(dummyUsageRecordFactory);
+        UsageRecordFactory dummyUsageRecordFactory = mock(UsageRecordFactory.class);
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
         Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
-        SeasonTicket dummySeason = mock(SeasonTicket.class);
+        SeasonTicket mockSeason = mock(SeasonTicket.class);
 
-        when(dummySeason.getCarparkId()).thenReturn("Bathurst Chase");
-        when(dummySeason.getEndValidPeriod()).thenReturn(999999999999999L);
-        instance.registerSeasonTicket(dummySeason);
+        when(mockSeason.getCarparkId()).thenReturn("Bathurst Chase");
+        when(mockSeason.getEndValidPeriod()).thenReturn(999999999999999L);
+        when(mockSeason.getId()).thenReturn("S1111");
+        instance.registerSeasonTicket(mockSeason);
         
-        String ticketId = dummySeason.getId();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        boolean businessHours = false;
+                try {
+                //sets opening business hours at 7am
+                String stringOpeningTime = "07:00:00";
+                Date openingTime = sdf.parse(stringOpeningTime);
+                Calendar calenderOpeningTime = Calendar.getInstance();
+                calenderOpeningTime.setTime(openingTime);
+
+                //sets closing business hours at 7pm
+                String stringClosingTime = "19:00:00";
+                Date closingTime = sdf.parse(stringClosingTime);
+                Calendar calenderClosingTime = Calendar.getInstance();
+                calenderClosingTime.setTime(closingTime);
+
+                //sets current time
+                Calendar calendarCurrentTime = Calendar.getInstance();
+                String stringCurrentTime = sdf.format(calendarCurrentTime.getTime());
+                Date currentTime = sdf.parse(stringCurrentTime);
+                calendarCurrentTime.setTime(currentTime);
+
+                //tests if current time is between opening time and closing time
+                Date current = calendarCurrentTime.getTime();
+                if (current.after(calenderOpeningTime.getTime()) && (current.before(calenderClosingTime.getTime()))) {
+                    businessHours = true;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                }
+                
+                Calendar c = Calendar.getInstance();
+                //Retrieves current day as integer from 1-7 Sunday =1, Saturday = 7
+                int day= c.get(Calendar.DAY_OF_WEEK);     
+                
         boolean expResult = true;
-        boolean result = instance.isSeasonTicketValid(ticketId);
+        if (!(businessHours == true) || (day >= 2) && (day <= 6)){
+            expResult = false;
+        }       
         
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        boolean result = instance.isSeasonTicketValid("S1111");
+        
+        assertEquals(expResult, result);;
     }
 
     /**

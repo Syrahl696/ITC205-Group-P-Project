@@ -1,4 +1,4 @@
-package bcccp;
+package bcccp.tickets.adhoc;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -49,7 +49,7 @@ public class testAdhocTicketDAO {
 		ticketFactory = mock(AdhocTicketFactory.class);
         sut = new AdhocTicketDAO(ticketFactory);
 
-        IAdhocTicket mockTicket = mock(IAdhocTicket.class);
+        AdhocTicket mockTicket = mock(AdhocTicket.class);
         when((ticketFactory).make("test carpark", 1)).thenReturn(mockTicket);
 
         ticket = sut.createTicket("test carpark");
@@ -63,7 +63,7 @@ public class testAdhocTicketDAO {
 		ticketFactory = mock(AdhocTicketFactory.class);
 
         sut = new AdhocTicketDAO(ticketFactory);
-        IAdhocTicket mockTicket = mock(IAdhocTicket.class);
+        AdhocTicket mockTicket = mock(AdhocTicket.class);
         when(ticketFactory.make("test carpark", 1)).thenReturn(mockTicket);
         when(mockTicket.getBarcode()).thenReturn("A111");
         IAdhocTicket ticket = sut.createTicket("test carpark");
@@ -79,9 +79,9 @@ public class testAdhocTicketDAO {
 		 ticketFactory = mock(AdhocTicketFactory.class);
 	        sut = new AdhocTicketDAO(ticketFactory);
 
-	        IAdhocTicket mockTicket = mock(IAdhocTicket.class);
+	        AdhocTicket mockTicket = mock(AdhocTicket.class);
 	                when(mockTicket.getBarcode()).thenReturn("A1111");
-	        IAdhocTicket mockTicket2 = mock(IAdhocTicket.class);
+	        AdhocTicket mockTicket2 = mock(AdhocTicket.class);
 	                when(mockTicket2.getBarcode()).thenReturn("A2222");
 	                when(ticketFactory.make("test carpark", 1)).thenReturn(mockTicket);
 	                when(ticketFactory.make("test carpark", 2)).thenReturn(mockTicket2);
