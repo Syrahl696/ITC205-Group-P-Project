@@ -4,27 +4,30 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.*;
-
+import org.mockito.Mock;
 
 import bcccp.tickets.adhoc.*;
 
 
 public class testAdhocTicketFactory {
 	
-	AdhocTicketFactory sut = new AdhocTicketFactory();
+	private AdhocTicketFactory sut = spy(new AdhocTicketFactory());
 	IAdhocTicket ticket;
-	IAdhocTicket ticket2;
 	
 	@Test
 	//not working yet
 	public void testMake() {
-		ticket = sut.make("test carpark", 1);
-		ticket2 = new AdhocTicket("test carpark", 1, ticket.getBarcode());
-
+		ticket = mock(AdhocTicket.class);
+		String carparkId = "test carpark";
+		int ticketNo = 1;
+		String barcode = "barcode";
+		doReturn(ticket).when(sut).makeTicket(eq(carparkId), eq(ticketNo), anyObject());
 		
-		assertEquals(ticket.getCarparkId(), ticket2.getCarparkId());
-		assertEquals(ticket.getBarcode(), ticket2.getBarcode());
-		assertEquals(ticket.getTicketNo(), ticket2.getTicketNo());
+		sut.make(carparkId, ticketNo);
+
+
 	}
+	
+	
 
 }

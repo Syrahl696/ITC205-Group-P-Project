@@ -120,7 +120,6 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge =  (float) 26.0;
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
@@ -131,7 +130,6 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 7.33;  //3hrs, 40mins = 7.something
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
@@ -142,7 +140,6 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 36.5;  //2hrs, 45 of OOH   then 7hrs, 45 of BH
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
@@ -154,7 +151,6 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 20.5;  //4hrs, 15 of BH   then 1hrs, 45 of OOH
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
@@ -166,7 +162,6 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 63.5;  //4hrs, 30 of OOH  then 12hrs of BH   then 3hrs 15 of OOH
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
@@ -178,7 +173,6 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 16.5;  //8hrs 15min
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
@@ -191,7 +185,6 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 64;  //15hrs 30 + 16hrs 30 hrs all OOH
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
@@ -202,19 +195,16 @@ public class testCarpark {
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 67;  //7hrs 30 OOH + 7hrs OOH + 9hrs 30 BH
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		
 		
-		
 		//all Business Day stay
 		start = 1505189700000L; //Tuesday 2:15pm
-		end = 1505848500000L; //Thursday 6:15am     //1505333700000L
+		end = 1505333700000L; //Thursday 6:15am     //
 		
 		charge = sut.calcCharge(start, end);
 		expectedCharge = (float) 113.5;  //4:45 BH + 5 OOH + 7 OOH + 12 BH + 5 OOH + 6:15 OOH  = 46.5 + 92
-		System.out.println("total charge: " + charge);
 		
 		assertEquals(expectedCharge, charge, 0.001);
 		

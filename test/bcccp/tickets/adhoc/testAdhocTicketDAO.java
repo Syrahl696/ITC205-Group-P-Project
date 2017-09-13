@@ -35,10 +35,7 @@ public class testAdhocTicketDAO {
 		ticketFactory = new AdhocTicketFactory();
 		
 		sut = new AdhocTicketDAO(ticketFactory);
-		
-		
-		
-		
+	
 	}
 	
 	@After
@@ -50,49 +47,55 @@ public class testAdhocTicketDAO {
 	@Test
 	public void testCreateTicket() {
 		ticketFactory = mock(AdhocTicketFactory.class);
-		IAdhocTicket mockTicket = new AdhocTicket("test carpark", 1, "barcode");
-		
-		when(ticketFactory.make("test carpark", 1)).thenReturn(mockTicket);
-		
-		sut = new AdhocTicketDAO(ticketFactory);
-		
-		ticket = sut.createTicket("test carpark");
-		ticket2 = new AdhocTicket("test carpark", 1, "barcode");
-		
-		assertEquals(ticket.getCarparkId(), ticket2.getCarparkId());
-		assertEquals(ticket.getBarcode(), ticket2.getBarcode());
-		assertEquals(ticket.getTicketNo(), ticket2.getTicketNo());
+        sut = new AdhocTicketDAO(ticketFactory);
 
+        IAdhocTicket mockTicket = mock(IAdhocTicket.class);
+        when((ticketFactory).make("test carpark", 1)).thenReturn(mockTicket);
+
+        ticket = sut.createTicket("test carpark");
+
+        assertEquals(ticket, mockTicket);
 	}
+	
 	
 	@Test
 	public void testFindTicketByBarcode() {
-		ticketFactory = new AdhocTicketFactory();
-		
-		sut = new AdhocTicketDAO(ticketFactory);
-		ticket = sut.createTicket("test carpark");
-		String barcode = ticket.getBarcode();
-		IAdhocTicket retrievedTicket = sut.findTicketByBarcode(barcode);
-		
-		assertEquals(ticket, retrievedTicket);	
+		ticketFactory = mock(AdhocTicketFactory.class);
+
+        sut = new AdhocTicketDAO(ticketFactory);
+        IAdhocTicket mockTicket = mock(IAdhocTicket.class);
+        when(ticketFactory.make("test carpark", 1)).thenReturn(mockTicket);
+        when(mockTicket.getBarcode()).thenReturn("A111");
+        IAdhocTicket ticket = sut.createTicket("test carpark");
+        
+
+        IAdhocTicket retrievedTicket = sut.findTicketByBarcode("A111");
+
+        assertEquals(ticket, retrievedTicket);
 	}
 	
 	@Test
 	public void testGetCurrentTickets() {
-		ticketFactory = new AdhocTicketFactory();
-		sut = new AdhocTicketDAO(ticketFactory);
-		currentAdhocTickets = new HashMap<>();
-		
-		ticket = sut.createTicket("test carpark");
-		ticket2 = sut.createTicket("test carpark");
-		currentAdhocTickets.put(ticket.getBarcode(), ticket);
-		currentAdhocTickets.put(ticket2.getBarcode(), ticket2);
-		
-		List<IAdhocTicket> retrievedTickets = (List<IAdhocTicket>) sut.getCurrentTickets();
-		
-		List<IAdhocTicket> adhocTickets = (List<IAdhocTicket>) Collections.unmodifiableList(new ArrayList<IAdhocTicket>(currentAdhocTickets.values()));
-		
-		assertEquals(adhocTickets, retrievedTickets);
+		 ticketFactory = mock(AdhocTicketFactory.class);
+	        sut = new AdhocTicketDAO(ticketFactory);
+
+	        IAdhocTicket mockTicket = mock(IAdhocTicket.class);
+	                when(mockTicket.getBarcode()).thenReturn("A1111");
+	        IAdhocTicket mockTicket2 = mock(IAdhocTicket.class);
+	                when(mockTicket2.getBarcode()).thenReturn("A2222");
+	                when(ticketFactory.make("test carpark", 1)).thenReturn(mockTicket);
+	                when(ticketFactory.make("test carpark", 2)).thenReturn(mockTicket2);
+	                IAdhocTicket ticket = sut.createTicket("test carpark");
+	                IAdhocTicket ticket2 = sut.createTicket("test carpark");
+
+	        List<IAdhocTicket> adhocTickets = new ArrayList<> ();
+	                adhocTickets.add(mockTicket2);
+	                adhocTickets.add(mockTicket);
+
+	        List<IAdhocTicket> retrievedTickets = sut.getCurrentTickets();
+
+	        assertEquals(adhocTickets, retrievedTickets);
+
 		
 	}
 	

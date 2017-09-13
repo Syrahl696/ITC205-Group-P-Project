@@ -30,13 +30,18 @@ public class AdhocTicketFactory implements IAdhocTicketFactory {
             
             
             //create new ticket with carparkId, ticketNo & barcode
-            AdhocTicket newTicket = new AdhocTicket(carparkId, ticketNo, barcode);
+            AdhocTicket newTicket = makeTicket(carparkId, ticketNo, barcode);
             
             //set current datetime used in barcode to the entry time of ticket. 
             newTicket.enter(dateTime);
 
             //return ticket
             return newTicket;   
+	}
+	
+        //factory helper, allows for testing
+	public AdhocTicket makeTicket(String a, int b, String c) {
+		return new AdhocTicket(a, b, c);
 	}
 
 }

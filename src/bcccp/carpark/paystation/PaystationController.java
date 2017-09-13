@@ -48,7 +48,7 @@ public class PaystationController
                     else {
                     
                     //TODO Verify ticket based on date and time in barcode
-                    charge = carpark.calculateAdHocTicketCharge(adhocTicket.getEntryDateTime());
+                    charge = carpark.calculateAdhocTicketCharge(adhocTicket.getEntryDateTime());
                     ui.display("Please pay: $" + String.valueOf(charge));
                     }
                 } 
