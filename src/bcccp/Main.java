@@ -44,10 +44,10 @@ public class Main {
 					IAdhocTicketDAO adhocTicketDAO = new AdhocTicketDAO(new AdhocTicketFactory());
 					ISeasonTicketDAO seasonTicketDAO = new SeasonTicketDAO(new UsageRecordFactory());
 					
-					Carpark carpark = new Carpark("Bathurst Chase", 3, adhocTicketDAO, seasonTicketDAO);
+					Carpark carpark = new Carpark("Bathurst Chase", 20, 2, adhocTicketDAO, seasonTicketDAO);
 					
-					ISeasonTicket t1 = new SeasonTicket("S1111","Bathurst Chase", 0L, 0L);
-					ISeasonTicket t2 = new SeasonTicket("S2222","Bathurst Chase", 0L, 0L);
+					ISeasonTicket t1 = new SeasonTicket("S1111","Bathurst Chase", 1L, 99999999999999999L);
+					ISeasonTicket t2 = new SeasonTicket("S2222","Bathurst Chase", 1L, 99999999999999999L);
 					
 					carpark.registerSeasonTicket(t1);
 					carpark.registerSeasonTicket(t2);
