@@ -2,7 +2,6 @@ package bcccp.carpark;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
@@ -10,6 +9,8 @@ import bcccp.tickets.season.ISeasonTicketDAO;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+
 
 
 public class Carpark implements ICarpark {
@@ -129,7 +130,7 @@ public class Carpark implements ICarpark {
 
 
     @Override
-	public float calculateAdHocTicketCharge(long entryDateTime) {
+	public float calculateAdhocTicketCharge(long entryDateTime) {
             Date current = new Date();
             //calcCharge from given entryDateTime and current as payingTime
             return calcCharge(entryDateTime, current.getTime());
@@ -217,21 +218,17 @@ public class Carpark implements ICarpark {
 
 }
 
-        private float calcCharge(long start, long end) {
+        @SuppressWarnings("deprecation")
+		public float calcCharge(long start, long end) {
             //create Date objects with given long values
             Date startTime = new Date(start);
             Date endTime = new Date(end);
-            
-            //Calendar calendar1 = Calendar.getInstance();
-            //calendar1.setTime(startTime);
-            
-            //Calendar calendar2 = Calendar.getInstance();
-            //calendar2.setTime(endTime);
-            
-            //get day Integers from start/end times
-            int curDay = startTime.getDay();
-            int endDay = endTime.getDay();
+
             int daysBetweenDates = daysBetween(startTime, endTime);
+            int curDayBetween = 0;
+            
+            int curDayOfWeek = startTime.getDay();
+            
             System.out.println("days between: " + daysBetweenDates);
             
             //initialize float = 0, currentStartTime = startTime
@@ -239,7 +236,7 @@ public class Carpark implements ICarpark {
             Date curStartTime = new Date(startTime.getTime());           
             
             //run while look as long as currentDay does not = endDay
-            while (curDay != endDay) {
+            while (curDayBetween != daysBetweenDates) {
                 Date curEndTime = new Date(startTime.getTime());   //set endDay time to midnight. 
                 curEndTime.setHours(23);
                 curEndTime.setMinutes(59);
@@ -252,13 +249,14 @@ public class Carpark implements ICarpark {
                 		curStartTime.setSeconds(0);
                 }
                 //call calcDayCharge method, passing in current values. 
-                charge += calcDayCharge(curStartTime, curEndTime, curDay);
+                charge += calcDayCharge(curStartTime, curEndTime, curDayOfWeek);
                 //reset currentStartTime to endTime
                 curStartTime = new Date(curEndTime.getTime());
                 //increment day, check if passed into new week
-                curDay++;
-                 if (curDay == 7) {
-                    curDay = 0;
+                curDayBetween++;
+                curDayOfWeek++;
+                if (curDayOfWeek == 7) {
+                    curDayOfWeek = 0;
                 }
             }
             //if current day is the same as end day, reset midnight to 0 values. 
@@ -268,13 +266,14 @@ public class Carpark implements ICarpark {
         		curStartTime.setSeconds(0);
         }
             //call calc method. 
-            charge += calcDayCharge(curStartTime, endTime, endDay);
+            charge += calcDayCharge(curStartTime, endTime, curDayOfWeek);
             //return accumulated charge
             return charge;
         }
 
         //calcDayCharge checks for BH and OOH and determines correct charge
-        private float calcDayCharge(Date startDate, Date endDate, int day) {
+        @SuppressWarnings("deprecation")
+		private float calcDayCharge(Date startDate, Date endDate, int day) {
             
             //create time objets from given Date objects
             Time startTime = new Time(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
@@ -342,6 +341,7 @@ public class Carpark implements ICarpark {
         }
         
         //getMinutes() takes a Time object and returns the amount of total minutes. Calculated from hours, minutes and seconds
+        @SuppressWarnings("deprecation")
         private int getMinutes(Time time) {
             int minutes = 0;
             minutes += time.getMinutes();
@@ -352,9 +352,20 @@ public class Carpark implements ICarpark {
             return minutes;
         }
         
-        public int daysBetween(Date d1, Date d2){
-             return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
-     }
+        private int daysBetween(Date d1, Date d2) {
+        	Calendar startCal = new GregorianCalendar();
+        	Calendar endCal = new GregorianCalendar();
+        	
+        	startCal.setTime(d1);
+        	endCal.setTime(d2);
+        	
+        	int one = startCal.get(Calendar.DAY_OF_YEAR);
+        	int two = endCal.get(Calendar.DAY_OF_YEAR);
+        	
+        	System.out.println(two-one);
+        	return two-one;
+        	
+        	}
         
 
 }
