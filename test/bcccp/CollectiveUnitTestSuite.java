@@ -9,6 +9,11 @@ import bcccp.carpark.CarparkTest;
 import bcccp.carpark.entry.EntryControllerTest;
 import bcccp.carpark.exit.ExitControllerTest;
 import bcccp.carpark.paystation.PaystationControllerTest;
+import bcccp.tickets.adhoc.testAdhocTicketDAO;
+import bcccp.tickets.season.SeasonTicketDAOTest;
+import bcccp.tickets.season.SeasonTicketTest;
+import bcccp.tickets.season.UsageRecordFactoryTest;
+import bcccp.tickets.season.UsageRecordTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,11 +29,18 @@ import org.junit.runners.Suite;
  * @author Ryan Smith
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CarparkTest.class, 
+@Suite.SuiteClasses({CarparkTest.class,
     EntryControllerTest.class, 
     ExitControllerTest.class,
-    PaystationControllerTest.class})
-public class RyanSmithUnitTestSuite {
+    PaystationControllerTest.class,
+    testAdhocTicket.class, 
+    testAdhocTicketDAO.class,
+    testAdhocTicketFactory.class,
+    SeasonTicketDAOTest.class, 
+    SeasonTicketTest.class,
+    UsageRecordFactoryTest.class,
+    UsageRecordTest.class })
+public class CollectiveUnitTestSuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -48,9 +60,16 @@ public class RyanSmithUnitTestSuite {
     
     public static void main(String[] args) {
       Result result = JUnitCore.runClasses(CarparkTest.class,
-              EntryControllerTest.class,
-              ExitControllerTest.class,
-              PaystationControllerTest.class);
+    EntryControllerTest.class, 
+    ExitControllerTest.class,
+    PaystationControllerTest.class,
+    testAdhocTicket.class, 
+    testAdhocTicketDAO.class,
+    testAdhocTicketFactory.class,
+    SeasonTicketDAOTest.class, 
+    SeasonTicketTest.class,
+    UsageRecordFactoryTest.class,
+    UsageRecordTest.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());

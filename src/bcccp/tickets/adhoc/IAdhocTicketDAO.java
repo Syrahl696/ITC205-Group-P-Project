@@ -8,8 +8,7 @@ public interface IAdhocTicketDAO {
 	public IAdhocTicket findTicketByBarcode(String barcode);
 	public List<IAdhocTicket> getCurrentTickets();
 
-    public void addToCurrentList(IAdhocTicket ticket);
-    public void removeFromCurrentList(IAdhocTicket ticket);
+
 
 
 }
