@@ -93,7 +93,8 @@ public class PaystationControllerTest {
 
         instance.ticketTaken();
         
-        //Internally changes state to Waiting. No public methods are called to verify this change.
+        //controller should have become idle when initialised, and again now (total 2 times).
+        verify(mockUI, times(1)).display("Paid");
         //a beep indicates an error that may not have been caught otherwise.        
         verify(mockUI, never()).beep();
     }
