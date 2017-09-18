@@ -4,5 +4,3 @@ build/*
 manifest.mf
 build.xml
 .DS_Store
-test/.DS_Store
-test/bcccp/.DS_Store

@@ -1,2 +1,0 @@
-bcccp.testAdhocTicket$STATE
-bcccp.testAdhocTicket
