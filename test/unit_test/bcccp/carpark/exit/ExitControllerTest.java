@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bcccp.carpark.exit;
+package unit_test.bcccp.carpark.exit;
 
 import bcccp.carpark.*;
+import bcccp.carpark.exit.ExitController;
+import bcccp.carpark.exit.IExitUI;
 import bcccp.tickets.adhoc.AdhocTicket;
 import org.junit.*;
 import static org.junit.Assert.*;

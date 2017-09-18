@@ -1,4 +1,4 @@
-package bcccp.tickets.adhoc;
+package unit_test.bcccp.tickets.adhoc;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -8,6 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import bcccp.tickets.adhoc.*;
+import bcccp.tickets.adhoc.AdhocTicket;
+import bcccp.tickets.adhoc.AdhocTicketDAO;
+import bcccp.tickets.adhoc.AdhocTicketFactory;
+import bcccp.tickets.adhoc.IAdhocTicket;
+import bcccp.tickets.adhoc.IAdhocTicketFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;

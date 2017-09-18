@@ -3,8 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bcccp.tickets.season;
+package unit_test.bcccp.tickets.season;
 
+import bcccp.tickets.season.ISeasonTicket;
+import bcccp.tickets.season.IUsageRecordFactory;
+import bcccp.tickets.season.SeasonTicket;
+import bcccp.tickets.season.SeasonTicketDAO;
+import bcccp.tickets.season.UsageRecordFactory;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import static net.bytebuddy.matcher.ElementMatchers.is;

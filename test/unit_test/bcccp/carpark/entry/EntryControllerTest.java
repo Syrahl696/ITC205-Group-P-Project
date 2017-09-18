@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bcccp.carpark.entry;
+package unit_test.bcccp.carpark.entry;
 
 import bcccp.carpark.*;
+import bcccp.carpark.entry.EntryController;
+import bcccp.carpark.entry.IEntryUI;
 import bcccp.tickets.adhoc.AdhocTicket;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
