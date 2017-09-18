@@ -8,7 +8,6 @@ package bcccp.carpark.paystation;
 import bcccp.carpark.*;
 import bcccp.tickets.adhoc.AdhocTicket;
 import org.junit.*;
-import static org.junit.Assert.*;
 import org.junit.runners.MethodSorters;
 import static org.mockito.Mockito.*;
 
@@ -58,7 +57,7 @@ public class PaystationControllerTest {
         String barcode = "A1111";        
         AdhocTicket ticket = mock(AdhocTicket.class);
         when(mockCarpark.getAdhocTicket(barcode)).thenReturn(ticket);
-        when(mockCarpark.calculateAdHocTicketCharge(any(long.class))).thenReturn(10.00f);
+        when(mockCarpark.calculateAdhocTicketCharge(any(long.class))).thenReturn(10.00f);
         
         //Begin test
         instance.ticketInserted(barcode);

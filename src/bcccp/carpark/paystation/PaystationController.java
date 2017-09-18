@@ -82,7 +82,7 @@ public class PaystationController
 		if (state_ == STATE.IDLE) {
 			adhocTicket = carpark.getAdhocTicket(barcode);
 			if (adhocTicket != null) {
-				charge = carpark.calculateAdHocTicketCharge(adhocTicket.getEntryDateTime());
+				charge = carpark.calculateAdhocTicketCharge(adhocTicket.getEntryDateTime());
 				ui.display("Pay " + String.format("%.2f", charge));
 				setState(STATE.WAITING);
 			}
@@ -97,7 +97,7 @@ public class PaystationController
 			ui.beep();
 			log("ticketInserted: called while in incorrect state");				
 		}
-        } 
+  } 
 
     /**
      * Registers the ticket as paid and prints an updated physical ticket.

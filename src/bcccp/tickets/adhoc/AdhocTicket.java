@@ -11,14 +11,28 @@ public class AdhocTicket implements IAdhocTicket {
 	private long exitDateTime = 0;
 	private float charge = 0;
 	private String barcode;
+        private STATE state;
+        
+        private enum STATE {ISSUED, CURRENT, PAID, EXITED };
 
 	
 	
         //Adhoc ticket constructor, assigning values and setting enter time to current time
 	public AdhocTicket(String carparkId, int ticketNo, String barcode) {
+            if (carparkId.length() == 0 || carparkId == null) {
+                throw new RuntimeException("carparkId is empty");
+            }
+            if (ticketNo <= 0) {
+                throw new RuntimeException("TicketNo is less than zero");
+            }
+            if (barcode.length() == 0 || barcode == null) {
+                throw new RuntimeException("barcode is empty");
+            }
+            
             this.carparkId = carparkId;
             this.ticketNo = ticketNo;
             this.barcode = barcode;
+            this.state = STATE.ISSUED;
 
 	}
 
@@ -47,7 +61,12 @@ public class AdhocTicket implements IAdhocTicket {
         //sets the enter time from given long value
 	@Override
 	public void enter(long dateTime) {
-                this.entryDateTime = dateTime;		
+            if(dateTime <= 0) {
+                throw new RuntimeException("Entry Datetime is less than zero");
+            }
+            
+                this.entryDateTime = dateTime;	
+                this.state = STATE.CURRENT;
 	}
 
 
@@ -61,15 +80,20 @@ public class AdhocTicket implements IAdhocTicket {
         //returns boolean if ticket is valid, if it has an entry time and no exit time
 	@Override
 	public boolean isCurrent() {
-            return entryDateTime != 0 && exitDateTime == 0;
+            return this.state == STATE.CURRENT;
 	}
 
 
         //assigns the paid charge to the Ticket from given float and exit long
 	@Override
 	public void pay(long dateTime, float charge) {
+            if (dateTime <= this.entryDateTime) {
+                throw new RuntimeException("Paid date time is less than or equal to entry date time");
+            }
+            
             this.charge = charge;
-            this.paidDateTime = dateTime;	
+            this.paidDateTime = dateTime;
+            this.state = STATE.PAID;
 	}
 
 
@@ -85,9 +109,7 @@ public class AdhocTicket implements IAdhocTicket {
 	@Override
 
 	public boolean isPaid() {
-            long currentMilli = System.currentTimeMillis() - getPaidDateTime();
-            long fifteenMinutes = 900000;
-            return (paidDateTime != 0) && (currentMilli <= fifteenMinutes);
+            return this.state == STATE.PAID;
 
 	}
 
@@ -102,8 +124,13 @@ public class AdhocTicket implements IAdhocTicket {
         //assigns given long dateTime to exitDateTime
 	@Override
 	public void exit(long dateTime) {
+            if (dateTime <= this.paidDateTime) {
+            throw new RuntimeException("ExitdateTime is less than or equal to paid date time");
+            }
+            
             this.exitDateTime = dateTime;
-		
+            this.state = STATE.EXITED;
+
 	}
 
 
@@ -117,9 +144,25 @@ public class AdhocTicket implements IAdhocTicket {
         //returns boolean, if exitDateTime has a value
 	@Override
 	public boolean hasExited() {
-            return exitDateTime != 0;
+            return this.state == STATE.EXITED;
 	}
 
+        //not sure what this does yet, but was in Jim's example
+        public String toString() {
+		Date entryDate = new Date(entryDateTime);
+		Date paidDate = new Date(paidDateTime);
+		Date exitDate = new Date(exitDateTime);
+
+		return "Carpark    : " + carparkId + "\n" +
+		       "Ticket No  : " + ticketNo + "\n" +
+		       "Entry Time : " + entryDate + "\n" + 
+		       "Paid Time  : " + paidDate + "\n" + 
+		       "Exit Time  : " + exitDate + "\n" +
+		       "State      : " + state + "\n" +
+		       "Barcode    : " + barcode;		
+	}
+        
+        
 	
 	
 }

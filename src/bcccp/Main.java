@@ -13,12 +13,14 @@ import bcccp.carpark.paystation.PaystationController;
 import bcccp.carpark.paystation.PaystationUI;
 import bcccp.tickets.adhoc.AdhocTicketFactory;
 import bcccp.tickets.adhoc.AdhocTicketDAO;
+import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
 import bcccp.tickets.season.SeasonTicket;
 import bcccp.tickets.season.SeasonTicketDAO;
 import bcccp.tickets.season.UsageRecordFactory;
+import java.util.Date;
 
 public class Main {
 
@@ -26,6 +28,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+
 					CarSensor eos = new CarSensor("Entry Outside Sensor", 20, 100);
 					Gate egate = new Gate(20, 320);
 					CarSensor eis = new CarSensor("Entry Inside Sensor", 20, 440);
@@ -43,8 +46,8 @@ public class Main {
 					
 					Carpark carpark = new Carpark("Bathurst Chase", 20, 2, adhocTicketDAO, seasonTicketDAO);
 					
-					ISeasonTicket t1 = new SeasonTicket("S1111","Bathurst Chase", 0L, 0L);
-					ISeasonTicket t2 = new SeasonTicket("S2222","Bathurst Chase", 0L, 0L);
+					ISeasonTicket t1 = new SeasonTicket("S1111","Bathurst Chase", 1L, 99999999999999999L);
+					ISeasonTicket t2 = new SeasonTicket("S2222","Bathurst Chase", 1L, 99999999999999999L);
 					
 					carpark.registerSeasonTicket(t1);
 					carpark.registerSeasonTicket(t2);
@@ -72,7 +75,8 @@ public class Main {
 					xis.setVisible(true);
 					xgate.setVisible(true);
 					xos.setVisible(true);
-					
+					System.out.println("Test");
+
 				} 
 				catch (Exception e) {
 					e.printStackTrace();

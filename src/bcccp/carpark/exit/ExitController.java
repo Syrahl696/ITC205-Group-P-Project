@@ -243,7 +243,6 @@ public class ExitController
      */
     @Override
 	public void carEventDetected(String detectorId, boolean detected) {
-            
 		log("carEventDetected: " + detectorId + ", car Detected: " + detected );
 		
 		switch (state) {
@@ -306,5 +305,5 @@ public class ExitController
 			break;
 			
 		}
-        }
+  }
 }

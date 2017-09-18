@@ -11,42 +11,45 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
         private HashMap<String, ISeasonTicket> seasonTickets = new HashMap();
 	
 	/**
+         * @throws  RuntimeException if the reference to the UsageRecordFactory is null
          * SeasonTicket constructor, assigning factory
          * @param factory 
          */
 	public SeasonTicketDAO(IUsageRecordFactory factory) {
-		//TOD Implement constructor
+           if (factory == null){
+            throw new RuntimeException("reference to the UsageRecordFactory is null");
+        }
+                     //An instance of a class implementing the IUsageRecordFactory
                      this.factory = factory;
 
 	}
 
-
 /**
  * Registers ticket to hashmap with ticket.getId() as key and ticket as value
+ * @throws RuntimeException if ticket is null
  * @param ticket 
  */
 	@Override
 	public void registerTicket(ISeasonTicket ticket) {
-		// TODO Auto-generated method stub
+        if (ticket == null){
+            throw new RuntimeException("ticket is null");
+        }
                 seasonTickets.put(ticket.getId(), ticket);
                  }
-	
-
 
 /**
  * Gets the key for the specified season tickets key and if not null removes season ticket from hashmap
+ * @throws RuntimeException if ticket is null
  * @param ticket 
  */
         @Override
 	public void deregisterTicket(ISeasonTicket ticket) {
-               /*if(seasonTickets.containsKey(ticket.getId())){
-			seasonTickets.remove(ticket.getId());
-		}*/
                Object value = seasonTickets.get(ticket.getId());
-               if (value != null) {
-                        seasonTickets.remove(ticket.getId());
-            }
-	}
+               if (value == null) {
+                   throw new RuntimeException("ticket is null");
+               }
+               seasonTickets.remove(ticket.getId());  
+}
 
 
 /**
@@ -55,7 +58,7 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
  */
 	@Override
 	public int getNumberOfTickets() {
-		return seasonTickets.size();
+		return this.seasonTickets.size();
 	}
 
 
@@ -79,32 +82,36 @@ public class SeasonTicketDAO implements ISeasonTicketDAO {
 /**
  * Records ticket entry method,gets the key for the specified season tickets key and if not null 
  * record start usage method, calls IUsageRecordFactory passing in ticketId and System.currentTimeMillis() 
+ * @throws RuntimeException if season ticket identified by ticketId is not in the internal store
  * @param ticketId 
  */
 	@Override
 	public void recordTicketEntry(String ticketId) {
 		Object value = seasonTickets.get(ticketId);
-               if (value != null) {
-                   IUsageRecord record = factory.make(ticketId, System.currentTimeMillis());
-			seasonTickets.get(ticketId).recordUsage(record);
+               if (value == null) {
+                   throw new RuntimeException("season ticket identified by ticketId is not in the internal store");
                }
-	}
-
+                   IUsageRecord record = factory.make(ticketId, System.currentTimeMillis());
+                   seasonTickets.get(ticketId).recordUsage(record);
+        }
 
 /**
  * Records ticket exit method,gets the key for the specified season tickets key and if not null 
  * record end usage method, calls IUsageRecordFactory passing in ticketId and System.currentTimeMillis() 
+ * @throws RuntimeException if season ticket identified by ticketId is not in the internal store
+ * @throws RuntimeException if the season ticket identified by ticketId is not currently in use
  * @param ticketId 
  */
 	@Override
 	public void recordTicketExit(String ticketId) {
-		// TODO Auto-generated method stub
 		Object value = seasonTickets.get(ticketId);
-               if (value != null) {
-                   seasonTickets.get(ticketId).endUsage(System.currentTimeMillis());
-               }
+                    if (value == null) {
+                        throw new RuntimeException("season ticket identified by ticketId is not in the internal store");
+                    }
+                    if (seasonTickets.get(ticketId).getCurrentUsageRecord() == null){
+                        throw new RuntimeException("season ticket not in use");
+                    }
+                        seasonTickets.get(ticketId).endUsage(System.currentTimeMillis());}
+               
 	}
-	
-	
-	
-}
+
