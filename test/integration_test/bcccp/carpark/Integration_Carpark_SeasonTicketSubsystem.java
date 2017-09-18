@@ -3,76 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package unit_test.bcccp.carpark;
+package integration_test.bcccp.carpark;
 
-import bcccp.carpark.Carpark;
-import bcccp.carpark.ICarparkObserver;
-import bcccp.tickets.adhoc.AdhocTicket;
-import bcccp.tickets.adhoc.AdhocTicketDAO;
-import bcccp.tickets.adhoc.AdhocTicketFactory;
-import bcccp.tickets.adhoc.IAdhocTicket;
-import bcccp.tickets.adhoc.IAdhocTicketDAO;
-import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.ISeasonTicketDAO;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
+import bcccp.carpark.*;
+import bcccp.tickets.adhoc.*;
+import bcccp.tickets.season.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
 import static org.mockito.Mockito.*;
 
 /**
  *
  * @author Ryan Smith
  */
-public class CarparkTest {
-    public CarparkTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {      
-    }
-    
-    @After
-    public void tearDown() {
-    }
-    
-    
-    
-    /**
-     * Test of register method, of class Carpark.
-     */
-    @Test
-    public void testConstructor() {
-        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
-        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
-        when(dummySeasonDAO.getNumberOfTickets()).thenReturn(0);
-        
-        Carpark instance = new Carpark("Test Carpark", 1, 0, dummyAdhocDAO, dummySeasonDAO);
-        
-        assertEquals(instance.getName(), "Test Carpark");
-        assertFalse(instance.isFull());
-        
-    }
-    
+public class Integration_Carpark_SeasonTicketSubsystem {
     /**
      * Test of register method, of class Carpark.
      */
@@ -428,5 +378,4 @@ public class CarparkTest {
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
-    
 }
