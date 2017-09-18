@@ -28,11 +28,10 @@ import org.mockito.Mockito;
 public class Integration_Factory_AdhocTicket {
     //integration test of the Factory and AdhocTicket
     //Test Factory.make method using a real AdhocTicket. 
-    
-    IAdhocTicket ticket = new AdhocTicket("placeholder", 1, "placeholder");
-    IAdhocTicket spyTicket = spy(ticket);
-    IAdhocTicket ticket2;
+
     IAdhocTicketFactory factory;
+    IAdhocTicket ticket;
+    IAdhocTicket ticket2;
     
      @BeforeClass
     public static void setUpClass() {
@@ -53,20 +52,24 @@ public class Integration_Factory_AdhocTicket {
     @Test
     public void testFactoryMake() {
         factory = new AdhocTicketFactory();
-        spyTicket = factory.make("test carpark", 1);
         
+        //create two tickets, one through DAO and one through ticket constructor with same parameters
+        ticket = factory.make("test carpark", 1);
         ticket2 = new AdhocTicket("test carpark", 1, "barcode");
         
-        assertEquals(spyTicket.getCarparkId(), ticket2.getCarparkId());
-        assertEquals(spyTicket.getTicketNo(), ticket2.getTicketNo());
+        //check if carparkID and TicketNo match given parameters
+        assertEquals(ticket.getCarparkId(), ticket2.getCarparkId());
+        assertEquals(ticket.getTicketNo(), ticket2.getTicketNo());
         
-        //fails here
-        //verify(spyTicket).enter(anyLong());
+        //check for null/ empty values in carparkId and ticketNo
+        assertTrue(ticket.getCarparkId() != null);
+        assertTrue(ticket.getTicketNo() > 0);
         
-        //verify ticket has a barcode
-        //verify ticket has an entry time greater than o
-        //verify that entry() inside ticket has been called
-        //check if first few digits of barcode match                                        
+        //test if ticket has been given an EntryDateTime
+        assertTrue(ticket.getEntryDateTime() > 0);
+        
+        //test if ticket has been given barcode containing "A" + ticketNo
+        assertEquals((ticket.getBarcode()).substring(0, 2), "A1");
         
         
         

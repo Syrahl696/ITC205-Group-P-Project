@@ -55,11 +55,18 @@ public class Integration_AdhocTicketDAO_FactoryTicket {
         factory = new AdhocTicketFactory();
         ticketDAO = new AdhocTicketDAO(factory);
         
+        //create two tickets, one through DAO and one through ticket constrcutor with same parameters
         ticket = ticketDAO.createTicket("test carpark");
         ticket2 = new AdhocTicket("test carpark", 1, "barcode");
         
+        //check if carparkId is not empty
+        assertTrue(ticket.getCarparkId() != null);
+        
+        //test if both tickets contain same given carparkId and TicketNo. 
         assertEquals(ticket.getCarparkId(), ticket2.getCarparkId());
         assertEquals(ticket.getTicketNo(), ticket2.getTicketNo());
+        
+        
     }
     
     
@@ -68,9 +75,11 @@ public class Integration_AdhocTicketDAO_FactoryTicket {
         factory = new AdhocTicketFactory();
         ticketDAO = new AdhocTicketDAO(factory);
         
+        //create two tickets, one with DAO and one by passing barcode into method under test. 
         ticket = ticketDAO.createTicket("test carpark");
         ticket2 = ticketDAO.findTicketByBarcode(ticket.getBarcode());
         
+        //test if tickets equal
         assertEquals(ticket, ticket2);
         
         
@@ -86,14 +95,12 @@ public class Integration_AdhocTicketDAO_FactoryTicket {
         ticketDAO.createTicket("test carpark");  //create first ticket
         ticketDAO.createTicket("test carpark");  //create second ticket
         
-        //somehow verify that this DAO holds two ticket, both with same carparkID and consecutive numbers. 
-        //actually that it returns a Hashmap with two tickets inside
-        
+        //verofy both tickets created by DAO.
         verify(ticketDAO, times(2)).createTicket("test carpark");
         
         List<IAdhocTicket> retrievedTickets = ticketDAO.getCurrentTickets();
         
-        //somehow do some more checks
+        //test that both tickets placed into HashMap
         assertTrue(retrievedTickets.size() == 2);
         
     }
