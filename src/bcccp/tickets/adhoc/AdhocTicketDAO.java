@@ -35,7 +35,7 @@ public class AdhocTicketDAO  implements IAdhocTicketDAO  {
                 throw new RuntimeException("carparkId is empty");
             }
             
-             AdhocTicket newTicket = (AdhocTicket) adhocTicketFactory.make(carparkId, currentTicketNo);
+             IAdhocTicket newTicket = adhocTicketFactory.make(carparkId, currentTicketNo);
                 currentTicketNo++;
                 //add new ticket to hasMap
                 currentAdhocTickets.put(newTicket.getBarcode(), newTicket);
