@@ -341,7 +341,7 @@ public class CarparkTest {
         
         boolean result = instance.isSeasonTicketValid("S1111");
         
-        assertEquals(expResult, result);;
+        assertEquals(expResult, result);
     }
 
     /**
