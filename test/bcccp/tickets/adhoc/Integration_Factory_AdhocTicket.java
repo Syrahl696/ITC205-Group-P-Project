@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import bcccp.tickets.adhoc.*;
+import java.text.SimpleDateFormat;
 import org.mockito.Mockito;
 
 /**
@@ -70,6 +71,13 @@ public class Integration_Factory_AdhocTicket {
         
         //test if ticket has been given barcode containing "A" + ticketNo
         assertEquals((ticket.getBarcode()).substring(0, 2), "A1");
+        
+        //format ticket.EntryDateTime correctly
+        String formatter = new SimpleDateFormat("ddMMyyyyHHmmss").format(ticket.getEntryDateTime());
+        long date = Long.parseLong(formatter);
+        
+        //test if rest of barcode equals the EntryDateTime stored in the ticket. 
+        assertEquals((ticket.getBarcode()).substring(2), Long.toHexString(date));
         
         
         
