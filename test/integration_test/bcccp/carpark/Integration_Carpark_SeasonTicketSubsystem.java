@@ -149,7 +149,7 @@ public class Integration_Carpark_SeasonTicketSubsystem {
                 int day= c.get(Calendar.DAY_OF_WEEK);     
                 
         boolean expResult = true;
-        if (!(businessHours == true) || (day >= 2) && (day <= 6)){
+        if (!(businessHours == true) || !((day >= 2) && (day <= 6))){
             expResult = false;
         }       
         
