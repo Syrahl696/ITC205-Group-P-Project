@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bcccp;
+package integration_test.bcccp;
 
-import bcccp.tickets.season.SeasonTicketDAOIntegrationTest;
-import bcccp.tickets.season.SeasonTicketIntegrationTest;
-import bcccp.tickets.season.UsageRecordFactoryIntegrationTest;
+import integration_test.bcccp.tickets.season.SeasonTicketDAOIntegrationTest;
+import integration_test.bcccp.tickets.season.SeasonTicketIntegrationTest;
+import integration_test.bcccp.tickets.season.UsageRecordFactoryIntegrationTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

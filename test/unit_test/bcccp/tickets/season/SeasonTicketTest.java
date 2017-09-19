@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bcccp.tickets.season;
+package unit_test.bcccp.tickets.season;
 
+import bcccp.tickets.season.IUsageRecord;
+import bcccp.tickets.season.SeasonTicket;
+import bcccp.tickets.season.UsageRecord;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;

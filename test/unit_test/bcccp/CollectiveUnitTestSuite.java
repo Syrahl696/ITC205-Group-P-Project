@@ -3,17 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bcccp;
+package unit_test.bcccp;
 
-import bcccp.carpark.CarparkTest;
-import bcccp.carpark.entry.EntryControllerTest;
-import bcccp.carpark.exit.ExitControllerTest;
-import bcccp.carpark.paystation.PaystationControllerTest;
-import bcccp.tickets.adhoc.testAdhocTicketDAO;
-import bcccp.tickets.season.SeasonTicketDAOTest;
-import bcccp.tickets.season.SeasonTicketTest;
-import bcccp.tickets.season.UsageRecordFactoryTest;
-import bcccp.tickets.season.UsageRecordTest;
+import unit_test.bcccp.carpark.CarparkTest;
+import unit_test.bcccp.carpark.entry.EntryControllerTest;
+import unit_test.bcccp.carpark.exit.ExitControllerTest;
+import unit_test.bcccp.carpark.paystation.PaystationControllerTest;
+import unit_test.bcccp.tickets.adhoc.testAdhocTicket;
+import unit_test.bcccp.tickets.adhoc.testAdhocTicketFactory;
+import unit_test.bcccp.tickets.adhoc.testAdhocTicketDAO;
+import unit_test.bcccp.tickets.season.SeasonTicketDAOTest;
+import unit_test.bcccp.tickets.season.SeasonTicketTest;
+import unit_test.bcccp.tickets.season.UsageRecordFactoryTest;
+import unit_test.bcccp.tickets.season.UsageRecordTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
