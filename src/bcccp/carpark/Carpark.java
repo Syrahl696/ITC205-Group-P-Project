@@ -177,13 +177,17 @@ public class Carpark implements ICarpark {
  */
     @Override
 	public void registerSeasonTicket(ISeasonTicket seasonTicket) {
-            if (seasonTicket.getCarparkId() != carparkId){
+            if (!seasonTicket.getCarparkId().equals(carparkId)){
             throw new RuntimeException("the carpark the season ticket is associated with is not the same as the carpark name");
         }
+            if (capacity / (seasonCapacity * 10 + 1) >= 1 ){
+               throw new RuntimeException("season ticket capacity will not be between 0 and 10 percent of total capacity");
+            }
+            if (seasonTicketDAO.findTicketById(seasonTicket.getId()) != null){
+                throw new RuntimeException("season ticket is already registered");
+            }
 		seasonTicketDAO.registerTicket(seasonTicket);
-		
 	}
-
 
 /**
  * deregisters season ticket
