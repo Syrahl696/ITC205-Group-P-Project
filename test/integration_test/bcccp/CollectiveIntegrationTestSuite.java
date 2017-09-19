@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bcccp;
+package integration_test.bcccp;
 
-import bcccp.tickets.season.SeasonTicketDAOIntegrationTest;
-import bcccp.tickets.season.SeasonTicketIntegrationTest;
-import bcccp.tickets.season.UsageRecordFactoryIntegrationTest;
+import integration_test.bcccp.carpark.Integration_Carpark_SeasonTicketSubsystem;
+import integration_test.bcccp.tickets.season.SeasonTicketDAOIntegrationTest;
+import integration_test.bcccp.tickets.season.SeasonTicketIntegrationTest;
+import integration_test.bcccp.tickets.season.UsageRecordFactoryIntegrationTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,7 +26,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({SeasonTicketDAOIntegrationTest.class, 
       SeasonTicketIntegrationTest.class,
-      UsageRecordFactoryIntegrationTest.class})
+      UsageRecordFactoryIntegrationTest.class,
+        Integration_Carpark_SeasonTicketSubsystem.class})
 
 public class CollectiveIntegrationTestSuite {
 
@@ -49,7 +51,8 @@ public class CollectiveIntegrationTestSuite {
       Result result = JUnitCore.runClasses(
       SeasonTicketDAOIntegrationTest.class, 
       SeasonTicketIntegrationTest.class,
-      UsageRecordFactoryIntegrationTest.class);
+      UsageRecordFactoryIntegrationTest.class,
+      Integration_Carpark_SeasonTicketSubsystem.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());

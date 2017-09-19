@@ -1,4 +1,4 @@
-package bcccp;
+package unit_test.bcccp.tickets.adhoc;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -8,6 +8,12 @@ import org.junit.*;
 import bcccp.carpark.Carpark;
 import bcccp.carpark.ICarpark;
 import bcccp.tickets.adhoc.*;
+import bcccp.tickets.adhoc.AdhocTicket;
+import bcccp.tickets.adhoc.AdhocTicketDAO;
+import bcccp.tickets.adhoc.AdhocTicketFactory;
+import bcccp.tickets.adhoc.IAdhocTicket;
+import bcccp.tickets.adhoc.IAdhocTicketDAO;
+import bcccp.tickets.adhoc.IAdhocTicketFactory;
 
 import bcccp.tickets.season.ISeasonTicketDAO;
 
