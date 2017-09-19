@@ -38,17 +38,13 @@ public class Integration_Carpark_AdhocSubSystem {
     public void testCarparkIssueAdhocTicket() {
         adhocDAO = new AdhocTicketDAO(new AdhocTicketFactory());
         seasonDAO = new SeasonTicketDAO(new UsageRecordFactory());
-        carpark = new Carpark("test carpark", 5, 1, adhocDAO, seasonDAO);
+        carpark = new Carpark("test carpark", 1, 0, adhocDAO, seasonDAO);
         
         ticket = carpark.issueAdhocTicket();
-        ticket2 = new AdhocTicket("test carpark", 1, "barcode");
         
-        assertEquals(ticket.getTicketNo(), ticket2.getTicketNo());
-        assertEquals(ticket.getCarparkId(), ticket2.getCarparkId());
-        
-        assertTrue(ticket.getEntryDateTime() > 0);
-        assertEquals((ticket.getBarcode()).substring(0, 2), "A1");   //same tests as the DAO, should it be something else?
-        
+        //check if ticket exists
+        assertTrue(ticket != null);
+
     }
     
     @Test
