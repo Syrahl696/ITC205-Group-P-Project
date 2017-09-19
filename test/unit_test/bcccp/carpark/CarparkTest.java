@@ -9,8 +9,11 @@ import bcccp.carpark.Carpark;
 import bcccp.carpark.ICarparkObserver;
 import bcccp.tickets.adhoc.AdhocTicket;
 import bcccp.tickets.adhoc.AdhocTicketDAO;
+import bcccp.tickets.adhoc.AdhocTicketFactory;
 import bcccp.tickets.adhoc.IAdhocTicket;
+import bcccp.tickets.adhoc.IAdhocTicketDAO;
 import bcccp.tickets.season.ISeasonTicket;
+import bcccp.tickets.season.ISeasonTicketDAO;
 import bcccp.tickets.season.SeasonTicket;
 import bcccp.tickets.season.SeasonTicketDAO;
 import bcccp.tickets.season.UsageRecordFactory;
@@ -51,7 +54,25 @@ public class CarparkTest {
     @After
     public void tearDown() {
     }
-
+    
+    
+    
+    /**
+     * Test of register method, of class Carpark.
+     */
+    @Test
+    public void testConstructor() {
+        AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
+        SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
+        when(dummySeasonDAO.getNumberOfTickets()).thenReturn(0);
+        
+        Carpark instance = new Carpark("Test Carpark", 1, 0, dummyAdhocDAO, dummySeasonDAO);
+        
+        assertEquals(instance.getName(), "Test Carpark");
+        assertFalse(instance.isFull());
+        
+    }
+    
     /**
      * Test of register method, of class Carpark.
      */
