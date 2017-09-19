@@ -6,7 +6,9 @@
 package integration_test.bcccp;
 
 import integration_test.bcccp.carpark.Integration_Carpark_SeasonTicketSubsystem;
+import integration_test.bcccp.carpark.Paystation.Integration_Carpark_PaystationUseCase;
 import integration_test.bcccp.carpark.entry.Integration_EntryController_CarparkSubsystem;
+import integration_test.bcccp.carpark.exit.Integration_ExitController_CarparkSubsystem;
 import integration_test.bcccp.tickets.season.SeasonTicketDAOIntegrationTest;
 import integration_test.bcccp.tickets.season.SeasonTicketIntegrationTest;
 import integration_test.bcccp.tickets.season.UsageRecordFactoryIntegrationTest;
@@ -22,14 +24,16 @@ import org.junit.runners.Suite;
 
 /**
  *
- * @author Ryan Smith
+ * @author Corey Schmetzer
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({SeasonTicketDAOIntegrationTest.class, 
       SeasonTicketIntegrationTest.class,
       UsageRecordFactoryIntegrationTest.class,
       Integration_Carpark_SeasonTicketSubsystem.class,
-      Integration_EntryController_CarparkSubsystem.class})
+      Integration_Carpark_PaystationUseCase.class,
+      Integration_EntryController_CarparkSubsystem.class,
+      Integration_ExitController_CarparkSubsystem.class})
 
 public class CollectiveIntegrationTestSuite {
 
@@ -54,8 +58,10 @@ public class CollectiveIntegrationTestSuite {
       SeasonTicketDAOIntegrationTest.class, 
       SeasonTicketIntegrationTest.class,
       UsageRecordFactoryIntegrationTest.class,
+      Integration_Carpark_PaystationUseCase.class,
       Integration_Carpark_SeasonTicketSubsystem.class,
-      Integration_EntryController_CarparkSubsystem.class);
+      Integration_EntryController_CarparkSubsystem.class,
+      Integration_ExitController_CarparkSubsystem.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());
