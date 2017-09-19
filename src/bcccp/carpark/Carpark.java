@@ -213,7 +213,7 @@ public class Carpark implements ICarpark {
             ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);  
 
             return ((seasonTicket != null) && (System.currentTimeMillis() <= seasonTicket.getEndValidPeriod()) &&
-                   (System.currentTimeMillis() >= seasonTicket.getStartValidPeriod()) && (isBusinessDay()));
+                   (System.currentTimeMillis() >= seasonTicket.getStartValidPeriod()) && (isBusinessHours()));
 	}
 
 /**
@@ -267,7 +267,7 @@ public class Carpark implements ICarpark {
      *Calculates whether or not the carpark is within business hours and days.
      * @return boolean
      */
-        public boolean isBusinessDay(){
+        public boolean isBusinessHours(){
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             boolean businessHours = false;
             try {

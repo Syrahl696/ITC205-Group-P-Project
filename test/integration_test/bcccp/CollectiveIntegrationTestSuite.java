@@ -6,6 +6,7 @@
 package integration_test.bcccp;
 
 import integration_test.bcccp.carpark.Integration_Carpark_SeasonTicketSubsystem;
+import integration_test.bcccp.carpark.entry.Integration_EntryController_CarparkSubsystem;
 import integration_test.bcccp.tickets.season.SeasonTicketDAOIntegrationTest;
 import integration_test.bcccp.tickets.season.SeasonTicketIntegrationTest;
 import integration_test.bcccp.tickets.season.UsageRecordFactoryIntegrationTest;
@@ -27,7 +28,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({SeasonTicketDAOIntegrationTest.class, 
       SeasonTicketIntegrationTest.class,
       UsageRecordFactoryIntegrationTest.class,
-        Integration_Carpark_SeasonTicketSubsystem.class})
+      Integration_Carpark_SeasonTicketSubsystem.class,
+      Integration_EntryController_CarparkSubsystem.class})
 
 public class CollectiveIntegrationTestSuite {
 
@@ -52,7 +54,8 @@ public class CollectiveIntegrationTestSuite {
       SeasonTicketDAOIntegrationTest.class, 
       SeasonTicketIntegrationTest.class,
       UsageRecordFactoryIntegrationTest.class,
-      Integration_Carpark_SeasonTicketSubsystem.class);
+      Integration_Carpark_SeasonTicketSubsystem.class,
+      Integration_EntryController_CarparkSubsystem.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());
