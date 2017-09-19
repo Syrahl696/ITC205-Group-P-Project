@@ -282,23 +282,20 @@ public class CarparkTest {
         //fail("The test case is a prototype.");
     }
 
-    /**
+     /**
      * Test of isSeasonTicketValid method, of class Carpark.
      */
     @Test
     public void testIsSeasonTicketValid() {
         System.out.println("isSeasonTicketValid");       
         
-        UsageRecordFactory dummyUsageRecordFactory = mock(UsageRecordFactory.class);
         SeasonTicketDAO dummySeasonDAO = mock(SeasonTicketDAO.class);
         AdhocTicketDAO dummyAdhocDAO = mock(AdhocTicketDAO.class);
         Carpark instance = new Carpark("Bathurst Chase", 3, 3, dummyAdhocDAO, dummySeasonDAO);
         SeasonTicket mockSeason = mock(SeasonTicket.class);
 
-        when(mockSeason.getCarparkId()).thenReturn("Bathurst Chase");
         when(mockSeason.getEndValidPeriod()).thenReturn(999999999999999L);
-        when(mockSeason.getId()).thenReturn("S1111");
-        instance.registerSeasonTicket(mockSeason);
+        when(dummySeasonDAO.findTicketById("S1111")).thenReturn(mockSeason);
         
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         boolean businessHours = false;
@@ -335,7 +332,7 @@ public class CarparkTest {
                 int day= c.get(Calendar.DAY_OF_WEEK);     
                 
         boolean expResult = true;
-        if (!(businessHours == true) || (day >= 2) && (day <= 6)){
+        if (!(businessHours == true) || !((day >= 2) && (day <= 6))){
             expResult = false;
         }       
         

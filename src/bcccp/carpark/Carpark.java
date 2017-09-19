@@ -177,13 +177,17 @@ public class Carpark implements ICarpark {
  */
     @Override
 	public void registerSeasonTicket(ISeasonTicket seasonTicket) {
-            if (seasonTicket.getCarparkId() != carparkId){
+            if (!seasonTicket.getCarparkId().equals(carparkId)){
             throw new RuntimeException("the carpark the season ticket is associated with is not the same as the carpark name");
         }
+            if (capacity / (seasonCapacity * 10 + 1) >= 1 ){
+               throw new RuntimeException("season ticket capacity will not be between 0 and 10 percent of total capacity");
+            }
+            if (seasonTicketDAO.findTicketById(seasonTicket.getId()) != null){
+                throw new RuntimeException("season ticket is already registered");
+            }
 		seasonTicketDAO.registerTicket(seasonTicket);
-		
 	}
-
 
 /**
  * deregisters season ticket
@@ -204,48 +208,13 @@ public class Carpark implements ICarpark {
  * @return boolean
  */
 
-@Override
+    @Override
 	public boolean isSeasonTicketValid(String ticketId) {
-            
-		ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                boolean businessHours = false;
-                try {
-                //sets opening business hours at 7am
-                String stringOpeningTime = "07:00:00";
-                Date openingTime = sdf.parse(stringOpeningTime);
-                Calendar calenderOpeningTime = Calendar.getInstance();
-                calenderOpeningTime.setTime(openingTime);
+            ISeasonTicket seasonTicket = seasonTicketDAO.findTicketById(ticketId);  
 
-                //sets closing business hours at 7pm
-                String stringClosingTime = "19:00:00";
-                Date closingTime = sdf.parse(stringClosingTime);
-                Calendar calenderClosingTime = Calendar.getInstance();
-                calenderClosingTime.setTime(closingTime);
-
-                //sets current time
-                Calendar calendarCurrentTime = Calendar.getInstance();
-                String stringCurrentTime = sdf.format(calendarCurrentTime.getTime());
-                Date currentTime = sdf.parse(stringCurrentTime);
-                calendarCurrentTime.setTime(currentTime);
-
-                //tests if current time is between opening time and closing time
-                Date current = calendarCurrentTime.getTime();
-                if (current.after(calenderOpeningTime.getTime()) && (current.before(calenderClosingTime.getTime()))) {
-                    businessHours = true;
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-                }
-                
-                Calendar c = Calendar.getInstance();
-                //Retrieves current day as integer from 1-7 Sunday =1, Saturday = 7
-                int day= c.get(Calendar.DAY_OF_WEEK);     
-                
-                return ((seasonTicket != null) && (System.currentTimeMillis() <= seasonTicket.getEndValidPeriod() &&
-                        (businessHours == true) && (day >= 2) && (day <= 6)));
+            return ((seasonTicket != null) && (System.currentTimeMillis() <= seasonTicket.getEndValidPeriod()) &&
+                   (System.currentTimeMillis() >= seasonTicket.getStartValidPeriod()) && (isBusinessDay()));
 	}
-
 
 /**
  * Finds season ticket by Id and then returns whether or not it is in use
@@ -294,7 +263,47 @@ public class Carpark implements ICarpark {
 		seasonTicketDAO.recordTicketExit(ticketId);
 
 }
+     /**
+     *Calculates whether or not the carpark is within business hours and days.
+     * @return boolean
+     */
+        public boolean isBusinessDay(){
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            boolean businessHours = false;
+            try {
+            //sets opening business hours at 7am
+            String stringOpeningTime = "07:00:00";
+            Date openingTime = sdf.parse(stringOpeningTime);
+            Calendar calenderOpeningTime = Calendar.getInstance();
+            calenderOpeningTime.setTime(openingTime);
 
+            //sets closing business hours at 7pm
+            String stringClosingTime = "19:00:00";
+            Date closingTime = sdf.parse(stringClosingTime);
+            Calendar calenderClosingTime = Calendar.getInstance();
+            calenderClosingTime.setTime(closingTime);
+
+            //sets current time
+            Calendar calendarCurrentTime = Calendar.getInstance();
+            String stringCurrentTime = sdf.format(calendarCurrentTime.getTime());
+            Date currentTime = sdf.parse(stringCurrentTime);
+            calendarCurrentTime.setTime(currentTime);
+
+            //tests if current time is between opening time and closing time
+            Date current = calendarCurrentTime.getTime();
+            if (current.after(calenderOpeningTime.getTime()) && (current.before(calenderClosingTime.getTime()))) {
+                businessHours = true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            }
+                
+            Calendar c = Calendar.getInstance();
+            //Retrieves current day as integer from 1-7 Sunday =1, Saturday = 7
+            int day= c.get(Calendar.DAY_OF_WEEK);     
+                
+            return ((businessHours == true) && (day >= 2) && (day <= 6));
+      }
 
         @SuppressWarnings("deprecation")
 		public float calcCharge(long start, long end) {
