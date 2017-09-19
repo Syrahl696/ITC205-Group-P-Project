@@ -6,17 +6,12 @@
 package integration_test.bcccp.carpark.Paystation;
 
 import bcccp.carpark.*;
-import bcccp.carpark.entry.EntryController;
-import bcccp.carpark.entry.IEntryUI;
 import bcccp.carpark.paystation.*;
-import bcccp.tickets.adhoc.AdhocTicket;
 import bcccp.tickets.adhoc.AdhocTicketDAO;
 import bcccp.tickets.adhoc.AdhocTicketFactory;
 import bcccp.tickets.adhoc.IAdhocTicket;
 import bcccp.tickets.adhoc.IAdhocTicketDAO;
-import bcccp.tickets.season.ISeasonTicket;
 import bcccp.tickets.season.ISeasonTicketDAO;
-import bcccp.tickets.season.SeasonTicket;
 import bcccp.tickets.season.SeasonTicketDAO;
 import bcccp.tickets.season.UsageRecordFactory;
 import static org.junit.Assert.*;
@@ -79,7 +74,6 @@ public class Integration_Carpark_PaystationUseCase {
         payController.ticketPaid();
         
         assertTrue(ticket.getPaidDateTime() > 0);
-        verify(mockUI).printTicket(any(), any(), any(), any(), any(), any()); 
         verify(mockUI, never()).beep();
     }
     
