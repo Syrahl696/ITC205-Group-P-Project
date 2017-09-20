@@ -6,19 +6,10 @@
 package integration_test.bcccp.carpark.entry;
 
 import bcccp.carpark.*;
-import bcccp.carpark.entry.EntryController;
-import bcccp.carpark.entry.IEntryUI;
-import bcccp.tickets.adhoc.AdhocTicket;
-import bcccp.tickets.adhoc.AdhocTicketDAO;
-import bcccp.tickets.adhoc.AdhocTicketFactory;
-import bcccp.tickets.adhoc.IAdhocTicketDAO;
-import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.ISeasonTicketDAO;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
-import org.junit.*;
-import org.junit.runners.MethodSorters;
+import bcccp.carpark.entry.*;
+import bcccp.tickets.adhoc.*;
+import bcccp.tickets.season.*;
+import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 
@@ -31,23 +22,6 @@ public class Integration_EntryController_CarparkSubsystem {
     
     public Integration_EntryController_CarparkSubsystem() {
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of buttonPushed method, of class EntryController.
      */

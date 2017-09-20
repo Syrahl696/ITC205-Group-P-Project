@@ -10,7 +10,6 @@ import bcccp.carpark.exit.ExitController;
 import bcccp.carpark.exit.IExitUI;
 import bcccp.tickets.adhoc.AdhocTicket;
 import org.junit.*;
-import static org.junit.Assert.*;
 import org.junit.runners.MethodSorters;
 import static org.mockito.Mockito.*;
 

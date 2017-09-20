@@ -8,14 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import bcccp.tickets.adhoc.*;
-import bcccp.tickets.adhoc.AdhocTicket;
-import bcccp.tickets.adhoc.AdhocTicketDAO;
-import bcccp.tickets.adhoc.AdhocTicketFactory;
-import bcccp.tickets.adhoc.IAdhocTicket;
-import bcccp.tickets.adhoc.IAdhocTicketFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -5,26 +5,12 @@
  */
 package unit_test.bcccp.tickets.season;
 
-import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.IUsageRecordFactory;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
+import bcccp.tickets.season.*;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  *
@@ -33,22 +19,6 @@ import static org.mockito.Mockito.when;
 public class SeasonTicketDAOTest {
     
     public SeasonTicketDAOTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
     }
 
     /**
