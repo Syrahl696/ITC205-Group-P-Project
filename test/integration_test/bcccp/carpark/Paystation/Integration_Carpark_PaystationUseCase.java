@@ -71,6 +71,9 @@ public class Integration_Carpark_PaystationUseCase {
         
         payController.ticketInserted(ticket.getBarcode());
         
+        //Implemented second delay to avoid paidTime equalling entryTime
+        TimeUnit.SECONDS.sleep(1);
+        
         payController.ticketPaid();
         
         assertTrue(ticket.getPaidDateTime() > 0);
