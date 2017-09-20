@@ -4,24 +4,12 @@
  * and open the template in the editor.
  */
 package integration_test.bcccp.tickets.season;
-import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.ISeasonTicketDAO;
-import bcccp.tickets.season.IUsageRecord;
-import bcccp.tickets.season.IUsageRecordFactory;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
+import bcccp.tickets.season.*;
 import java.util.concurrent.TimeUnit;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  *
@@ -30,22 +18,6 @@ import static org.mockito.Mockito.verify;
 public class SeasonTicketDAOIntegrationTest {
     
     public SeasonTicketDAOIntegrationTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
     }
      /**
      * Test of registerTicket method, of class SeasonTicketDAO.

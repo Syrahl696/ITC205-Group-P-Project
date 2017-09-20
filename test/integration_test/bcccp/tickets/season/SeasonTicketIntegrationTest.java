@@ -5,17 +5,9 @@
  */
 package integration_test.bcccp.tickets.season;
 
-import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.IUsageRecord;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.UsageRecordFactory;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import bcccp.tickets.season.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -24,23 +16,6 @@ import org.junit.Ignore;
 public class SeasonTicketIntegrationTest {
 
     public SeasonTicketIntegrationTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
     }
     /**
     * Test of recordUsage method, of class SeasonTicket.
