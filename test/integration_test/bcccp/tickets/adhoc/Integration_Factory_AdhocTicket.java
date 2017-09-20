@@ -5,21 +5,10 @@
  */
 package integration_test.bcccp.tickets.adhoc;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.RunWith;
-import org.junit.runner.notification.Failure;
-import org.junit.runners.Suite;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import bcccp.tickets.adhoc.*;
-import org.mockito.Mockito;
 
 /**
  *
@@ -32,22 +21,6 @@ public class Integration_Factory_AdhocTicket {
     IAdhocTicketFactory factory;
     IAdhocTicket ticket;
     IAdhocTicket ticket2;
-    
-     @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {      
-    }
-    
-    @After
-    public void tearDown() {
-    }
     
     @Test
     public void testFactoryMake() {

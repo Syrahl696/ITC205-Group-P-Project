@@ -7,28 +7,16 @@ package unit_test.bcccp.carpark;
 
 import bcccp.carpark.Carpark;
 import bcccp.carpark.ICarparkObserver;
-import bcccp.tickets.adhoc.AdhocTicket;
 import bcccp.tickets.adhoc.AdhocTicketDAO;
-import bcccp.tickets.adhoc.AdhocTicketFactory;
 import bcccp.tickets.adhoc.IAdhocTicket;
-import bcccp.tickets.adhoc.IAdhocTicketDAO;
-import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.ISeasonTicketDAO;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
+import bcccp.tickets.season.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import static org.mockito.Mockito.*;
 
 /**
@@ -36,26 +24,9 @@ import static org.mockito.Mockito.*;
  * @author Ryan Smith
  */
 public class CarparkTest {
+    
     public CarparkTest() {
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {      
-    }
-    
-    @After
-    public void tearDown() {
-    }
-    
-    
     
     /**
      * Test of register method, of class Carpark.

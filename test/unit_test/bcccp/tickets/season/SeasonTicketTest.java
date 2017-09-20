@@ -5,18 +5,11 @@
  */
 package unit_test.bcccp.tickets.season;
 
-import bcccp.tickets.season.IUsageRecord;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.UsageRecord;
+import bcccp.tickets.season.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -26,23 +19,6 @@ import static org.mockito.Mockito.mock;
 public class SeasonTicketTest {
 
     public SeasonTicketTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
     }
 
     /**
