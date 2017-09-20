@@ -5,10 +5,13 @@
  */
 package integration_test.bcccp;
 
+import integration_test.bcccp.carpark.Integration_Carpark_AdhocSubSystem;
 import integration_test.bcccp.carpark.Integration_Carpark_SeasonTicketSubsystem;
 import integration_test.bcccp.carpark.Paystation.Integration_Carpark_PaystationUseCase;
 import integration_test.bcccp.carpark.entry.Integration_EntryController_CarparkSubsystem;
 import integration_test.bcccp.carpark.exit.Integration_ExitController_CarparkSubsystem;
+import integration_test.bcccp.tickets.adhoc.Integration_AdhocTicketDAO_FactoryTicket;
+import integration_test.bcccp.tickets.adhoc.Integration_Factory_AdhocTicket;
 import integration_test.bcccp.tickets.season.SeasonTicketDAOIntegrationTest;
 import integration_test.bcccp.tickets.season.SeasonTicketIntegrationTest;
 import integration_test.bcccp.tickets.season.UsageRecordFactoryIntegrationTest;
@@ -30,7 +33,11 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({SeasonTicketDAOIntegrationTest.class, 
       SeasonTicketIntegrationTest.class,
       UsageRecordFactoryIntegrationTest.class,
+      Integration_AdhocTicketDAO_FactoryTicket.class, 
+      Integration_Factory_AdhocTicket.class,
       Integration_Carpark_SeasonTicketSubsystem.class,
+      Integration_Carpark_AdhocSubSystem.class, 
+      Integration_EntryController_CarparkSubsystem.class, 
       Integration_Carpark_PaystationUseCase.class,
       Integration_EntryController_CarparkSubsystem.class,
       Integration_ExitController_CarparkSubsystem.class})
@@ -60,7 +67,10 @@ public class CollectiveIntegrationTestSuite {
       UsageRecordFactoryIntegrationTest.class,
       Integration_Carpark_PaystationUseCase.class,
       Integration_Carpark_SeasonTicketSubsystem.class,
-      Integration_EntryController_CarparkSubsystem.class,
+      Integration_EntryController_CarparkSubsystem.class, 
+      Integration_Carpark_AdhocSubSystem.class, 
+      Integration_AdhocTicketDAO_FactoryTicket.class, 
+      Integration_Factory_AdhocTicket.class,
       Integration_ExitController_CarparkSubsystem.class);
 
       for (Failure failure : result.getFailures()) {
