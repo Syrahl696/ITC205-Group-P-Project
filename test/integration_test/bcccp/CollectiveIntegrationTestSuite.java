@@ -61,7 +61,10 @@ public class CollectiveIntegrationTestSuite {
       SeasonTicketIntegrationTest.class,
       UsageRecordFactoryIntegrationTest.class,
       Integration_Carpark_SeasonTicketSubsystem.class,
-      Integration_EntryController_CarparkSubsystem.class);
+      Integration_EntryController_CarparkSubsystem.class, 
+      Integration_Carpark_AdhocSubSystem.class, 
+      Integration_AdhocTicketDAO_FactoryTicket.class, 
+      Integration_Factory_AdhocTicket.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());
