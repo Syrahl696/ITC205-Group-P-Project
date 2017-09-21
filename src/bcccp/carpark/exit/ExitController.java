@@ -187,7 +187,7 @@ public class ExitController
 			if (isAdhocTicket(ticketStr)) {
 				adhocTicket = carpark.getAdhocTicket(ticketStr);
 				exitTime = System.currentTimeMillis();
-				if (adhocTicket != null && adhocTicket.isPaid()) {
+				if (adhocTicket != null && adhocTicket.isPaid() && exitTime - adhocTicket.getPaidDateTime() <= 900000) {
 					setState(STATE.PROCESSED);
 				}
 				else {

@@ -100,6 +100,9 @@ public class AdhocTicket implements IAdhocTicket {
         //returns the paidDateTime long
 	@Override
 	public long getPaidDateTime() {
+            if (this.state == STATE.PAID && System.currentTimeMillis() - paidDateTime > 900000){
+                this.state = STATE.CURRENT;
+            }
             return paidDateTime;
 	}
 
