@@ -81,7 +81,7 @@ public class PaystationController
 	public void ticketInserted(String barcode) {
 		if (state_ == STATE.IDLE) {
 			adhocTicket = carpark.getAdhocTicket(barcode);
-			if (adhocTicket != null) {
+			if (adhocTicket != null && adhocTicket.getEntryDateTime() != 0) {
                             if (adhocTicket.isPaid()){
                                 if (System.currentTimeMillis() - adhocTicket.getPaidDateTime() > 900000){
                                    charge = carpark.calculateAdhocTicketCharge(adhocTicket.getPaidDateTime());

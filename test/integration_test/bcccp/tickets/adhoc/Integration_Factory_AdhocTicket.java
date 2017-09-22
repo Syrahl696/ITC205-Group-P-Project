@@ -38,9 +38,6 @@ public class Integration_Factory_AdhocTicket {
         assertTrue(ticket.getCarparkId() != null);
         assertTrue(ticket.getTicketNo() > 0);
         
-        //test if ticket has been given an EntryDateTime
-        assertTrue(ticket.getEntryDateTime() > 0);
-        
         //test if ticket has been given barcode containing "A" + ticketNo
         assertEquals((ticket.getBarcode()).substring(0, 2), "A1");
         

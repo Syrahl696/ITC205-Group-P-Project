@@ -64,7 +64,6 @@ public class AdhocTicket implements IAdhocTicket {
             if(dateTime <= 0) {
                 throw new RuntimeException("Entry Datetime is less than zero");
             }
-            
                 this.entryDateTime = dateTime;	
                 this.state = STATE.CURRENT;
 	}

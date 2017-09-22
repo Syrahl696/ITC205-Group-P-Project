@@ -77,6 +77,7 @@ public class ExitControllerTest {
         AdhocTicket ticket = mock(AdhocTicket.class);
         when(mockCarpark.getAdhocTicket(aBarcode)).thenReturn(ticket);
         when(ticket.isPaid()).thenReturn(true);
+        when(ticket.getPaidDateTime()).thenReturn(System.currentTimeMillis() - 10000);
 
         //Begin tests
         seasonInstance.carEventDetected("InsideSensor", true);

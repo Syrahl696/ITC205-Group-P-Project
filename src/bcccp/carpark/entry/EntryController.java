@@ -228,12 +228,14 @@ public class EntryController
 				}
 				else {
 					ui.beep();
+                                        ui.display("Invalid Ticket");
 					seasonTicketId = null;
 					log("ticketInserted: invalid ticket");				
 				}
 			}
 			catch (NumberFormatException e) {
 				ui.beep();
+                                ui.display("Invalid Ticket");
 				seasonTicketId = null;
 				log("ticketInserted: invalid ticket id");				
 			}
