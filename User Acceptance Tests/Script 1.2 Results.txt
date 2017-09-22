@@ -3,3 +3,13 @@ New ticket    : Ticket No  : 19 Barcode    : A131417b2d53a27
 
 Ticket to exit: Ticket No  : 4  Barcode    : A41417b2d51fa2
 New ticket    : Ticket No  : 20 Barcode    : A141417b2d53b57
+
+Run 2
+
+Ticket to exit: Ticket No  : 12 Barcode    : Ac1417b2d5b6d1
+New ticket    : Ticket No  : 19 Barcode    : A131417b2d5b7e8
+
+Ticket to exit: Ticket No  : 1  Barcode    : A11417b2d5b52f
+
+New ticket    : Ticket No  : 20 Barcode    : A141417b2d5b966
+    

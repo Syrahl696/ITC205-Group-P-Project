@@ -3,3 +3,10 @@ Ticket No  : 14 Barcode    : Ae1417b2d52129
 
 Ticket created then not stored:
 Ticket No  : 21 Barcode    : A151417b2d55e76
+
+Run 2
+
+No ticket exited.
+
+Ticket created then not stored:
+Ticket No  : 1  Barcode    : A11417b2d5bf54
