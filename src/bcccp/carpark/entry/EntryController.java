@@ -234,6 +234,7 @@ public class EntryController
 			}
 			catch (NumberFormatException e) {
 				ui.beep();
+                                ui.display("Season Ticket not valid");
 				seasonTicketId = null;
 				log("ticketInserted: invalid ticket id");				
 			}
