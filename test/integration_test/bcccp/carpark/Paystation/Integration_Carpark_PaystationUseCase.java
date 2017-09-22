@@ -7,13 +7,9 @@ package integration_test.bcccp.carpark.Paystation;
 
 import bcccp.carpark.*;
 import bcccp.carpark.paystation.*;
-import bcccp.tickets.adhoc.AdhocTicketDAO;
-import bcccp.tickets.adhoc.AdhocTicketFactory;
-import bcccp.tickets.adhoc.IAdhocTicket;
-import bcccp.tickets.adhoc.IAdhocTicketDAO;
-import bcccp.tickets.season.ISeasonTicketDAO;
-import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
+import bcccp.tickets.adhoc.*;
+import bcccp.tickets.season.*;
+import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import org.junit.Test;
@@ -55,7 +51,7 @@ public class Integration_Carpark_PaystationUseCase {
     
     
     @Test
-    public void testTicketPaid() {
+    public void testTicketPaid() throws InterruptedException {
         //set up DAO's and Carpark
         adhocdao = new AdhocTicketDAO(new AdhocTicketFactory());
         seasondao = new SeasonTicketDAO(new UsageRecordFactory());

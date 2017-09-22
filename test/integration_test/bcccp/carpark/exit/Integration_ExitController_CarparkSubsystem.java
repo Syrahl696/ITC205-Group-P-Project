@@ -6,22 +6,12 @@
 package integration_test.bcccp.carpark.exit;
 
 import bcccp.carpark.*;
-import bcccp.carpark.exit.ExitController;
-import bcccp.carpark.exit.IExitUI;
-import bcccp.carpark.paystation.IPaystationController;
-import bcccp.carpark.paystation.IPaystationUI;
-import bcccp.carpark.paystation.PaystationController;
-import bcccp.tickets.adhoc.AdhocTicketDAO;
-import bcccp.tickets.adhoc.AdhocTicketFactory;
-import bcccp.tickets.adhoc.IAdhocTicket;
-import bcccp.tickets.adhoc.IAdhocTicketDAO;
-import bcccp.tickets.season.ISeasonTicket;
-import bcccp.tickets.season.ISeasonTicketDAO;
-import bcccp.tickets.season.SeasonTicket;
-import bcccp.tickets.season.SeasonTicketDAO;
-import bcccp.tickets.season.UsageRecordFactory;
+import bcccp.carpark.exit.*;
+import bcccp.carpark.paystation.*;
+import bcccp.tickets.adhoc.*;
+import bcccp.tickets.season.*;
 import java.util.concurrent.TimeUnit;
-import org.junit.*;
+import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 
@@ -34,25 +24,9 @@ public class Integration_ExitController_CarparkSubsystem {
     
     public Integration_ExitController_CarparkSubsystem() {
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of ticketInserted method, of class ExitController.
+     * @throws java.lang.InterruptedException
      */
     @Test
     public void testTicketInserted() throws InterruptedException {

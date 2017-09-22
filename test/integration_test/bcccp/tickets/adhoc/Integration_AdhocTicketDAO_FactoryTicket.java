@@ -5,16 +5,7 @@
  */
 package integration_test.bcccp.tickets.adhoc;
 import bcccp.tickets.adhoc.*;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.RunWith;
-import org.junit.runner.notification.Failure;
-import org.junit.runners.Suite;
+import org.junit.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
