@@ -82,11 +82,21 @@ public class PaystationController
 		if (state_ == STATE.IDLE) {
 			adhocTicket = carpark.getAdhocTicket(barcode);
 			if (adhocTicket != null) {
-				charge = carpark.calculateAdhocTicketCharge(adhocTicket.getEntryDateTime());
+                            if (adhocTicket.isPaid()){
+                                if (System.currentTimeMillis() - adhocTicket.getPaidDateTime() > 900000){
+                                   charge = carpark.calculateAdhocTicketCharge(adhocTicket.getPaidDateTime());
+                                   ui.display("Pay " + String.format("%.2f", charge));
+                                    setState(STATE.WAITING);
+                                } else {
+                                    ui.display("Ticket Already Paid");
+                                    setState(STATE.PAID);   
+                                }    
+                            } else {
+                                charge = carpark.calculateAdhocTicketCharge(adhocTicket.getEntryDateTime());
 				ui.display("Pay " + String.format("%.2f", charge));
 				setState(STATE.WAITING);
-			}
-			else {
+                            }
+                        } else {
 				ui.beep();
 				ui.display("Take Rejected Ticket");
 				setState(STATE.REJECTED);
