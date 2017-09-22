@@ -209,14 +209,15 @@ public class ExitController
 			ui.beep();
 			ui.discardTicket();
 			log("ticketInserted: called while in incorrect state");
-			setState(STATE.REJECTED);						
+			setState(STATE.REJECTED);
+                        
 		}
 		
 		
 	}
 
     /**
-     * If the taken ticket was deemed valid, raises the gate, displays a thank you, and resets a flag.
+     * If the taken ticket was deemed valid, raises the gate.
      */
     @Override
 	public void ticketTaken() {
@@ -226,6 +227,7 @@ public class ExitController
 		}
 		else if (state == STATE.REJECTED) {
 			setState(STATE.WAITING);
+                        carEventDetected(outsideSensor.getId(), outsideSensor.carIsDetected());
 		}
 		else {
 			ui.beep();
