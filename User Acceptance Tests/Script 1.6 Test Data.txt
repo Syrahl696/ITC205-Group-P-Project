@@ -1,0 +1,5 @@
+Ticket exited: 
+Ticket No  : 14 Barcode    : Ae1417b2d52129
+
+Ticket created then not stored:
+Ticket No  : 21 Barcode    : A151417b2d55e76

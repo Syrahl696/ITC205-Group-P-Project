@@ -1,0 +1,5 @@
+Ticket to exit: Ticket No  : 10 Barcode    : Aa1417b2d52065
+New ticket    : Ticket No  : 19 Barcode    : A131417b2d53a27
+
+Ticket to exit: Ticket No  : 4  Barcode    : A41417b2d51fa2
+New ticket    : Ticket No  : 20 Barcode    : A141417b2d53b57
