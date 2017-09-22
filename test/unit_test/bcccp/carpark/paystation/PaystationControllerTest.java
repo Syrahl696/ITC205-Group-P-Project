@@ -58,6 +58,7 @@ public class PaystationControllerTest {
         //Initialise behaviour of mocks
         String barcode = "A1111";        
         AdhocTicket ticket = mock(AdhocTicket.class);
+        when(ticket.getEntryDateTime()).thenReturn(1L);
         when(mockCarpark.getAdhocTicket(barcode)).thenReturn(ticket);
         when(mockCarpark.calculateAdhocTicketCharge(any(long.class))).thenReturn(10.00f);
         

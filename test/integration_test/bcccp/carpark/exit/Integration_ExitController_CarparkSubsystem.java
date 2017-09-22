@@ -62,7 +62,7 @@ public class Integration_ExitController_CarparkSubsystem {
         
         //initialise adhoc ticket
         IAdhocTicket adhocTicket = adhocTicketDAO.createTicket("Bathurst Chase");
-        adhocTicketDAO.createTicket("Bathurst Chase");
+        adhocTicket.enter(System.currentTimeMillis());
         //Implemented second delay to avoid paidTime equalling entryTime
         TimeUnit.SECONDS.sleep(1);
         paystation.ticketInserted(adhocTicket.getBarcode());

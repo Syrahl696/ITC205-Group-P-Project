@@ -41,6 +41,7 @@ public class Integration_Carpark_PaystationUseCase {
         payController = new PaystationController(carpark, mockUI);
 
         ticket = carpark.issueAdhocTicket();
+        ticket.enter(System.currentTimeMillis());
 
         payController.ticketInserted(ticket.getBarcode());
 
@@ -64,6 +65,7 @@ public class Integration_Carpark_PaystationUseCase {
         payController = new PaystationController(carpark, mockUI);
 
         ticket = carpark.issueAdhocTicket();
+        ticket.enter(System.currentTimeMillis());
         
         payController.ticketInserted(ticket.getBarcode());
         
